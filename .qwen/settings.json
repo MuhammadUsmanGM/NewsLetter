@@ -1,0 +1,38 @@
+{
+    "version": "1.0",
+    "mcpServers": {
+      "playwright": {
+        "command": "npx",
+        "args": [
+          "@playwright/mcp@latest"
+        ]
+      },
+      "tavily-remote": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-remote",
+          "https://mcp.tavily.com/mcp/?tavilyApiKey=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"
+        ]
+      },
+      "context7": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@upstash/context7-mcp",
+          "--api-key",
+          "ctx7sk-420a969c-d4b8-4033-802e-7e2cf1875a05"
+        ]
+      },
+      "openmemory": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "openmemory"
+        ],
+        "env": {
+          "OPENMEMORY_API_KEY": "m0-7mfRfSVesfzePoF4tO6MJNEa6UzD0uTd1tBxJMu4"
+        }
+      }
+    }
+  }
