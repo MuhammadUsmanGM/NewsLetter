@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import Welcome from './components/Welcome'
 import './App.css'
 
 // Initialize Supabase client
@@ -8,6 +9,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 function App() {
+  const [showWelcome, setShowWelcome] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     email: ''
@@ -112,6 +114,14 @@ function App() {
       setErrors(newErrors);
     }
   };
+
+  const handleWelcomeComplete = () => {
+    setShowWelcome(false);
+  };
+
+  if (showWelcome) {
+    return <Welcome onWelcomeComplete={handleWelcomeComplete} />;
+  }
 
   return (
     <div className="newsletter-container">
