@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import './App.css'
 
@@ -16,6 +16,7 @@ function App() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [successTransition, setSuccessTransition] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,12 +73,19 @@ function App() {
         
         console.log('User subscribed:', data);
         setSubmitted(true);
+        setSuccessTransition(false); // Reset the transition state
         
-        // Reset form after success
+        // Reset form after success with a smooth transition
         setTimeout(() => {
-          setSubmitted(false);
-          setFormData({ name: '', email: '' });
-          setIsLoading(false);
+          setSuccessTransition(true); // Trigger the fade-out transition
+          
+          // Reset form after animation completes
+          setTimeout(() => {
+            setSubmitted(false);
+            setSuccessTransition(false); // Reset for next time
+            setFormData({ name: '', email: '' });
+            setIsLoading(false);
+          }, 500);
         }, 3000);
       } catch (error) {
         console.error('Error subscribing:', error.message);
@@ -114,14 +122,14 @@ function App() {
         </div>
         
         {submitted ? (
-          <div className="success-message">
+          <div className={`success-message ${successTransition ? 'fade-out' : ''}`}>
             <h2>Subscribed Successfully!</h2>
             <p>Thank you for joining our newsletter. You'll receive AI updates soon!</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="newsletter-form">
             {apiError && (
-              <div className="api-error-message">
+              <div className="api-error-message fade-in">
                 {apiError}
               </div>
             )}
@@ -136,7 +144,7 @@ function App() {
                 className={`stunning-input ${errors.name ? 'error' : ''}`}
                 disabled={isLoading}
               />
-              {errors.name && <span className="error-message">{errors.name}</span>}
+              {errors.name && <span className="error-message fade-in">{errors.name}</span>}
             </div>
             
             <div className="input-group">
@@ -150,7 +158,7 @@ function App() {
                 className={`stunning-input ${errors.email ? 'error' : ''}`}
                 disabled={isLoading}
               />
-              {errors.email && <span className="error-message">{errors.email}</span>}
+              {errors.email && <span className="error-message fade-in">{errors.email}</span>}
             </div>
             
             <button type="submit" className="submit-btn" disabled={isLoading}>
