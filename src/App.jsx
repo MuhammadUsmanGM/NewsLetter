@@ -12,13 +12,23 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
-    email: ''
+    email: '',
+    timezone: ''
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [successTransition, setSuccessTransition] = useState(false);
+
+  useEffect(() => {
+    // Get user timezone and update form data
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      timezone: userTimezone
+    }));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +76,7 @@ function App() {
         const { data, error } = await supabase
           .from('newsletter_subscribers')
           .insert([
-            { name: formData.name, email: formData.email }
+            { name: formData.name, email: formData.email, timezone: formData.timezone }
           ]);
         
         if (error) {
@@ -85,7 +95,9 @@ function App() {
           setTimeout(() => {
             setSubmitted(false);
             setSuccessTransition(false); // Reset for next time
-            setFormData({ name: '', email: '' });
+            // Get user timezone and reset form with new timezone
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            setFormData({ name: '', email: '', timezone: userTimezone });
             setIsLoading(false);
           }, 500);
         }, 3000);
@@ -170,6 +182,12 @@ function App() {
               />
               {errors.email && <span className="error-message fade-in">{errors.email}</span>}
             </div>
+            
+            <input
+              type="hidden"
+              name="timezone"
+              value={formData.timezone}
+            />
             
             <button type="submit" className="submit-btn" disabled={isLoading}>
               {isLoading ? 'Subscribing...' : 'Subscribe'}

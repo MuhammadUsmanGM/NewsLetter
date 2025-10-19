@@ -124,6 +124,7 @@ CREATE TABLE newsletter_subscribers (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
+  timezone TEXT,  -- Store timezone as string (e.g., "Asia/Karachi", "America/New_York")
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
