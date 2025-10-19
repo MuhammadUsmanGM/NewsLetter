@@ -10,17 +10,6 @@
 
 [![Deploy with Vercel](https://vercel.com/button)](https://news-letter-umber-five.vercel.app/)
 
-## 📋 Table of Contents
-- [About](#about)
-- [Features](#features)
-- [What Subscribers Get](#what-subscribers-get)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Environment Variables](#environment-variables)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## 📖 About
 
 AI Updates Newsletter is a modern, beautifully designed newsletter subscription application that provides subscribers with the latest insights, trends, and developments in artificial intelligence. Built with React and Vite, featuring a stunning glass-morphism UI and powered by Supabase for secure data storage.
