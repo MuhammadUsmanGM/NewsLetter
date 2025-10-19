@@ -184,3 +184,9 @@ Project Link: [https://github.com/your-username/ai-newsletter](https://github.co
 ---
 
 Made with ❤️ using React, Vite, and Supabase
+
+## 📧 Newsletter Sample
+
+![Sample Newsletter](src/assets/OutPut.png)
+
+*This is the type of mail you will get*
