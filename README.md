@@ -169,9 +169,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 💬 Contact
 
-[Your Name] - [@your_twitter_handle](https://twitter.com/your_twitter_handle) - your-email@example.com
+MuhammadUsmanGM - muhammadusman5965etc@gmail.com
 
-Project Link: [https://github.com/your-username/ai-newsletter](https://github.com/your-username/ai-newsletter)
+Project Link: [https://github.com/your-username/ai-newsletter](https://github.com/MuhammadUsmanGM/NewsLetter)
 
 ## 📊 Stats
 
