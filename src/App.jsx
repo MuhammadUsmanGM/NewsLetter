@@ -72,13 +72,19 @@ function App() {
       setApiError(''); // Clear any previous API errors
       
       try {
-        // Insert data into Supabase table
+        // Insert data into Supabase table with a timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
         const { data, error } = await supabase
           .from('newsletter_subscribers')
           .insert([
             { name: formData.name, email: formData.email, timezone: formData.timezone }
-          ]);
-        
+          ])
+          .throwOnError(); // Ensure Supabase throws on error
+
+        clearTimeout(timeoutId);
+
         if (error) {
           throw error;
         }
@@ -102,25 +108,44 @@ function App() {
           }, 500);
         }, 3000);
       } catch (error) {
-        console.error('Error subscribing:', error.message);
+        console.error('Error subscribing:', error);
         setIsLoading(false);
         
-        // Provide more specific error messages
-        let errorMessage = 'An error occurred while subscribing. Please try again.';
-        
-        if (error.code === '23505') { // Unique violation error code in PostgreSQL
-          errorMessage = 'This email is already subscribed to our newsletter.';
-        } else if (error.message.includes('newsletter_subscribers_email_key')) {
-          errorMessage = 'This email is already subscribed to our newsletter.';
-        } else if (error.message.toLowerCase().includes('duplicate')) {
-          errorMessage = 'This email is already subscribed to our newsletter.';
-        } else if (error.message.toLowerCase().includes('permission') || error.message.toLowerCase().includes('policy')) {
-          errorMessage = 'Access denied. Please try again later.';
-        } else if (error.message.toLowerCase().includes('network') || error.status === 0) {
-          errorMessage = 'Network error. Please check your connection and try again.';
+        // Network error detection
+        if (error.name === 'AbortError') {
+          setApiError('Request timed out. Please check your internet connection and try again.');
+        } else if (error.status === 503 || error.status === 502) {
+          setApiError('Service temporarily unavailable. Please try again later.');
+        } else if (error.status === 429) {
+          setApiError('Too many requests. Please wait before trying again.');
+        } else if (error.status === 0 || error.message.toLowerCase().includes('network')) {
+          setApiError('Network error. Please check your internet connection and try again.');
+        } else {
+          // Provide more specific error messages based on error details
+          let errorMessage = 'An error occurred while subscribing. Please try again.';
+          
+          // Check for duplicate email specifically
+          if (error.code === '23505' || 
+              error.message.includes('newsletter_subscribers_email_key') || 
+              error.message.toLowerCase().includes('duplicate')) {
+            errorMessage = 'This email is already subscribed to our newsletter.';
+          } 
+          // Check for permission issues
+          else if (error.message.toLowerCase().includes('permission') || 
+                   error.message.toLowerCase().includes('policy')) {
+            errorMessage = 'Access denied. Please try again later.';
+          }
+          // Server-side errors
+          else if (error.status >= 500) {
+            errorMessage = 'Server error. Please try again later.';
+          }
+          // Client-side validation errors
+          else if (error.status >= 400 && error.status < 500) {
+            errorMessage = 'Invalid request. Please check your input and try again.';
+          }
+          
+          setApiError(errorMessage);
         }
-        
-        setApiError(errorMessage);
       }
     } else {
       setErrors(newErrors);
