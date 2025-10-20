@@ -28,7 +28,29 @@ function App() {
       ...prevFormData,
       timezone: userTimezone
     }));
-  }, []);
+    
+    // Add network status listener
+    const handleOnline = () => {
+      if (apiError && apiError.includes('No internet connection')) {
+        setApiError('');
+      }
+    };
+    
+    const handleOffline = () => {
+      if (isLoading) {
+        setIsLoading(false);
+        setApiError('No internet connection. Please check your connection and try again.');
+      }
+    };
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [apiError, isLoading]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,6 +93,13 @@ function App() {
       setIsLoading(true);
       setApiError(''); // Clear any previous API errors
       
+      // Check for network connectivity
+      if (!navigator.onLine) {
+        setIsLoading(false);
+        setApiError('No internet connection. Please check your connection and try again.');
+        return;
+      }
+      
       try {
         // Insert data into Supabase table with a timeout
         const controller = new AbortController();
@@ -111,15 +140,19 @@ function App() {
         console.error('Error subscribing:', error);
         setIsLoading(false);
         
-        // Network error detection
+        // More specific network error detection
         if (error.name === 'AbortError') {
           setApiError('Request timed out. Please check your internet connection and try again.');
+        } else if (error.status === 0 || error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          setApiError('No internet connection. Please check your connection and try again.');
         } else if (error.status === 503 || error.status === 502) {
           setApiError('Service temporarily unavailable. Please try again later.');
         } else if (error.status === 429) {
           setApiError('Too many requests. Please wait before trying again.');
-        } else if (error.status === 0 || error.message.toLowerCase().includes('network')) {
-          setApiError('Network error. Please check your internet connection and try again.');
+        } else if (error.status >= 500) {
+          setApiError('Server error. Please try again later.');
+        } else if (error.status >= 400 && error.status < 500) {
+          setApiError('Invalid request. Please check your input and try again.');
         } else {
           // Provide more specific error messages based on error details
           let errorMessage = 'An error occurred while subscribing. Please try again.';
@@ -134,14 +167,6 @@ function App() {
           else if (error.message.toLowerCase().includes('permission') || 
                    error.message.toLowerCase().includes('policy')) {
             errorMessage = 'Access denied. Please try again later.';
-          }
-          // Server-side errors
-          else if (error.status >= 500) {
-            errorMessage = 'Server error. Please try again later.';
-          }
-          // Client-side validation errors
-          else if (error.status >= 400 && error.status < 500) {
-            errorMessage = 'Invalid request. Please check your input and try again.';
           }
           
           setApiError(errorMessage);
