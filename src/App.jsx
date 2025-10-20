@@ -154,19 +154,24 @@ function App() {
         } else if (error.status >= 400 && error.status < 500) {
           setApiError('Invalid request. Please check your input and try again.');
         } else {
-          // Provide more specific error messages based on error details
-          let errorMessage = 'An error occurred while subscribing. Please try again.';
-          
           // Check for duplicate email specifically
           if (error.code === '23505' || 
               error.message.includes('newsletter_subscribers_email_key') || 
               error.message.toLowerCase().includes('duplicate')) {
-            errorMessage = 'This email is already subscribed to our newsletter.';
+            setApiError('Email already subscribed! Happy to have you continue receiving AI updates.');
+            // Don't return here, let the normal flow continue to show the message
           } 
-          // Check for permission issues
-          else if (error.message.toLowerCase().includes('permission') || 
-                   error.message.toLowerCase().includes('policy')) {
-            errorMessage = 'Access denied. Please try again later.';
+          // Provide more specific error messages based on error details
+          else {
+            let errorMessage = 'An error occurred while subscribing. Please try again.';
+            
+            // Check for permission issues
+            if (error.message.toLowerCase().includes('permission') || 
+                error.message.toLowerCase().includes('policy')) {
+              errorMessage = 'Access denied. Please try again later.';
+            }
+            
+            setApiError(errorMessage);
           }
           
           setApiError(errorMessage);
@@ -201,7 +206,7 @@ function App() {
         ) : (
           <form onSubmit={handleSubmit} className="newsletter-form">
             {apiError && (
-              <div className="api-error-message fade-in">
+              <div className={`api-${apiError.includes('already subscribed') ? 'success' : 'error'}-message fade-in`}>
                 {apiError}
               </div>
             )}
