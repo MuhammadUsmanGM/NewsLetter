@@ -26,6 +26,28 @@ AI Updates Newsletter is a modern, beautifully designed newsletter subscription 
 - ✅ **Custom Favicon** - Professional branding
 - ✅ **GitHub Integration** - Easy social connection
 
+## 🤖 Automated Newsletter Workflow
+
+This project features intelligent automation using n8n:
+
+### Workflow Architecture:
+1. User subscribes via React frontend
+2. Data stored in Supabase with timezone information
+3. n8n workflow triggers daily at scheduled time
+4. Workflow fetches all subscribers from Supabase
+5. AI-generated content is personalized based on subscriber data
+6. Automated emails sent to all subscribers
+7. Delivery tracking and error handling
+
+### n8n Integration:
+- Automated daily trigger for newsletter distribution
+- Supabase database integration for subscriber retrieval
+- Email service integration for delivery
+- Error handling and retry logic
+- Timezone-aware scheduling
+
+This eliminates manual newsletter management and ensures consistent, timely delivery of AI insights to all subscribers.
+
 ## 🎁 What Subscribers Get
 
 By subscribing to our AI Updates Newsletter, you'll receive:
