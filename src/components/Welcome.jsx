@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import logo from '../assets/Favicon.png';
 import './Welcome.css';
 
 const Welcome = ({ onWelcomeComplete }) => {
@@ -21,13 +22,17 @@ const Welcome = ({ onWelcomeComplete }) => {
   return (
     <div className="welcome-screen">
       <div className="welcome-content">
-        <div className="welcome-text">
-          Welcome to AI Newsletter
+        <div className="welcome-logo-container">
+          <img src={logo} alt="Company Logo" className="welcome-logo" />
         </div>
-        <div className="loading-dots">
-          <span className="dot glowing"></span>
-          <span className="dot glowing"></span>
-          <span className="dot glowing"></span>
+        <div className="welcome-text">
+          AI NEWSLETTER
+        </div>
+        <div className="loading-container">
+          <div className="loading-bar"></div>
+        </div>
+        <div className="welcome-subtitle">
+          Initializing experience
         </div>
       </div>
     </div>
