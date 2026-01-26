@@ -130,7 +130,10 @@ async function sendNewsletter() {
         hour12: false,
       }).format(now);
 
-      if (parseInt(userTime) === 9) {
+      const is9AM = parseInt(userTime) === 9;
+      const forceSend = process.argv.includes('--force');
+
+      if (is9AM || forceSend) {
         // Only generate AI content if we have at least one subscriber to send to
         if (!sharedEmailBody) {
           console.log('Generating shared AI content...');

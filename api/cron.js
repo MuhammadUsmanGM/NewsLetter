@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     // Note: If you don't set CRON_SECRET, you can disable this check for testing
     // but it is highly recommended for production.
-    // return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   try {
