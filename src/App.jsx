@@ -135,26 +135,28 @@ function App() {
       }
       
       try {
-        // Insert data into Supabase table with a timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        // Call our custom serverless API to handle subscription and welcome email
+        const response = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            timezone: formData.timezone
+          }),
+        });
 
-        const { data, error } = await supabase
-          .from('newsletter_subscribers')
-          .insert([
-            { name: formData.name, email: formData.email, timezone: formData.timezone }
-          ])
-          .throwOnError(); // Ensure Supabase throws on error
+        const result = await response.json();
 
-        clearTimeout(timeoutId);
-
-        if (error) {
-          throw error;
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to subscribe');
         }
         
-        console.log('User subscribed:', data);
+        console.log('User subscribed successfully:', result);
         setSubmitted(true);
-        setSuccessTransition(false); // Reset the transition state
+        setSuccessTransition(false);
         
         // Reset form after success with a smooth transition
         setTimeout(() => {
