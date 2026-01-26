@@ -7,7 +7,7 @@
 [![NewsAPI](https://img.shields.io/badge/NewsAPI-FF4500?style=for-the-badge&logo=rss&logoColor=white)](https://newsapi.org/)
 
 ## 🌟 Live Experience
-[Explore the Newsletter](https://news-letter-umber-five.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Now-000000?style=for-the-badge&logo=vercel&logoColor=white&color=000)](https://news-letter-umber-five.vercel.app/)
 
 ---
 
