@@ -405,17 +405,34 @@
   to { opacity: 0; transform: scale(0.95); }
 }
 
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .newsletter-card {
+    max-width: 900px;
+  }
+  
+  .branding-side h1 {
+    font-size: 2.8rem;
+  }
+}
+
 @media (max-width: 968px) {
+  .newsletter-container {
+    padding: 1rem;
+  }
+
   .newsletter-card {
     flex-direction: column;
     max-width: 540px;
     min-height: auto;
+    border-radius: 2rem;
   }
 
   .branding-side {
     padding: 3rem 2rem;
     align-items: center;
     text-align: center;
+    min-height: 350px;
   }
 
   .branding-side h1 {
@@ -425,11 +442,19 @@
 
   .branding-side p {
     text-align: center;
-    margin-bottom: 0;
+    margin: 0 auto;
   }
 
   .social-links-container {
-    display: none; /* Hide on mobile branding side */
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
+  .brand-logo-container {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
   }
 
   .form-side {
@@ -438,6 +463,54 @@
 
   .newsletter-form {
     max-width: 100%;
+  }
+
+  .form-header h2 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .newsletter-container {
+    padding: 0.75rem;
+  }
+
+  .newsletter-card {
+    border-radius: 1.5rem;
+  }
+
+  .branding-side {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .branding-side h1 {
+    font-size: 2rem;
+  }
+
+  .branding-side p {
+    font-size: 1.1rem;
+  }
+
+  .form-side {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .stunning-input {
+    padding: 1rem;
+  }
+
+  .submit-btn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .success-state h2 {
+    font-size: 1.8rem;
+  }
+
+  .brand-logo-container {
+    width: 70px;
+    height: 70px;
   }
 }
 
