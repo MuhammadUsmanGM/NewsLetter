@@ -21,6 +21,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [successTransition, setSuccessTransition] = useState(false);
+  const [isUnsubscribing, setIsUnsubscribing] = useState(false);
+  const [unsubscribed, setUnsubscribed] = useState(false);
 
   useEffect(() => {
     // Get user timezone and update form data
@@ -43,6 +45,15 @@ function App() {
         setApiError('No internet connection. Please check your connection and try again.');
       }
     };
+
+    // Check for unsubscribe query parameters
+    const params = new URLSearchParams(window.location.search);
+    const unsubscribeEmail = params.get('email');
+    const isUnsubscribeAction = params.get('unsubscribe') === 'true';
+
+    if (isUnsubscribeAction && unsubscribeEmail) {
+      handleUnsubscribe(unsubscribeEmail);
+    }
     
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -52,6 +63,28 @@ function App() {
       window.removeEventListener('offline', handleOffline);
     };
   }, [apiError, isLoading]);
+
+  const handleUnsubscribe = async (email) => {
+    setIsUnsubscribing(true);
+    setApiError('');
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscribers')
+        .delete()
+        .eq('email', email);
+
+      if (error) throw error;
+      
+      setUnsubscribed(true);
+      // Remove query params from URL without refreshing
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } catch (error) {
+      console.error('Error unsubscribing:', error);
+      setApiError('Failed to unsubscribe. Please try again or contact support.');
+    } finally {
+      setIsUnsubscribing(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -223,7 +256,30 @@ function App() {
         </div>
 
         <div className="form-side">
-          {submitted ? (
+          {unsubscribed ? (
+            <div className="success-state">
+              <div className="success-icon-container">
+                <div className="success-circle" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}></div>
+                <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                  <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" style={{ stroke: '#ef4444' }}/>
+                  <path className="checkmark-check" fill="none" d="M16 16L36 36M36 16L16 36" style={{ stroke: '#ef4444' }}/>
+                </svg>
+              </div>
+              <div className="success-content fade-in">
+                <div className="success-badge" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>Unsubscribed</div>
+                <h2>We're sorry to see you go</h2>
+                <p>You have been successfully removed from our list.</p>
+                <div className="success-footer">
+                  You can always join us again later!
+                </div>
+              </div>
+            </div>
+          ) : isUnsubscribing ? (
+            <div className="success-state">
+               <div className="loading-spinner"></div>
+               <p>Unsubscribing you from the newsletter...</p>
+            </div>
+          ) : submitted ? (
             <div className={`success-state ${successTransition ? 'fade-out' : ''}`}>
               <div className="success-icon-container">
                 <div className="success-circle"></div>
