@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Welcome from './components/Welcome'
+import Dashboard from './components/Dashboard'
 import logo from './assets/Favicon.png'
 import './App.css'
 
@@ -23,6 +24,7 @@ function App() {
   const [successTransition, setSuccessTransition] = useState(false);
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [unsubscribed, setUnsubscribed] = useState(false);
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard'
 
   useEffect(() => {
     // Get user timezone and update form data
@@ -50,6 +52,12 @@ function App() {
     const params = new URLSearchParams(window.location.search);
     const unsubscribeEmail = params.get('email');
     const isUnsubscribeAction = params.get('unsubscribe') === 'true';
+    const viewParam = params.get('view');
+
+    if (viewParam === 'dashboard') {
+      setCurrentView('dashboard');
+      setShowWelcome(false); // Skip welcome screen for direct dashboard access
+    }
 
     if (isUnsubscribeAction && unsubscribeEmail) {
       handleUnsubscribe(unsubscribeEmail);
@@ -224,6 +232,10 @@ function App() {
 
   if (showWelcome) {
     return <Welcome onWelcomeComplete={handleWelcomeComplete} />;
+  }
+
+  if (currentView === 'dashboard') {
+    return <Dashboard />;
   }
 
   return (

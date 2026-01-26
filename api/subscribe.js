@@ -76,7 +76,7 @@ export default async function handler(req, res) {
 
                     <p>Stay tuned! Your first briefing will arrive tomorrow at 9:00 AM sharp.</p>
                     
-                    <a href="${process.env.APP_URL}" class="btn">Visit Our Dashboard</a>
+                    <a href="${process.env.APP_URL}/?view=dashboard" class="btn">Visit Our Dashboard</a>
                   </td>
                 </tr>
                 <tr>
