@@ -2,8 +2,8 @@ name: Hourly Newsletter Trigger
 
 on:
   schedule:
-    - cron: '0 * * * *' # Runs at minute 0 of every hour
-  workflow_dispatch: # Allows manual triggering from GitHub Actions tab
+    - cron: '5 * * * *' # Changed from 0 to 5 to avoid "peak" congestion and force a refresh
+  workflow_dispatch:
 
 jobs:
   cron:
@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Call Vercel Cron Endpoint
         run: |
-          curl -X GET "${{ secrets.APP_URL }}/api/cron" \
+          curl -v -X GET "${{ secrets.APP_URL }}/api/cron" \
           -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
           --fail
