@@ -11,6 +11,20 @@ jobs:
     steps:
       - name: Call Vercel Cron Endpoint
         run: |
-          curl -v -X GET "${{ secrets.APP_URL }}/api/cron" \
-          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-          --fail
+          # Remove trailing slash from APP_URL if it exists
+          CLEAN_URL=$(echo "${{ secrets.APP_URL }}" | sed 's:/*$::')
+          echo "Hitting endpoint: $CLEAN_URL/api/cron"
+          
+          # Fetch and print response body
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X GET "$CLEAN_URL/api/cron" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+          
+          echo "--- VERCEL RESPONSE START ---"
+          echo "$RESPONSE"
+          echo "--- VERCEL RESPONSE END ---"
+          
+          # Exit with error if not 200
+          if [[ ! "$RESPONSE" == *"HTTP_STATUS:200"* ]]; then
+            echo "Error: Received non-200 status code"
+            exit 1
+          fi
