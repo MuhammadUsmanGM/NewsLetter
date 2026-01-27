@@ -25,33 +25,37 @@ const transporter = nodemailer.createTransport({
 async function fetchAINews() {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  // Using full ISO string for more precise 24h window
   const fromDate = yesterday.toISOString();
 
-  try {
-    const response = await axios.get('https://newsapi.org/v2/everything', {
-      params: {
-        // More specific query to find actual breakthroughs and major releases
-        q: '(artificial intelligence OR AI) AND (breakthrough OR "new model" OR launch OR "announced" OR research OR "OpenAI" OR "Google AI" OR "Nvidia" OR "Anthropic" OR "LLM")',
-        from: fromDate,
-        sortBy: 'popularity', // Ensures we get high-impact stories
-        language: 'en',
-        // Target reputable tech journalistic domains for "premium" quality
-        domains: 'techcrunch.com,theverge.com,wired.com,arstechnica.com,venturebeat.com,zdnet.com,engadget.com,reuters.com,nytimes.com',
-        apiKey: newsApiKey,
-      },
-    });
-    
-    // Filter out articles with missing images or descriptions for better email quality
-    const highQualityArticles = response.data.articles
-      .filter(a => a.urlToImage && a.description && a.title)
-      .slice(0, 10); 
+  const fetchWithParams = async (params) => {
+    try {
+      const resp = await axios.get('https://newsapi.org/v2/everything', { params: { ...params, apiKey: newsApiKey, language: 'en' } });
+      return resp.data.articles.filter(a => a.urlToImage && a.description && a.title);
+    } catch (e) {
+      console.error('Fetch error:', e.message);
+      return [];
+    }
+  };
 
-    return highQualityArticles;
-  } catch (error) {
-    console.error('Error fetching news:', error.response?.data || error.message);
-    return [];
+  // 1. Try Premium Tech Domains First (High Quality)
+  let articles = await fetchWithParams({
+    q: '(artificial intelligence OR AI) AND (breakthrough OR "new model" OR launch OR research)',
+    from: fromDate,
+    sortBy: 'popularity',
+    domains: 'techcrunch.com,theverge.com,wired.com,arstechnica.com,venturebeat.com,zdnet.com'
+  });
+
+  // 2. Fallback: If nothing in premium, search EVERYWHERE for any AI news
+  if (articles.length === 0) {
+    console.log('No premium news found, broadening search...');
+    articles = await fetchWithParams({
+      q: 'artificial intelligence',
+      from: fromDate,
+      sortBy: 'relevancy'
+    });
   }
+
+  return articles.slice(0, 10);
 }
 
 async function generateEmailContent(articles) {
