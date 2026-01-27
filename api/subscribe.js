@@ -39,49 +39,205 @@ export default async function handler(req, res) {
     // 2. Send Premium Welcome Email
     const welcomeHtml = `
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
       <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to AI Insights</title>
         <style>
-          .btn { background: #0f172a; color: white !important; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; margin-top: 20px; }
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+          
+          body {
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: #020617;
+          }
+
+          .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #0f172a;
+          }
+
+          .header {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+            padding: 60px 40px;
+            text-align: center;
+          }
+
+          .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            color: #10b981;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+          }
+
+          .title {
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -1px;
+            line-height: 1.2;
+          }
+
+          .subtitle {
+            color: #94a3b8;
+            font-size: 18px;
+            margin-top: 12px;
+            line-height: 1.5;
+          }
+
+          .content {
+            padding: 48px 40px;
+            color: #cbd5e1;
+            line-height: 1.7;
+          }
+
+          .greeting {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+          }
+
+          .feature-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 32px 0;
+          }
+
+          .feature-title {
+            color: #10b981;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+          }
+
+          .btn {
+            display: inline-block;
+            background: #10b981;
+            color: #ffffff !important;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: 16px;
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+          }
+
+          .footer {
+            padding: 40px;
+            text-align: center;
+            background: #020617;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          .footer p {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0;
+          }
+
+          .social-links {
+            margin-top: 24px;
+          }
+
+          .social-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            margin: 0 12px;
+            font-size: 14px;
+          }
+
+          @media screen and (max-width: 600px) {
+            .header { padding: 40px 24px; }
+            .content { padding: 32px 24px; }
+            .title { font-size: 28px; }
+          }
         </style>
       </head>
-      <body style="font-family: 'Inter', sans-serif; background-color: #f8fafc; padding: 40px 0; margin: 0;">
+      <body>
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
           <tr>
-            <td align="center">
-              <table width="600" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <td align="center" style="background-color: #020617; padding: 40px 0;">
+              <table width="600" border="0" cellpadding="0" cellspacing="0" class="container" style="border-radius: 24px; overflow: hidden; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);">
+                <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 60px 40px; text-align: center;">
-                    <h1 style="color: white; margin: 0; font-size: 32px; letter-spacing: -1px;">Welcome to AI Insights</h1>
-                    <p style="color: #94a3b8; font-size: 16px; margin-top: 10px;">Your technical journey begins here.</p>
+                  <td class="header">
+                    <div style="margin-bottom: 24px;">
+                      <img src="${process.env.APP_URL}/Favicon.png" alt="NewsLetter AI Logo" style="width: 80px; height: 80px; border-radius: 16px; border: 2px solid #10b981; background: rgba(16, 185, 129, 0.1);">
+                    </div>
+                    <div class="badge">Success Verified</div>
+                    <h1 class="title">NewsLetter AI<br><span style="color: #10b981;">The Future is Here.</span></h1>
+                    <p class="subtitle">Personalized technical intelligence, delivered daily.</p>
                   </td>
                 </tr>
+                <!-- Body -->
                 <tr>
-                  <td style="padding: 40px; color: #334155; line-height: 1.8;">
-                    <h2 style="color: #0f172a; font-size: 24px;">Hi ${name},</h2>
-                    <p>We're thrilled to have you join our inner circle of AI professionals and enthusiasts.</p>
+                  <td class="content">
+                    <div class="greeting">Hi ${name},</div>
+                    <p>We're thrilled to have you here at <strong>NewsLetter AI</strong>. You've officially joined an elite group of professionals who prioritize technical depth over surface-level hype.</p>
                     
-                    <div style="background: #f1f5f9; border-radius: 12px; padding: 24px; margin: 30px 0;">
-                      <h3 style="margin-top: 0; color: #0f172a;">🎁 Your Welcome Gift</h3>
-                      <p style="margin-bottom: 0;">As a thank you for joining, you've been granted <strong>Priority Access</strong> to our daily AI breakthroughs. While others wait, you'll receive the most important technical updates at exactly 9:00 AM in your timezone.</p>
+                    <div class="feature-card" style="border-left: 4px solid #10b981;">
+                      <div class="feature-title">🎁 Priority Access Granted</div>
+                      <p style="margin: 0;">As a founding member, you've been granted <strong>Level 1 Priority</strong>. Your daily briefings are scheduled for exactly 9:00 AM in your timezone.</p>
                     </div>
 
-                    <p>What to expect from us:</p>
-                    <ul style="padding-left: 20px;">
-                      <li><strong>Daily Synthesis:</strong> The most important papers and releases simplified into 5-minute reads.</li>
-                      <li><strong>Technical Deep-Dives:</strong> Understanding the "how" behind the latest LLMs and tools.</li>
-                      <li><strong>Premium Visuals:</strong> Data and news presented in a clean, distraction-free format.</li>
-                    </ul>
+                    <p style="margin-bottom: 8px; font-weight: 600; color: #ffffff;">What to expect from NewsLetter AI:</p>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 32px;">
+                      <tr>
+                        <td width="24" valign="top" style="padding-top: 4px; color: #10b981;">&bull;</td>
+                        <td style="padding-bottom: 12px;"><strong>Research Synthesis:</strong> Complex papers broken down into technical briefs.</td>
+                      </tr>
+                      <tr>
+                        <td width="24" valign="top" style="padding-top: 4px; color: #10b981;">&bull;</td>
+                        <td style="padding-bottom: 12px;"><strong>Deployment Strategies:</strong> Deep-dives into the latest LLMs.</td>
+                      </tr>
+                      <tr>
+                        <td width="24" valign="top" style="padding-top: 4px; color: #10b981;">&bull;</td>
+                        <td style="padding-bottom: 0;"><strong>Market Signals:</strong> Moving past the noise to find real value.</td>
+                      </tr>
+                    </table>
 
-                    <p>Stay tuned! Your first briefing will arrive tomorrow at 9:00 AM sharp.</p>
+                    <p>Stay ahead of the curve. Your first briefing arrives at 9:00 AM sharp.</p>
                     
-                    <a href="${process.env.APP_URL}/?view=dashboard" class="btn">Visit Our Dashboard</a>
+                    <div style="text-align: center; margin-top: 40px;">
+                      <a href="${process.env.APP_URL}/?view=dashboard" class="btn" style="background: #10b981;">Enter Your Dashboard</a>
+                    </div>
                   </td>
                 </tr>
+                <!-- Footer -->
                 <tr>
-                  <td style="padding: 40px; background: #f8fafc; text-align: center; border-top: 1px solid #e2e8f0;">
-                    <p style="color: #64748b; font-size: 14px; margin: 0;">&copy; ${new Date().getFullYear()} AI NewsLetter. All rights reserved.</p>
+                  <td class="footer">
+                    <p>&copy; ${new Date().getFullYear()} NewsLetter AI. Crafted with ❤️ for the technical elite.</p>
+                    <div class="social-links">
+                      <a href="https://github.com/MuhammadUsmanGM">GitHub</a>
+                      <a href="https://linkedin.com/in/muhammad-usman-ai-dev">LinkedIn</a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <table width="600" border="0" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
+                <tr>
+                  <td align="center" style="color: #475569; font-size: 12px;">
+                    If you didn't sign up for this, you can <a href="${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color: #64748b; text-decoration: underline;">unsubscribe here</a>.
                   </td>
                 </tr>
               </table>
@@ -95,7 +251,7 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: email,
-      subject: 'Welcome to AI Insights: Your Welcome Gift Inside 🎁',
+      subject: 'Welcome to NewsLetter AI: Your Welcome Gift Inside 🎁',
       html: welcomeHtml,
     });
 
