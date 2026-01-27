@@ -130,8 +130,12 @@ async function sendNewsletter() {
         hour12: false,
       }).format(now);
 
-      const is9AM = parseInt(userTime) === 9;
+      // This will be '9' if the local time is 9:00 AM, 9:30 AM, or 9:59 AM.
+      const currentHour = parseInt(userTime.trim()); 
+      const is9AM = currentHour === 9;
       const forceSend = process.argv.includes('--force');
+
+      console.log(`[DEBUG] Subscriber: ${subscriber.email} | Zone: ${subscriber.timezone} | Local Hour: ${currentHour} | Send Target: 9AM | Decision: ${is9AM || forceSend ? 'SEND' : 'SKIP'}`);
 
       if (is9AM || forceSend) {
         // Only generate AI content if we have at least one subscriber to send to
