@@ -23,38 +23,47 @@ const transporter = nodemailer.createTransport({
 });
 
 async function fetchAINews() {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const fromDate = yesterday.toISOString();
+  const threeDaysAgo = new Date();
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3); // Look back 3 days to ensure we always have content
+  const fromDate = threeDaysAgo.toISOString();
 
   const fetchWithParams = async (params) => {
     try {
-      const resp = await axios.get('https://newsapi.org/v2/everything', { params: { ...params, apiKey: newsApiKey, language: 'en' } });
-      return resp.data.articles.filter(a => a.urlToImage && a.description && a.title);
+      console.log(`Fetching news with query: ${params.q} from ${params.from}...`);
+      const resp = await axios.get('https://newsapi.org/v2/everything', { 
+        params: { 
+          ...params, 
+          apiKey: newsApiKey, 
+          language: 'en',
+          pageSize: 20 
+        } 
+      });
+      return (resp.data.articles || []).filter(a => a.urlToImage && a.description && a.title);
     } catch (e) {
-      console.error('Fetch error:', e.message);
+      console.error('Fetch error:', e.response?.data?.message || e.message);
       return [];
     }
   };
 
   // 1. Try Premium Tech Domains First (High Quality)
   let articles = await fetchWithParams({
-    q: '(artificial intelligence OR AI) AND (breakthrough OR "new model" OR launch OR research)',
+    q: 'artificial intelligence OR AI OR "machine learning" OR "generative AI" OR "LLM"',
     from: fromDate,
     sortBy: 'popularity',
-    domains: 'techcrunch.com,theverge.com,wired.com,arstechnica.com,venturebeat.com,zdnet.com'
+    domains: 'techcrunch.com,theverge.com,wired.com,arstechnica.com,venturebeat.com,zdnet.com,engadget.com,reuters.com,bloomberg.com,nytimes.com'
   });
 
   // 2. Fallback: If nothing in premium, search EVERYWHERE for any AI news
   if (articles.length === 0) {
     console.log('No premium news found, broadening search...');
     articles = await fetchWithParams({
-      q: 'artificial intelligence',
+      q: 'artificial intelligence OR AI',
       from: fromDate,
       sortBy: 'relevancy'
     });
   }
 
+  console.log(`Found ${articles.length} potential articles.`);
   return articles.slice(0, 10);
 }
 
@@ -128,20 +137,26 @@ async function sendNewsletter() {
 
   for (const subscriber of subscribers) {
     try {
-      const userTime = new Intl.DateTimeFormat('en-US', {
+      const userDate = new Intl.DateTimeFormat('en-CA', {
+        timeZone: subscriber.timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(now);
+
+      const currentHour = parseInt(new Intl.DateTimeFormat('en-US', {
         timeZone: subscriber.timezone,
         hour: 'numeric',
         hour12: false,
-      }).format(now);
+      }).format(now));
 
-      // This will be '9' if the local time is 9:00 AM, 9:30 AM, or 9:59 AM.
-      const currentHour = parseInt(userTime.trim()); 
-      const is9AM = currentHour === 9;
+      const is9AMOrLater = currentHour >= 9;
+      const alreadySent = subscriber.last_sent_date === userDate;
       const forceSend = process.argv.includes('--force');
 
-      console.log(`[DEBUG] Subscriber: ${subscriber.email} | Zone: ${subscriber.timezone} | Local Hour: ${currentHour} | Send Target: 9AM | Decision: ${is9AM || forceSend ? 'SEND' : 'SKIP'}`);
+      console.log(`[DEBUG] ${subscriber.email} | LocalTime: ${currentHour}:00 | SentToday: ${alreadySent} | Decision: ${(is9AMOrLater && !alreadySent) || forceSend ? 'SEND' : 'SKIP'}`);
 
-      if (is9AM || forceSend) {
+      if ((is9AMOrLater && !alreadySent) || forceSend) {
         // Only generate AI content if we have at least one subscriber to send to
         if (!sharedEmailBody) {
           console.log('Generating shared AI content...');
@@ -213,6 +228,18 @@ async function sendNewsletter() {
         });
 
         console.log(`Premium email successfully sent to ${subscriber.email}`);
+        
+        // Update database to mark as sent for today
+        const { error: updateError } = await supabase
+          .from('newsletter_subscribers')
+          .update({ last_sent_date: userDate })
+          .eq('email', subscriber.email);
+          
+        if (updateError) {
+          console.error(`Failed to update last_sent_date for ${subscriber.email}:`, updateError);
+        } else {
+          console.log(`Updated last_sent_date for ${subscriber.email} to ${userDate}`);
+        }
       }
     } catch (err) {
       console.error(`Failed to send email to ${subscriber.email}:`, err);
