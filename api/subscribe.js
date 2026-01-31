@@ -43,204 +43,298 @@ export default async function handler(req, res) {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to AI Insights</title>
+        <title>Intelligence Protocol Activated</title>
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap');
           
           body {
             margin: 0;
             padding: 0;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            font-family: 'Inter', -apple-system, sans-serif;
             background-color: #020617;
+            font-family: 'Outfit', -apple-system, system-ui, sans-serif;
+            color: #94a3b8;
           }
 
           .container {
             width: 100%;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 40px auto;
             background-color: #0f172a;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7);
           }
 
           .header {
             background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
-            padding: 60px 40px;
+            padding: 70px 48px;
             text-align: center;
+            position: relative;
+          }
+
+          .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+          }
+
+          .brand-logo {
+            width: 84px;
+            height: 84px;
+            border-radius: 20px;
+            border: 2px solid #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 10;
           }
 
           .badge {
-            display: inline-block;
-            padding: 6px 16px;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 20px;
             background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            border-radius: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 30px;
             color: #10b981;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             margin-bottom: 24px;
+            position: relative;
+            z-index: 10;
           }
 
-          .title {
+          .main-title {
             color: #ffffff;
-            font-size: 36px;
+            font-size: 42px;
             font-weight: 800;
             margin: 0;
-            letter-spacing: -1px;
-            line-height: 1.2;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            position: relative;
+            z-index: 10;
           }
 
-          .subtitle {
-            color: #94a3b8;
-            font-size: 18px;
-            margin-top: 12px;
-            line-height: 1.5;
+          .main-title span {
+            color: #10b981;
           }
 
-          .content {
-            padding: 48px 40px;
-            color: #cbd5e1;
-            line-height: 1.7;
+          .content-body {
+            padding: 60px 48px;
+            background-color: #0f172a;
           }
 
-          .greeting {
+          .greeting-text {
             color: #ffffff;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
+            margin-bottom: 28px;
+            letter-spacing: -0.5px;
+          }
+
+          .intro-p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+          }
+
+          .access-key-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 40px 0;
+          }
+
+          .card-header {
+            color: #10b981;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+          }
+
+          .key-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: #ffffff;
+            font-size: 22px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+          }
+
+          .key-meta {
+            font-size: 14px;
+            color: #64748b;
+          }
+
+          .feature-list {
+            margin: 48px 0;
+            padding: 0;
+            list-style: none;
+          }
+
+          .feature-item {
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 24px;
           }
 
-          .feature-card {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 24px;
-            margin: 32px 0;
-          }
-
-          .feature-title {
+          .feature-icon {
             color: #10b981;
             font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
+            margin-right: 16px;
+            line-height: 1;
+            padding-top: 4px;
           }
 
-          .btn {
+          .feature-text strong {
+            display: block;
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 4px;
+          }
+
+          .feature-text span {
+            font-size: 15px;
+            color: #94a3b8;
+          }
+
+          .cta-wrap {
+            text-align: center;
+            margin: 50px 0 20px;
+          }
+
+          .action-btn {
             display: inline-block;
             background: #10b981;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #ffffff !important;
-            padding: 16px 32px;
-            border-radius: 12px;
+            padding: 20px 48px;
+            border-radius: 16px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 16px;
-            margin-top: 16px;
-            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+            font-size: 18px;
+            box-shadow: 0 15px 30px -10px rgba(16, 185, 129, 0.4);
+            transition: transform 0.2s ease;
           }
 
-          .footer {
-            padding: 40px;
+          .footer-section {
+            padding: 48px;
+            background-color: #020617;
             text-align: center;
-            background: #020617;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
           }
 
-          .footer p {
-            color: #64748b;
+          .footer-text {
+            color: #475569;
             font-size: 14px;
-            margin: 0;
+            line-height: 1.6;
           }
 
-          .social-links {
-            margin-top: 24px;
+          .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 28px;
           }
 
-          .social-links a {
+          .social-grid a {
             color: #94a3b8;
             text-decoration: none;
-            margin: 0 12px;
             font-size: 14px;
+            font-weight: 600;
+          }
+
+          .unsub {
+            margin-top: 32px;
+            font-size: 12px;
+            color: #334155;
           }
 
           @media screen and (max-width: 600px) {
-            .header { padding: 40px 24px; }
-            .content { padding: 32px 24px; }
-            .title { font-size: 28px; }
+            .container { margin: 0; border-radius: 0; }
+            .header { padding: 50px 24px; }
+            .content-body { padding: 40px 24px; }
+            .main-title { font-size: 32px; }
           }
         </style>
       </head>
       <body>
-        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #020617;">
           <tr>
-            <td align="center" style="background-color: #020617; padding: 40px 0;">
-              <table width="600" border="0" cellpadding="0" cellspacing="0" class="container" style="border-radius: 24px; overflow: hidden; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);">
+            <td align="center" style="padding: 20px;">
+              <div class="container">
                 <!-- Header -->
-                <tr>
-                  <td class="header">
-                    <div style="margin-bottom: 24px;">
-                      <img src="${process.env.APP_URL}/Favicon.png" alt="NewsLetter AI Logo" style="width: 80px; height: 80px; border-radius: 16px; border: 2px solid #10b981; background: rgba(16, 185, 129, 0.1);">
-                    </div>
-                    <div class="badge">Success Verified</div>
-                    <h1 class="title">NewsLetter AI<br><span style="color: #10b981;">The Future is Here.</span></h1>
-                    <p class="subtitle">Personalized technical intelligence, delivered daily.</p>
-                  </td>
-                </tr>
+                <div class="header">
+                  <div class="header-overlay"></div>
+                  <img src="${process.env.APP_URL}/Favicon.png" alt="AI Intelligence Briefing" class="brand-logo">
+                  <div class="badge">Connection Established</div>
+                  <h1 class="main-title">Intelligence <span>BRIEFING.</span></h1>
+                </div>
+
                 <!-- Body -->
-                <tr>
-                  <td class="content">
-                    <div class="greeting">Hi ${name},</div>
-                    <p>We're thrilled to have you here at <strong>NewsLetter AI</strong>. You've officially joined an elite group of professionals who prioritize technical depth over surface-level hype.</p>
-                    
-                    <div class="feature-card" style="border-left: 4px solid #10b981;">
-                      <div class="feature-title">🎁 Priority Access Granted</div>
-                      <p style="margin: 0;">As a founding member, you've been granted <strong>Level 1 Priority</strong>. Your daily briefings are scheduled for exactly 9:00 AM in your timezone.</p>
-                    </div>
+                <div class="content-body">
+                  <div class="greeting-text">Protocol Initiated, ${name}.</div>
+                  <p class="intro-p">Welcome to the inner circle. Your subscription is active, and your access to exclusive AI technical intelligence has been granted.</p>
+                  
+                  <div class="access-key-card">
+                    <div class="card-header">Membership Access Key</div>
+                    <div class="key-value">USR-${Math.random().toString(36).substring(2, 10).toUpperCase()}</div>
+                    <div class="key-meta">Priority Level: Founding Member • 9:00 AM Sync</div>
+                  </div>
 
-                    <p style="margin-bottom: 8px; font-weight: 600; color: #ffffff;">What to expect from NewsLetter AI:</p>
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 32px;">
-                      <tr>
-                        <td width="24" valign="top" style="padding-top: 4px; color: #10b981;">&bull;</td>
-                        <td style="padding-bottom: 12px;"><strong>Research Synthesis:</strong> Complex papers broken down into technical briefs.</td>
-                      </tr>
-                      <tr>
-                        <td width="24" valign="top" style="padding-top: 4px; color: #10b981;">&bull;</td>
-                        <td style="padding-bottom: 12px;"><strong>Deployment Strategies:</strong> Deep-dives into the latest LLMs.</td>
-                      </tr>
-                      <tr>
-                        <td width="24" valign="top" style="padding-top: 4px; color: #10b981;">&bull;</td>
-                        <td style="padding-bottom: 0;"><strong>Market Signals:</strong> Moving past the noise to find real value.</td>
-                      </tr>
-                    </table>
-
-                    <p>Stay ahead of the curve. Your first briefing arrives at 9:00 AM sharp.</p>
-                    
-                    <div style="text-align: center; margin-top: 40px;">
-                      <a href="${process.env.APP_URL}/?view=dashboard" class="btn" style="background: #10b981;">Enter Your Dashboard</a>
+                  <div class="feature-list">
+                    <div class="feature-item">
+                      <div class="feature-icon">🛡️</div>
+                      <div class="feature-text">
+                        <strong>Neural Post-Processing</strong>
+                        <span>Advanced synthesis of technical research papers into actionable insights.</span>
+                      </div>
                     </div>
-                  </td>
-                </tr>
+                    <div class="feature-item">
+                      <div class="feature-icon">⚡</div>
+                      <div class="feature-text">
+                        <strong>Deployment Intelligence</strong>
+                        <span>Zero-day analysis of the latest LLM releases and deployment patterns.</span>
+                      </div>
+                    </div>
+                    <div class="feature-item">
+                      <div class="feature-icon">🔍</div>
+                      <div class="feature-text">
+                        <strong>Signal Extraction</strong>
+                        <span>Filtering out the noise to focus on high-impact technological shifts.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="intro-p" style="margin-bottom: 20px;">Your first intelligence drop arrives at 9:00 AM sharp in your local timezone.</p>
+                  
+                  <div class="cta-wrap">
+                    <a href="${process.env.APP_URL}/?view=dashboard" class="action-btn">Enter Neural Dashboard</a>
+                  </div>
+                </div>
+
                 <!-- Footer -->
-                <tr>
-                  <td class="footer">
-                    <p>&copy; ${new Date().getFullYear()} NewsLetter AI. Crafted with ❤️ for the technical elite.</p>
-                    <div class="social-links">
-                      <a href="https://github.com/MuhammadUsmanGM">GitHub</a>
-                      <a href="https://linkedin.com/in/muhammad-usman-ai-dev">LinkedIn</a>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-              <table width="600" border="0" cellpadding="0" cellspacing="0" style="margin-top: 24px;">
-                <tr>
-                  <td align="center" style="color: #475569; font-size: 12px;">
-                    If you didn't sign up for this, you can <a href="${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color: #64748b; text-decoration: underline;">unsubscribe here</a>.
-                  </td>
-                </tr>
-              </table>
+                <div class="footer-section">
+                  <p class="footer-text">&copy; ${new Date().getFullYear()} AI Intelligence Briefing.<br>Forged for the technical elite and technical founders.</p>
+                  <div class="social-grid">
+                    <a href="https://github.com/MuhammadUsmanGM">GITHUB</a>
+                    <a href="https://linkedin.com/in/muhammad-usman-ai-dev">LINKEDIN</a>
+                  </div>
+                  <div class="unsub">
+                    If you did not initiate this protocol, <a href="${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color: #475569;">deactivate here</a>.
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
         </table>
