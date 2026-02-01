@@ -22,20 +22,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function fetchAINews() {
-  const threeDaysAgo = new Date();
-  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3); // Look back 3 days to ensure we always have content
-  const fromDate = threeDaysAgo.toISOString();
+async function fetchAIIntelligence() {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const fromDate = sevenDaysAgo.toISOString();
 
   const fetchWithParams = async (params) => {
     try {
-      console.log(`Fetching news with query: ${params.q} from ${params.from}...`);
+      console.log(`Fetching intelligence for query: ${params.q}...`);
       const resp = await axios.get('https://newsapi.org/v2/everything', { 
         params: { 
           ...params, 
           apiKey: newsApiKey, 
           language: 'en',
-          pageSize: 20 
+          pageSize: 30 
         } 
       });
       return (resp.data.articles || []).filter(a => a.urlToImage && a.description && a.title);
@@ -45,30 +45,19 @@ async function fetchAINews() {
     }
   };
 
-  // 1. Try Premium Tech Domains First (High Quality)
+  // Broad search for high-quality AI breakthroughs over the week
   let articles = await fetchWithParams({
-    q: 'artificial intelligence OR AI OR "machine learning" OR "generative AI" OR "LLM"',
+    q: 'artificial intelligence OR "machine learning" OR "generative AI" OR "AI agents" OR "LLM breakthroughs"',
     from: fromDate,
-    sortBy: 'popularity',
-    domains: 'techcrunch.com,theverge.com,wired.com,arstechnica.com,venturebeat.com,zdnet.com,engadget.com,reuters.com,bloomberg.com,nytimes.com'
+    sortBy: 'popularity'
   });
 
-  // 2. Fallback: If nothing in premium, search EVERYWHERE for any AI news
-  if (articles.length === 0) {
-    console.log('No premium news found, broadening search...');
-    articles = await fetchWithParams({
-      q: 'artificial intelligence OR AI',
-      from: fromDate,
-      sortBy: 'relevancy'
-    });
-  }
-
-  console.log(`Found ${articles.length} potential articles.`);
-  return articles.slice(0, 10);
+  console.log(`Found ${articles.length} potential signal sources.`);
+  return articles.slice(0, 15);
 }
 
-async function generateEmailContent(articles) {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+async function generateWeeklyIntelligence(articles) {
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
   const articlesContext = articles.map(a => `
     Title: ${a.title}
@@ -79,26 +68,46 @@ async function generateEmailContent(articles) {
   `).join('\n---\n');
 
   const prompt = `
-    You are a professional AI newsletter editor for a high-end tech publication. 
-    Write a premium, insightful, and visually stunning email newsletter based on this AI news:
+    You are the Lead Editor of "THE SIGNAL", a high-end intelligence protocol for technical founders and AI engineers.
     
+    Based on these sources:
     ${articlesContext}
     
-    STYLING & STRUCTURE (MANDATORY):
-    1. Tone: Sophisticated, authoritative, yet engaging.
-    2. Layout per article:
-       - Header: <h2 style="font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 12px; line-height: 1.2;">[Article Title]</h2>
-       - Image: <img src="[ImageURL]" style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-       - Body: A deep-dive paragraph explaining *why* this matters.
-       - Highlights: Use a styled list for key takeaways.
-       - Link: A clear, styled "Read full story" link.
-    3. Closing: A thought-provoking final sentence about the future of AI.
+    Create a premium weekly briefing following the exact **3-2-1 Structure**:
+    
+    1. **3 MAJOR NEW STORIES**: Select the 3 most impactful AI breakthroughs of the week. For each:
+       - Strategic Headline
+       - High-quality analysis of why this shift matters (The "Signal")
+       - Use this HTML for stories:
+         <div style="margin-bottom: 40px;">
+           <img src="[ImageURL]" style="width: 100%; height: auto; border-radius: 16px; margin-bottom: 20px;">
+           <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 12px;">[Headline]</h2>
+           <p style="color: #94a3b8; font-size: 16px; line-height: 1.6;">[Analysis]</p>
+           <a href="[URL]" style="color: #10b981; font-weight: 700; text-decoration: none;">Read Technical Analysis →</a>
+         </div>
+
+    2. **2 NEW TOOLS TO TRY**: Pick 2 emerging AI tools, frameworks, or agents. For each:
+       - Tool Name
+       - Quick value prop (How it optimizes workflows)
+       - Link
+       - Use this HTML for tools:
+         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+           <strong style="color: #10b981; font-size: 18px;">[Tool Name]</strong>
+           <p style="color: #cbd5e1; margin: 8px 0;">[Value Prop]</p>
+         </div>
+
+    3. **1 ACTIONABLE INSIGHT/PROMPT**: Provide one high-level strategic insight or a complex, multi-step LLM prompt that saves hours of work.
+       - Use this HTML for the insight:
+         <div style="border-left: 4px solid #10b981; padding: 24px; background: rgba(16, 185, 129, 0.05); border-radius: 0 16px 16px 0;">
+           <h3 style="color: #ffffff; margin-top: 0;">This Week's Actionable Insight</h3>
+           <p style="color: #cbd5e1; font-style: italic;">[Insight/Prompt Content]</p>
+         </div>
     
     Technical:
-    - Return ONLY the HTML snippets for the articles.
-    - DO NOT include any personalized greeting or "Hi [Name]".
-    - No markdown formatting (no \`\`\`html).
+    - Return ONLY the HTML content.
+    - No markdown formatting.
     - Use inline styles only.
+    - Ensure all colors match the brand (White #ffffff, Primary #10b981, Muted #94a3b8, Dark Background #0f172a).
   `;
 
   try {
@@ -106,16 +115,16 @@ async function generateEmailContent(articles) {
     return result.response.text().replace(/```html|```/g, '').trim();
   } catch (error) {
     console.error('Error generating AI content:', error);
-    return `<p>Stay ahead of the curve with today's AI insights...</p>`;
+    return `<p style="color: #ffffff;">Neural processing error. Access dashboard for manual briefing.</p>`;
   }
 }
 
 async function sendNewsletter() {
-  console.log('Starting newsletter service...');
+  console.log('--- STARTING 3-2-1 WEEKLY INTELLIGENCE PROTOCOL ---');
 
-  const articles = await fetchAINews();
+  const articles = await fetchAIIntelligence();
   if (articles.length === 0) {
-    console.log('No new articles found. Skipping.');
+    console.log('Insufficient signal found. Aborting protocol.');
     return;
   }
 
@@ -124,91 +133,75 @@ async function sendNewsletter() {
     .select('*');
 
   if (error) {
-    console.error('Error fetching subscribers:', error);
+    console.error('Database connection failure:', error);
     return;
   }
 
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  
-  // OPTIMIZATION: Generate the AI shared content ONCE per run (not per subscriber)
-  // This prevents hitting Gemini rate limits and Vercel timeouts.
   let sharedEmailBody = null;
 
   for (const subscriber of subscribers) {
     try {
-      const userDate = new Intl.DateTimeFormat('en-CA', {
-        timeZone: subscriber.timezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(now);
+      const localeOptions = { timeZone: subscriber.timezone, hour12: false };
+      const userFullDate = new Intl.DateTimeFormat('en-CA', { ...localeOptions, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+      const userDay = new Intl.DateTimeFormat('en-US', { ...localeOptions, weekday: 'long' }).format(now);
+      const userHour = parseInt(new Intl.DateTimeFormat('en-US', { ...localeOptions, hour: 'numeric' }).format(now));
 
-      const currentHour = parseInt(new Intl.DateTimeFormat('en-US', {
-        timeZone: subscriber.timezone,
-        hour: 'numeric',
-        hour12: false,
-      }).format(now));
-
-      const is9AMOrLater = currentHour >= 9;
-      const alreadySent = subscriber.last_sent_date === userDate;
+      const isMonday = userDay === 'Monday';
+      const is9AMOrLater = userHour >= 9;
+      const alreadySent = subscriber.last_sent_date === userFullDate;
       const forceSend = process.argv.includes('--force');
 
-      console.log(`[DEBUG] ${subscriber.email} | LocalTime: ${currentHour}:00 | SentToday: ${alreadySent} | Decision: ${(is9AMOrLater && !alreadySent) || forceSend ? 'SEND' : 'SKIP'}`);
+      console.log(`[TARGET] ${subscriber.email} | Day: ${userDay} | Hour: ${userHour} | Sent: ${alreadySent}`);
 
-      if ((is9AMOrLater && !alreadySent) || forceSend) {
-        // Only generate AI content if we have at least one subscriber to send to
+      if ((isMonday && is9AMOrLater && !alreadySent) || forceSend) {
         if (!sharedEmailBody) {
-          console.log('Generating shared AI content...');
-          sharedEmailBody = await generateEmailContent(articles);
+          console.log('--- GENERATING NEURAL BRIEFING (3-2-1 STRUCTURE) ---');
+          sharedEmailBody = await generateWeeklyIntelligence(articles);
         }
 
-        console.log(`Sending premium newsletter to ${subscriber.email}`);
-        
         const unsubscribeUrl = `${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(subscriber.email)}`;
         
-        const fullEmailHtml = `
+        const premiumEmailHtml = `
           <!DOCTYPE html>
           <html lang="en">
           <head>
             <meta charset="utf-8">
             <style>
-              @media only screen and (max-width: 600px) {
-                .container { width: 100% !important; padding: 20px !important; }
-              }
+              @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
             </style>
           </head>
-          <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; padding: 40px 0;">
+          <body style="margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', sans-serif; color: #94a3b8;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #020617; padding: 40px 0;">
               <tr>
                 <td align="center">
-                  <table border="0" cellpadding="0" cellspacing="0" width="600" class="container" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
-                    <!-- Header/Branding -->
+                  <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #0f172a; border-radius: 32px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
+                    <!-- Header -->
                     <tr>
-                      <td style="padding: 40px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); text-align: center;">
-                        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.025em;">AI INSIGHTS</h1>
-                        <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em;">${dateStr}</p>
+                      <td style="padding: 60px 48px; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); text-align: center;">
+                        <div style="display: inline-block; padding: 8px 16px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
+                          Weekly Protocol Release
+                        </div>
+                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -1.5px;">THE <span style="color: #10b981;">SIGNAL.</span></h1>
+                        <p style="color: #94a3b8; margin: 12px 0 0 0; font-size: 16px; letter-spacing: 0.05em;">${dateStr}</p>
                       </td>
                     </tr>
                     <!-- Content -->
                     <tr>
-                      <td style="padding: 40px; color: #334155; line-height: 1.6; font-size: 16px;">
-                        <p style="font-size: 18px; color: #0f172a; font-weight: 600;">Hi ${subscriber.name},</p>
-                        <p style="margin-bottom: 30px;">Wishing you a productive day! Here is your curated briefing on the latest AI breakthroughs.</p>
+                      <td style="padding: 48px; color: #cbd5e1; line-height: 1.7; font-size: 16px;">
+                        <div style="color: #ffffff; font-size: 24px; font-weight: 700; margin-bottom: 24px;">Greetings, ${subscriber.name}.</div>
+                        <p style="margin-bottom: 40px;">Your weekly intelligence harvest has completed. Below is the curated signal extracted from this week's neural network shifts.</p>
                         
                         ${sharedEmailBody}
                       </td>
                     </tr>
                     <!-- Footer -->
                     <tr>
-                      <td style="padding: 40px; background-color: #f1f5f9; text-align: center;">
-                        <p style="margin: 0; color: #64748b; font-size: 14px;">Stay curious, stay ahead.</p>
-                        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
-                          <p style="margin: 0; color: #94a3b8; font-size: 12px;">
-                            Sent to ${subscriber.email}
-                            <br>
-                            <a href="${unsubscribeUrl}" style="color: #64748b; text-decoration: underline; margin-top: 8px; display: inline-block;">Unsubscribe</a>
-                          </p>
+                      <td style="padding: 48px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <p style="margin: 0; color: #475569; font-size: 14px;">Forged for the technical elite.</p>
+                        <div style="margin-top: 24px;">
+                          <a href="${unsubscribeUrl}" style="color: #64748b; text-decoration: underline; font-size: 12px;">Protocol Deactivation</a>
                         </div>
                       </td>
                     </tr>
@@ -223,28 +216,27 @@ async function sendNewsletter() {
         await transporter.sendMail({
           from: process.env.SMTP_FROM,
           to: subscriber.email,
-          subject: `Daily AI Insights: ${dateStr}`,
-          html: fullEmailHtml,
+          subject: `THE SIGNAL: Intelligence Protocol for ${dateStr}`,
+          html: premiumEmailHtml,
         });
 
-        console.log(`Premium email successfully sent to ${subscriber.email}`);
+        console.log(`[SUCCESS] Intelligence delivered to ${subscriber.email}`);
         
-        // Update database to mark as sent for today
-        const { error: updateError } = await supabase
+        await supabase
           .from('newsletter_subscribers')
-          .update({ last_sent_date: userDate })
+          .update({ last_sent_date: userFullDate })
           .eq('email', subscriber.email);
-          
-        if (updateError) {
-          console.error(`Failed to update last_sent_date for ${subscriber.email}:`, updateError);
-        } else {
-          console.log(`Updated last_sent_date for ${subscriber.email} to ${userDate}`);
-        }
       }
     } catch (err) {
-      console.error(`Failed to send email to ${subscriber.email}:`, err);
+      console.error(`[ERROR] Protocol failed for ${subscriber.email}:`, err);
     }
   }
+}
+
+export { sendNewsletter };
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  sendNewsletter();
 }
 
 // Export for use in scheduler
