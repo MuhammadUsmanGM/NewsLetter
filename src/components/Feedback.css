@@ -4,185 +4,222 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  /* Remove solid background to let global gradient show or use our own fancy one */
-  background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+  padding: 2rem 2rem;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(6, 78, 59, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
   color: #94a3b8;
   font-family: 'Outfit', sans-serif;
   position: relative;
-  overflow-y: auto; /* Allow scrolling on small screens */
-  overflow-x: hidden;
   box-sizing: border-box;
 }
 
-/* Dynamic background effects */
+/* Animated grid overlay */
 .feedback-container::before {
   content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(6, 78, 59, 0.15) 0%, transparent 40%);
-  animation: rotateBg 15s linear infinite;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.feedback-container::after {
-  content: '';
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  opacity: 0.3;
+    linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.4;
+  z-index: 1;
+  pointer-events: none;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+/* Floating orbs */
+.feedback-container::after {
+  content: '';
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 25%),
+    radial-gradient(circle at 85% 80%, rgba(6, 78, 59, 0.12) 0%, transparent 30%);
+  animation: floatOrbs 15s ease-in-out infinite;
   z-index: 1;
   pointer-events: none;
 }
 
-@keyframes rotateBg {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes floatOrbs {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -30px) scale(1.1); }
 }
 
 .feedback-card {
   width: 100%;
-  max-width: 600px;
-  background: rgba(15, 23, 42, 0.75); /* More transparent */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08); /* Smoother border */
+  max-width: 650px;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.85) 100%);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    0 0 100px -20px rgba(16, 185, 129, 0.1); /* Green glow behind card */
+    0 30px 60px -15px rgba(0, 0, 0, 0.7),
+    0 0 100px -20px rgba(16, 185, 129, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   z-index: 10;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
-.feedback-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 
-    0 35px 60px -12px rgba(0, 0, 0, 0.6),
-    0 0 120px -20px rgba(16, 185, 129, 0.15);
-}
-
-.feedback-header {
-  padding: 40px;
-  background: linear-gradient(135deg, rgba(6, 78, 59, 0.8) 0%, rgba(2, 44, 34, 0.9) 100%);
-  position: relative;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Add a cool shine to header */
-.feedback-header::after {
+.feedback-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  opacity: 0.6;
+}
+
+.feedback-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 40px 80px -15px rgba(0, 0, 0, 0.8),
+    0 0 140px -20px rgba(16, 185, 129, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.feedback-header {
+  padding: 48px 40px 40px;
+  background: 
+    linear-gradient(135deg, rgba(6, 78, 59, 0.4) 0%, rgba(2, 44, 34, 0.6) 100%),
+    linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+  position: relative;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px 32px 0 0;
+}
+
+.feedback-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), transparent);
 }
 
 .feedback-badge {
   display: inline-flex;
   align-items: center;
-  padding: 6px 16px;
-  background: rgba(16, 185, 129, 0.15);
+  padding: 8px 20px;
+  background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(16, 185, 129, 0.3);
   border-radius: 30px;
-  color: #34d399; /* Lighter vivid green */
+  color: #34d399;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+  letter-spacing: 2.5px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+  50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.25); }
 }
 
 .feedback-title {
   color: #ffffff;
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 800;
-  margin: 0 0 10px 0;
-  letter-spacing: -1.5px;
-  background: linear-gradient(to right, #ffffff, #34d399);
+  margin: 0 0 12px 0;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #ffffff 0%, #34d399 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
 }
 
 .feedback-subtitle {
   color: #cbd5e1;
-  font-size: 16px;
-  opacity: 0.9;
-  max-width: 400px;
+  font-size: 17px;
+  opacity: 0.95;
+  max-width: 450px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-weight: 400;
 }
 
 .feedback-form {
-  padding: 40px;
+  padding: 48px 40px;
+  background: rgba(2, 6, 23, 0.2);
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .form-label {
   display: block;
-  color: #cbd5e1;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  font-size: 0.75rem;
 }
 
 .form-input,
 .form-textarea {
   width: 100%;
-  background-color: rgba(2, 6, 23, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px;
+  background: linear-gradient(145deg, rgba(2, 6, 23, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 18px 20px;
   color: #f8fafc;
   font-family: inherit;
   font-size: 16px;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
 }
 
 .form-textarea {
-  min-height: 150px;
+  min-height: 160px;
   resize: vertical;
+  line-height: 1.6;
 }
 
 .form-input:hover,
 .form-textarea:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background-color: rgba(2, 6, 23, 0.8);
+  border-color: rgba(16, 185, 129, 0.2);
+  background: linear-gradient(145deg, rgba(2, 6, 23, 0.9) 0%, rgba(15, 23, 42, 0.7) 100%);
 }
 
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
   border-color: #10b981;
-  background-color: rgba(2, 6, 23, 0.95);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-  transform: translateY(-1px);
+  background: rgba(2, 6, 23, 0.95);
+  box-shadow: 
+    0 0 0 4px rgba(16, 185, 129, 0.15),
+    0 8px 16px -4px rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
 }
 
 .submit-btn {
@@ -190,8 +227,8 @@
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  padding: 18px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 16px;
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
@@ -199,70 +236,108 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+  letter-spacing: 1.5px;
+  box-shadow: 
+    0 12px 24px -8px rgba(16, 185, 129, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
 }
 
 .submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.5);
-  filter: brightness(1.1);
+  transform: translateY(-3px);
+  box-shadow: 
+    0 20px 35px -8px rgba(16, 185, 129, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  filter: brightness(1.15);
+}
+
+.submit-btn:active {
+  transform: translateY(-1px);
 }
 
 .submit-btn:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  filter: grayscale(0.5);
+  filter: grayscale(0.3);
 }
 
 .success-view {
-  padding: 80px 40px;
+  padding: 100px 40px;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: 
+    radial-gradient(circle at 50% 30%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
 }
 
 .success-icon {
-  width: 90px;
-  height: 90px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border: 2px solid rgba(16, 185, 129, 0.4);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 32px;
+  margin: 0 auto 36px;
   color: #10b981;
-  box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-  animation: pulseSuccess 2s infinite;
+  box-shadow: 
+    0 0 40px rgba(16, 185, 129, 0.3),
+    inset 0 0 20px rgba(16, 185, 129, 0.1);
+  animation: pulseSuccess 2.5s ease-in-out infinite;
 }
 
 @keyframes pulseSuccess {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-  70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  0%, 100% { 
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.3), inset 0 0 20px rgba(16, 185, 129, 0.1);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 60px rgba(16, 185, 129, 0.5), inset 0 0 30px rgba(16, 185, 129, 0.2);
+    transform: scale(1.05);
+  }
 }
 
 .back-link {
   display: inline-block;
-  margin-top: 40px;
-  color: #64748b;
+  margin-top: 48px;
+  color: #94a3b8;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  transition: all 0.2s;
-  padding: 10px 20px;
-  border-radius: 8px;
+  transition: all 0.3s;
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .back-link:hover {
   color: #ffffff;
-  background: rgba(255,255,255,0.05);
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  transform: translateY(-2px);
 }
 
 @keyframes spin {
@@ -270,85 +345,103 @@
 }
 
 .spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   border-top-color: #ffffff;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .feedback-container {
-    padding: 1rem;
-    align-items: flex-start; /* Align top on mobile so content isn't cut off */
+    padding: 1.5rem 1rem;
+    align-items: flex-start;
     padding-top: 2rem;
   }
   
   .feedback-card {
     max-width: 100%;
-    margin-bottom: 2rem; /* Add space at bottom */
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); /* Simpler shadow for mobile perf */
+    border-radius: 28px;
   }
 
   .feedback-title {
-    font-size: 28px;
+    font-size: 32px;
   }
   
   .feedback-subtitle {
-    font-size: 14px;
+    font-size: 15px;
+  }
+
+  .feedback-header {
+    padding: 36px 28px 32px;
+  }
+
+  .feedback-form {
+    padding: 36px 28px;
   }
 }
 
 @media (max-width: 640px) {
   .feedback-container {
-    padding: 0.75rem;
+    padding: 1rem 0.75rem;
   }
   
   .feedback-card {
-    border-radius: 20px;
+    border-radius: 24px;
   }
   
   .feedback-header {
-    padding: 30px 20px;
+    padding: 32px 24px 28px;
   }
   
   .feedback-form {
-    padding: 24px 20px;
+    padding: 32px 24px;
   }
   
   .feedback-title {
-    font-size: 24px;
-    letter-spacing: -1px;
+    font-size: 28px;
+    letter-spacing: -1.5px;
   }
 
   .form-input,
   .form-textarea {
-    padding: 14px;
+    padding: 16px 18px;
     font-size: 15px;
+    border-radius: 14px;
   }
 
   .submit-btn {
-    padding: 16px;
+    padding: 18px;
     font-size: 15px;
+    border-radius: 14px;
+  }
+
+  .success-view {
+    padding: 60px 24px;
   }
 }
 
 @media (max-width: 380px) {
   .feedback-header {
-    padding: 24px 16px;
+    padding: 28px 20px 24px;
   }
   
   .feedback-form {
-    padding: 20px 16px;
+    padding: 28px 20px;
   }
   
   .feedback-title {
-    font-size: 22px;
+    font-size: 24px;
   }
   
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+  }
+
+  .feedback-badge {
+    font-size: 10px;
+    padding: 6px 16px;
   }
 }
