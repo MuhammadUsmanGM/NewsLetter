@@ -201,7 +201,17 @@ async function sendNewsletter() {
                       <td style="padding: 48px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
                         <p style="margin: 0; color: #475569; font-size: 14px;">Forged for the technical elite.</p>
                         <div style="margin-top: 24px;">
-                          <a href="${unsubscribeUrl}" style="color: #64748b; text-decoration: underline; font-size: 12px;">Protocol Deactivation</a>
+                          <table align="center" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="padding: 0 10px;">
+                                <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" style="color: #10b981; text-decoration: none; font-size: 12px; font-weight: 700;">Transmit Feedback</a>
+                              </td>
+                              <td style="padding: 0 10px; color: #334155;">|</td>
+                              <td style="padding: 0 10px;">
+                                <a href="${unsubscribeUrl}" style="color: #64748b; text-decoration: underline; font-size: 12px;">Protocol Deactivation</a>
+                              </td>
+                            </tr>
+                          </table>
                         </div>
                       </td>
                     </tr>

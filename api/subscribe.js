@@ -334,6 +334,9 @@ export default async function handler(req, res) {
                         <td style="padding: 0 15px;">
                           <a href="https://linkedin.com/in/muhammad-usman-ai-dev" class="social-link">LINKEDIN</a>
                         </td>
+                        <td style="padding: 0 15px;">
+                          <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}" class="social-link" style="color: #10b981 !important;">FEEDBACK</a>
+                        </td>
                       </tr>
                     </table>
                   </div>

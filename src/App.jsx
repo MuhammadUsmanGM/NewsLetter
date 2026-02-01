@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Welcome from './components/Welcome'
 import Dashboard from './components/Dashboard'
+import Feedback from './components/Feedback'
 import logo from './assets/Favicon.png'
 import './App.css'
 
@@ -24,7 +25,7 @@ function App() {
   const [successTransition, setSuccessTransition] = useState(false);
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [unsubscribed, setUnsubscribed] = useState(false);
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard', 'feedback'
   const [userName, setUserName] = useState('Commander');
 
   useEffect(() => {
@@ -60,6 +61,9 @@ function App() {
       if (nameParam) setUserName(nameParam);
       setCurrentView('dashboard');
       setShowWelcome(false); // Skip welcome screen for direct dashboard access
+    } else if (viewParam === 'feedback') {
+      setCurrentView('feedback');
+      setShowWelcome(false);
     }
 
     if (isUnsubscribeAction && unsubscribeEmail) {
@@ -249,6 +253,10 @@ function App() {
 
   if (currentView === 'dashboard') {
     return <Dashboard name={userName} />;
+  }
+
+  if (currentView === 'feedback') {
+    return <Feedback />;
   }
 
   return (
