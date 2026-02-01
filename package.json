@@ -16,6 +16,8 @@
     "@supabase/supabase-js": "^2.75.1",
     "axios": "^1.13.3",
     "dotenv": "^17.2.3",
+    "framer-motion": "^12.29.2",
+    "lucide-react": "^0.563.0",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.12",
     "react": "^19.1.1",
