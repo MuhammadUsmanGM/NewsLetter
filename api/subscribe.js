@@ -276,9 +276,9 @@ export default async function handler(req, res) {
                 <!-- Header -->
                 <div class="header">
                   <div class="header-overlay"></div>
-                  <img src="${process.env.APP_URL}/Favicon.png" alt="AI Intelligence Briefing" class="brand-logo">
+                  <img src="${process.env.APP_URL}/Favicon.png" alt="THE SIGNAL Logo" class="brand-logo">
                   <div class="badge">Connection Established</div>
-                  <h1 class="main-title">Intelligence <span>BRIEFING.</span></h1>
+                  <h1 class="main-title">THE <span>SIGNAL.</span></h1>
                 </div>
 
                 <!-- Body -->
@@ -289,43 +289,43 @@ export default async function handler(req, res) {
                   <div class="access-key-card">
                     <div class="card-header">Membership Access Key</div>
                     <div class="key-value">USR-${Math.random().toString(36).substring(2, 10).toUpperCase()}</div>
-                    <div class="key-meta">Priority Level: Founding Member • 9:00 AM Sync</div>
+                    <div class="key-meta">Priority Level: Founding Member • Monday 9:00 AM Sync</div>
                   </div>
 
                   <div class="feature-list">
                     <div class="feature-item">
-                      <div class="feature-icon">🛡️</div>
+                      <div class="feature-icon">📰</div>
                       <div class="feature-text">
-                        <strong>Neural Post-Processing</strong>
-                        <span>Advanced synthesis of technical research papers into actionable insights.</span>
+                        <strong>3 Major Stories</strong>
+                        <span>The critical breakthroughs you can't afford to miss, synthesized for depth.</span>
                       </div>
                     </div>
                     <div class="feature-item">
-                      <div class="feature-icon">⚡</div>
+                      <div class="feature-icon">🛠️</div>
                       <div class="feature-text">
-                        <strong>Deployment Intelligence</strong>
-                        <span>Zero-day analysis of the latest LLM releases and deployment patterns.</span>
+                        <strong>2 Tools to Try</strong>
+                        <span>Hand-picked AI agents, frameworks, or tools to optimize your workflow.</span>
                       </div>
                     </div>
                     <div class="feature-item">
-                      <div class="feature-icon">🔍</div>
+                      <div class="feature-icon">💡</div>
                       <div class="feature-text">
-                        <strong>Signal Extraction</strong>
-                        <span>Filtering out the noise to focus on high-impact technological shifts.</span>
+                        <strong>1 Actionable Insight</strong>
+                        <span>A powerful prompt or strategic insight you can implement immediately.</span>
                       </div>
                     </div>
                   </div>
 
-                  <p class="intro-p" style="margin-bottom: 20px;">Your first intelligence drop arrives at 9:00 AM sharp in your local timezone.</p>
+                  <p class="intro-p" style="margin-bottom: 20px;">Your first intelligence drop arrives this <strong>Monday at 9:00 AM sharp</strong> in your local timezone.</p>
                   
                   <div class="cta-wrap">
-                    <a href="${process.env.APP_URL}/?view=dashboard" class="action-btn">Enter Neural Dashboard</a>
+                    <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(name)}" class="action-btn">Enter Neural Dashboard</a>
                   </div>
                 </div>
 
                 <!-- Footer -->
                 <div class="footer-section">
-                  <p class="footer-text">&copy; ${new Date().getFullYear()} AI Intelligence Briefing.<br>Forged for the technical elite and technical founders.</p>
+                  <p class="footer-text">&copy; ${new Date().getFullYear()} THE SIGNAL.<br>Forged for the technical elite and technical founders.</p>
                   <div class="social-grid">
                     <a href="https://github.com/MuhammadUsmanGM">GITHUB</a>
                     <a href="https://linkedin.com/in/muhammad-usman-ai-dev">LINKEDIN</a>
@@ -345,11 +345,11 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: email,
-      subject: 'Welcome to NewsLetter AI: Your Welcome Gift Inside 🎁',
+      subject: 'THE SIGNAL: Your Intelligence Protocol has been Activated 📡',
       html: welcomeHtml,
     });
 
-    return res.status(200).json({ success: true, message: 'Subscribed and welcome email sent.' });
+    return res.status(200).json({ success: true, message: 'Subscribed to THE SIGNAL. Your protocol has been initiated.' });
   } catch (error) {
     console.error('Subscription error:', error);
     return res.status(500).json({ error: 'Failed to subscribe. Please try again later.' });
