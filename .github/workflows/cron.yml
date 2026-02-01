@@ -1,8 +1,8 @@
-name: Hourly Newsletter Trigger
+name: Weekly 3-2-1 Intelligence Trigger
 
 on:
   schedule:
-    - cron: '5 * * * *' # Every hour at minute 5
+    - cron: '5 * * * 1' # Every hour at minute 5, ONLY on Mondays
   workflow_dispatch: # Allows manual triggering
 
 jobs:
