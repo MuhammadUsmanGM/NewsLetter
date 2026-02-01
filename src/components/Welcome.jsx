@@ -26,7 +26,7 @@ const Welcome = ({ onWelcomeComplete }) => {
           <img src={logo} alt="Company Logo" className="welcome-logo" />
         </div>
         <div className="welcome-text">
-          AI NEWSLETTER
+          THE SIGNAL
         </div>
         <div className="loading-container">
           <div className="loading-bar"></div>

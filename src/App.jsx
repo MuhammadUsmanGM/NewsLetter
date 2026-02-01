@@ -25,6 +25,7 @@ function App() {
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [unsubscribed, setUnsubscribed] = useState(false);
   const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard'
+  const [userName, setUserName] = useState('Commander');
 
   useEffect(() => {
     // Get user timezone and update form data
@@ -55,6 +56,8 @@ function App() {
     const viewParam = params.get('view');
 
     if (viewParam === 'dashboard') {
+      const nameParam = params.get('name');
+      if (nameParam) setUserName(nameParam);
       setCurrentView('dashboard');
       setShowWelcome(false); // Skip welcome screen for direct dashboard access
     }
@@ -226,6 +229,16 @@ function App() {
     }
   };
 
+  const handleJoinAgain = () => {
+    setUnsubscribed(false);
+    setApiError('');
+    setFormData({
+      name: '',
+      email: '',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    });
+  };
+
   const handleWelcomeComplete = () => {
     setShowWelcome(false);
   };
@@ -235,7 +248,7 @@ function App() {
   }
 
   if (currentView === 'dashboard') {
-    return <Dashboard />;
+    return <Dashboard name={userName} />;
   }
 
   return (
@@ -246,8 +259,8 @@ function App() {
             <div className="brand-logo-container">
               <img src={logo} alt="AI Logo" className="brand-logo" />
             </div>
-            <h1>Stay Ahead of the Curve</h1>
-            <p>Join thousands of AI professionals getting daily breakthroughs, deep-dives, and technical insights.</p>
+            <h1>Tune Into The Signal</h1>
+            <p>Join thousands of AI professionals getting weekly 3-2-1 breakthroughs, deep-dives, and technical insights.</p>
             <div className="social-links-container">
               <div className="social-link">
                 <a href="https://github.com/MuhammadUsmanGM" target="_blank" rel="noopener noreferrer" aria-label="Visit my GitHub profile">
@@ -271,20 +284,36 @@ function App() {
 
         <div className="form-side">
           {unsubscribed ? (
-            <div className="success-state">
+            <div className="success-state fade-in">
               <div className="success-icon-container">
-                <div className="success-circle" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}></div>
+                <div className="success-circle" style={{ backgroundColor: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.1)' }}></div>
                 <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                  <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" style={{ stroke: '#ef4444' }}/>
-                  <path className="checkmark-check" fill="none" d="M16 16L36 36M36 16L16 36" style={{ stroke: '#ef4444' }}/>
+                  <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" style={{ stroke: '#ef4444', opacity: 0.5 }}/>
+                  <path className="checkmark-check" fill="none" d="M16 16L36 36M36 16L16 36" style={{ stroke: '#ef4444', strokeWidth: 3 }}/>
                 </svg>
               </div>
-              <div className="success-content fade-in">
-                <div className="success-badge" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>Unsubscribed</div>
-                <h2>We're sorry to see you go</h2>
-                <p>You have been successfully removed from our list.</p>
-                <div className="success-footer">
-                  You can always join us again later!
+              <div className="success-content">
+                <div className="success-badge" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }}>Mission Suspended</div>
+                <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Protocol Deactivated</h2>
+                <p style={{ marginBottom: '2rem', opacity: 0.8 }}>You've been successfully removed from the 3-2-1 Intelligence Protocol. We'll miss your presence in the inner circle.</p>
+                
+                <button 
+                  onClick={handleJoinAgain}
+                  className="submit-button"
+                  style={{ 
+                    background: 'transparent', 
+                    border: '1px solid var(--primary)', 
+                    color: '#fff',
+                    marginTop: '1rem',
+                    width: 'auto',
+                    padding: '1rem 2rem'
+                  }}
+                >
+                  Join Back Anytime
+                </button>
+                
+                <div className="success-footer" style={{ marginTop: '2.5rem' }}>
+                  Signal lost. Connection closed.
                 </div>
               </div>
             </div>
@@ -315,7 +344,7 @@ function App() {
             <form onSubmit={handleSubmit} className="newsletter-form" noValidate>
               <div className="form-header">
                 <h2>Join our list</h2>
-                <p>Start your daily AI mastery journey.</p>
+                <p>Start your weekly 3-2-1 intelligence protocol.</p>
               </div>
               {apiError && (
                 <div 
@@ -369,7 +398,7 @@ function App() {
                 <span className="btn-content">
                   Subscribing...
                 </span>
-              ) : 'Join Newsletter'}
+              ) : 'Access The Signal'}
             </button>
             </form>
           )}
