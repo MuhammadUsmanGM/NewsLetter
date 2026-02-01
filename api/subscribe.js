@@ -241,17 +241,15 @@ export default async function handler(req, res) {
           }
 
           .social-grid {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
             margin-top: 28px;
           }
 
-          .social-grid a {
-            color: #94a3b8;
+          .social-link {
+            color: #94a3b8 !important;
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
+            letter-spacing: 1px;
           }
 
           .unsub {
@@ -326,12 +324,30 @@ export default async function handler(req, res) {
                 <!-- Footer -->
                 <div class="footer-section">
                   <p class="footer-text">&copy; ${new Date().getFullYear()} THE SIGNAL.<br>Forged for the technical elite and technical founders.</p>
+                  <!-- Social Links -->
                   <div class="social-grid">
-                    <a href="https://github.com/MuhammadUsmanGM">GITHUB</a>
-                    <a href="https://linkedin.com/in/muhammad-usman-ai-dev">LINKEDIN</a>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding: 0 15px;">
+                          <a href="https://github.com/MuhammadUsmanGM" class="social-link">GITHUB</a>
+                        </td>
+                        <td style="padding: 0 15px;">
+                          <a href="https://linkedin.com/in/muhammad-usman-ai-dev" class="social-link">LINKEDIN</a>
+                        </td>
+                      </tr>
+                    </table>
                   </div>
+
+                  <!-- Unsubscribe -->
                   <div class="unsub">
-                    If you did not initiate this protocol, <a href="${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color: #475569;">deactivate here</a>.
+                    <p style="margin: 0 0 16px 0;">If you did not subscribe to this protocol, you can deactivate below:</p>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="border: 1px solid #334155; border-radius: 6px; padding: 8px 16px;">
+                          <a href="${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color: #475569; text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: 1px;">UNSUBSCRIBE</a>
+                        </td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
