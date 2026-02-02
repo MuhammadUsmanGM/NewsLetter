@@ -18,11 +18,12 @@
 
 ## ✨ Cutting-Edge Features
 
-- 🧠 **AI-Powered Curation** – Leverages `gemini-2.5-flash-lite` to generate deep-dive technical insights.
+- 🧠 **AI-Powered Curation** – Leverages `gemini-2.0-flash-exp` to generate deep-dive technical insights.
 - 📡 **Real-time Global News** – Powered by NewsAPI to fetch the most discussed breakthroughs from tech giants like OpenAI, Nvidia, and Anthropic.
-- ⏰ **Dynamic Timezone Delivery** – Intelligent hourly scheduling ensures users receive their update at exactly 9:00 AM local time, anywhere in the world.
-- 🎨 **Premium Aesthetic** – Stunning glass-morphism landing page and modern, card-based email design.
-- 🛠️ **Serverless Architecture** – Fully automated via Vercel Cron Jobs and Supabase.
+- ⏰ **Dynamic Timezone Delivery** – Intelligent scheduling ensures users receive their update at exactly 9:00 AM local time, anywhere in the world.
+- 🎨 **Premium Aesthetic** – Stunning glassmorphism landing page, feedback form, and modern, card-based email design.
+- 🛠️ **Serverless Architecture** – Fully automated via GitHub Actions + Vercel Cron Jobs and Supabase.
+- 📬 **Feedback Channel** – Premium feedback form for users to submit suggestions and bug reports.
 - 🔗 **One-Click Unsubscribe** – Smooth, frictionless user data management.
 
 ---
@@ -32,12 +33,15 @@
 ```mermaid
 graph TD
     A[React Landing Page] -->|Subscribe| B(Supabase DB)
-    C[Vercel Cron /1h] -->|Trigger| D{api/cron.js}
+    C[GitHub Actions - Every 3h on Monday] -->|Trigger| D{api/cron.js}
     D -->|Fetch News| E[NewsAPI]
     D -->|Generate Insights| F[Google Gemini AI]
     D -->|Check Timezones| B
     D -->|Send Mail| G[SMTP / Nodemailer]
     G -->|Premium Email| H[User Inbox]
+    I[Feedback Form] -->|Submit| J{api/feedback.js}
+    J -->|Email Admin| G
+    J -->|Store| B
 ```
 
 ---
@@ -46,41 +50,17 @@ graph TD
 
 | Layer | Technology | Role |
 | :--- | :--- | :--- |
-| **Frontend** | React + Vite | Stunning subscription UI |
+| **Frontend** | React + Vite | Stunning subscription UI & feedback form |
 | **Database** | Supabase | Secure user & timezone storage |
 | **Logic** | Node.js (Vercel) | Automated cron & processing |
 | **Intelligence** | Google Gemini | Content synthesis & insights |
 | **Insights** | NewsAPI | Real-time global technical data |
 | **Delivery** | Nodemailer | Premium template distribution |
+| **Automation** | GitHub Actions | Weekly cron trigger (optimized) |
 
 ---
 
-## 🚀 Deployment & Configuration
-
-### 1. Environment Variables
-To power the system, configure these in your `.env` or Vercel Dashboard:
-
-```env
-# Supabase
-VITE_SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
-
-# Intelligence
-GEMINI_API_KEY=...
-NEWS_API_KEY=...
-
-# Email (SMTP)
-SMTP_USER=...
-SMTP_PASS=...
-SMTP_FROM=AI Insights <your-email@gmail.com>
-```
-
-### 2. Vercel Cron Setup
-The system is pre-configured with `vercel.json` to handle hourly tasks. Just deploy your repository to Vercel, and the automation will activate instantly.
-
----
-
-## 📧 Premium Newsletter Sample
+##  Premium Newsletter Sample
 ![Sample Newsletter](src/assets/OutPut.png)
 *A high-end briefing designed to keep you ahead of the curve.*
 
