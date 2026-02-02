@@ -151,7 +151,7 @@ async function sendNewsletter() {
       const isMonday = userDay === 'Monday';
       const is9AMOrLater = userHour >= 9;
       const alreadySent = subscriber.last_sent_date === userFullDate;
-      const forceSend = process.argv.includes('--force');
+      const forceSend = process.argv && Array.isArray(process.argv) ? process.argv.includes('--force') : false;
 
       console.log(`[TARGET] ${subscriber.email} | Day: ${userDay} | Hour: ${userHour} | Sent: ${alreadySent}`);
 
@@ -243,16 +243,14 @@ async function sendNewsletter() {
   }
 }
 
+// Export for use in API handler
 export { sendNewsletter };
 
+// Only run if called directly (CLI mode), not when imported
 if (import.meta.url === `file://${process.argv[1]}`) {
-  sendNewsletter();
-}
-
-// Export for use in scheduler
-export { sendNewsletter };
-
-// If run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  sendNewsletter();
+  console.log('Running newsletter script directly...');
+  sendNewsletter().catch(err => {
+    console.error('Direct execution failed:', err);
+    process.exit(1);
+  });
 }
