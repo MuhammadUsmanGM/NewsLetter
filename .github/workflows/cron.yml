@@ -2,7 +2,10 @@ name: Weekly 3-2-1 Intelligence Trigger
 
 on:
   schedule:
-    - cron: '5 * * * 1' # Every hour at minute 5, ONLY on Mondays
+    # Run every 3 hours on Monday (8 times per day instead of 24)
+    # This covers all global timezones efficiently while reducing GitHub Action usage
+    # Times: 00:00, 03:00, 06:00, 09:00, 12:00, 15:00, 18:00, 21:00 UTC
+    - cron: '0 */3 * * 1'
   workflow_dispatch: # Allows manual triggering
 
 jobs:
