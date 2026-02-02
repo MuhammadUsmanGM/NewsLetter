@@ -1,4 +1,4 @@
-import 'dotenv/config';
+// Note: dotenv is not needed in Vercel - env vars are automatically available
 import axios from 'axios';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
