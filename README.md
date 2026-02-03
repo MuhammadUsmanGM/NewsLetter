@@ -18,7 +18,7 @@
 
 ## ✨ Cutting-Edge Features
 
-- 🧠 **AI-Powered Curation** – Leverages `gemini-2.0-flash-exp` to generate deep-dive technical insights.
+- 🧠 **AI-Powered Curation** – Leverages `gemini-2.5-flash-lite.5-flas-lite` to generate deep-dive technical insights.
 - 📡 **Real-time Global News** – Powered by NewsAPI to fetch the most discussed breakthroughs from tech giants like OpenAI, Nvidia, and Anthropic.
 - ⏰ **Dynamic Timezone Delivery** – Intelligent scheduling ensures users receive their update at exactly 9:00 AM local time, anywhere in the world.
 - 🎨 **Premium Aesthetic** – Stunning glassmorphism landing page, feedback form, and modern, card-based email design.
