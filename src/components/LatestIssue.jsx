@@ -1,7 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import './Feedback.css'; // Reuse premium styles
+import logo from '../assets/Favicon.png';
+import './Feedback.css'; // Reuse premium styles for content
+import './Welcome.css';  // Reuse loading styles
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -18,12 +20,16 @@ const LatestIssue = () => {
 
   const fetchLatestIssue = async () => {
     try {
-      // Fetch the most recent entry from the archive
-      const { data, error } = await supabase
+      // Simulate at least 1.5s loading time for the animation to be felt
+      const minLoadTime = new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const fetchPromise = supabase
         .from('newsletter_archive')
         .select('*')
         .order('id', { ascending: false })
         .limit(1);
+        
+      const [_, { data, error }] = await Promise.all([minLoadTime, fetchPromise]);
 
       if (error) throw error;
 
@@ -39,8 +45,21 @@ const LatestIssue = () => {
 
   if (loading) {
     return (
-      <div className="feedback-container">
-        <div className="spinner"></div>
+      <div className="welcome-screen">
+        <div className="welcome-content">
+          <div className="welcome-logo-container">
+            <img src={logo} alt="Company Logo" className="welcome-logo" />
+          </div>
+          <div className="welcome-text">
+            THE SIGNAL
+          </div>
+          <div className="loading-container">
+            <div className="loading-bar"></div>
+          </div>
+          <div className="welcome-subtitle">
+            Decrypting Latest Protocol
+          </div>
+        </div>
       </div>
     );
   }
