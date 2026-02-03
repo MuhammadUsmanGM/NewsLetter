@@ -57,7 +57,7 @@ async function fetchAIIntelligence() {
 }
 
 async function generateWeeklyIntelligence(articles) {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite.5-flas-lite" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
   const articlesContext = articles.map(a => `
     Title: ${a.title}
