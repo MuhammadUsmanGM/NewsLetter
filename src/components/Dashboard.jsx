@@ -100,6 +100,18 @@ const Dashboard = ({ name }) => {
             </div>
           </motion.div>
 
+          {/* Access Latest Briefing */}
+          <motion.div className="glass-card" variants={itemVariants} style={{ marginBottom: '24px', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+            <div>
+              <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '4px' }}>Latest Signal Archive</h3>
+              <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Access this week's 3-2-1 intelligence briefing immediately.</p>
+            </div>
+            <a href="/?view=latest" className="sync-btn" style={{ width: 'auto', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+              <Zap size={16} style={{ marginRight: '8px' }} />
+              Read Protocol
+            </a>
+          </motion.div>
+
           {/* Optimized 3-2-1 Countdown */}
           <motion.div className="glass-card countdown-section" variants={itemVariants}>
             <div className="countdown-title">Next 3-2-1 Intelligence Release</div>

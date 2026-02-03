@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import Welcome from './components/Welcome'
 import Dashboard from './components/Dashboard'
 import Feedback from './components/Feedback'
+import LatestIssue from './components/LatestIssue'
 import logo from './assets/Favicon.png'
 import './App.css'
 
@@ -25,7 +26,7 @@ function App() {
   const [successTransition, setSuccessTransition] = useState(false);
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [unsubscribed, setUnsubscribed] = useState(false);
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard', 'feedback'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard', 'feedback', 'latest'
   const [userName, setUserName] = useState('Commander');
 
   useEffect(() => {
@@ -63,6 +64,9 @@ function App() {
       setShowWelcome(false); // Skip welcome screen for direct dashboard access
     } else if (viewParam === 'feedback') {
       setCurrentView('feedback');
+      setShowWelcome(false);
+    } else if (viewParam === 'latest') {
+      setCurrentView('latest');
       setShowWelcome(false);
     }
 
@@ -257,6 +261,10 @@ function App() {
 
   if (currentView === 'feedback') {
     return <Feedback />;
+  }
+
+  if (currentView === 'latest') {
+    return <LatestIssue />;
   }
 
   return (
