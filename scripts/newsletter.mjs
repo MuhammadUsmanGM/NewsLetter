@@ -159,6 +159,27 @@ async function sendNewsletter() {
         if (!sharedEmailBody) {
           console.log('--- GENERATING NEURAL BRIEFING (3-2-1 STRUCTURE) ---');
           sharedEmailBody = await generateWeeklyIntelligence(articles);
+          
+          // ARCHIVE THE ISSUE: Save to Supabase for the web view
+          try {
+            console.log('--- ARCHIVING SIGNAL FOR WEB VIEW ---');
+            const { error: archiveError } = await supabase
+              .from('newsletter_archive')
+              .insert([
+                { 
+                  week_date: dateStr, 
+                  content_html: sharedEmailBody 
+                }
+              ]);
+            
+            if (archiveError) {
+              console.error('Failed to archive newsletter:', archiveError);
+            } else {
+              console.log('Signal archived successfully for web view.');
+            }
+          } catch (archiveErr) {
+            console.error('Archive error:', archiveErr);
+          }
         }
 
         const unsubscribeUrl = `${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(subscriber.email)}`;
@@ -173,7 +194,14 @@ async function sendNewsletter() {
             </style>
           </head>
           <body style="margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', sans-serif; color: #94a3b8;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #020617; padding: 40px 0;">
+            <!-- View in Browser Link -->
+            <div style="text-align: center; padding: 10px; background-color: #020617;">
+              <a href="${process.env.APP_URL}/?view=latest" style="color: #475569; font-size: 11px; text-decoration: none; letter-spacing: 0.5px;">
+                View this signal in your neural interface
+              </a>
+            </div>
+            
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #020617; padding: 20px 0 40px 0;">
               <tr>
                 <td align="center">
                   <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #0f172a; border-radius: 32px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
