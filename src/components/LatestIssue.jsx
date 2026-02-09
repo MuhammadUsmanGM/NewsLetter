@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import logo from '../assets/Favicon.png';
 import './Feedback.css'; // Reuse premium styles for content
 import './Welcome.css';  // Reuse loading styles
+import { Share2 } from 'lucide-react';
 import PromptPlayground from './PromptPlayground';
 import { AnimatePresence } from 'framer-motion';
 
@@ -16,6 +17,14 @@ const LatestIssue = ({ issueId = null }) => {
   const [loading, setLoading] = useState(true);
   const [showPlayground, setShowPlayground] = useState(false);
   const [currentPrompt, setCurrentPrompt] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = () => {
+    const url = `${window.location.origin}/api/share?id=${issue?.id || ''}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     fetchIssue();
@@ -113,10 +122,33 @@ const LatestIssue = ({ issueId = null }) => {
     <div className="feedback-container">
       <div className="feedback-card" style={{ maxWidth: '800px', width: '100%' }}>
         {/* Header */}
-        <div className="feedback-header">
-          <div className="feedback-badge">{issueId ? `Protocol Record #${issueId}` : 'Latest Protocol Release'}</div>
-          <h1 className="feedback-title">THE SIGNAL.</h1>
-          <p className="feedback-subtitle">{issue.week_date}</p>
+        <div className="feedback-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <div className="feedback-badge">{issueId ? `Protocol Record #${issueId}` : 'Latest Protocol Release'}</div>
+            <h1 className="feedback-title">THE SIGNAL.</h1>
+            <p className="feedback-subtitle">{issue.week_date}</p>
+          </div>
+          <button 
+            onClick={handleShare}
+            className="secondary-btn"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '8px 16px',
+              background: copied ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+              border: `1px solid ${copied ? '#10b981' : 'rgba(255, 255, 255, 0.1)'}`,
+              color: copied ? '#10b981' : '#94a3b8',
+              borderRadius: '10px',
+              fontSize: '0.8rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <Share2 size={14} />
+            {copied ? 'Copied!' : 'Share Signal'}
+          </button>
         </div>
 
         {/* Content Body */}
