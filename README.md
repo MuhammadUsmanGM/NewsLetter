@@ -24,6 +24,7 @@
 - 🌐 **Web Archive Protocol** – Users can access the latest intelligence briefing directly in the browser.
 - 🏛️ **The Protocol Vault** – A full historical archive of all past signals and breakthroughs.
 - 📡 **Live Signal Ticker** – Real-time AI news feed scrolling at the bottom of the interface.
+- 🧪 **Neural Playground** – Interactive terminal sandbox to test and execute weekly AI prompts immediately.
 - 🎨 **Premium Aesthetic** – Stunning glassmorphism landing page, feedback form, and modern, card-based email design.
 - 🛠️ **Serverless Architecture** – Fully automated via GitHub Actions + Vercel Cron Jobs and Supabase.
 - 📬 **Feedback Channel** – Premium feedback form for users to submit suggestions and bug reports.

@@ -1,9 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import logo from '../assets/Favicon.png';
 import './Feedback.css'; // Reuse premium styles for content
 import './Welcome.css';  // Reuse loading styles
+import PromptPlayground from './PromptPlayground';
+import { AnimatePresence } from 'framer-motion';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -13,15 +14,36 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const LatestIssue = ({ issueId = null }) => {
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showPlayground, setShowPlayground] = useState(false);
+  const [currentPrompt, setCurrentPrompt] = useState('');
 
   useEffect(() => {
     fetchIssue();
   }, [issueId]);
 
+  useEffect(() => {
+    // Detect prompt in content and extract it for the playground
+    if (issue && issue.content_html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(issue.content_html, 'text/html');
+      
+      // Look for the specific pattern we defined in newsletter.mjs
+      const insightHeader = Array.from(doc.querySelectorAll('h3')).find(h => 
+        h.textContent.includes("This Week's Actionable Insight")
+      );
+
+      if (insightHeader && insightHeader.parentElement) {
+        const promptText = insightHeader.parentElement.querySelector('p')?.textContent;
+        if (promptText) {
+          setCurrentPrompt(promptText);
+        }
+      }
+    }
+  }, [issue]);
+
   const fetchIssue = async () => {
     try {
       setLoading(true);
-      // Simulate at least 1.5s loading time for the animation to be felt
       const minLoadTime = new Promise(resolve => setTimeout(resolve, 1500));
       
       let query = supabase.from('newsletter_archive').select('*');
@@ -33,11 +55,10 @@ const LatestIssue = ({ issueId = null }) => {
       }
         
       const [_, result] = await Promise.all([minLoadTime, query]);
-
       const data = result.data;
       const error = result.error;
 
-      if (error && !issueId) throw error; // Optional error handling for single fetch
+      if (error && !issueId) throw error;
 
       if (issueId) {
         setIssue(data);
@@ -49,6 +70,10 @@ const LatestIssue = ({ issueId = null }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const openPlayground = () => {
+    setShowPlayground(true);
   };
 
   if (loading) {
@@ -101,6 +126,39 @@ const LatestIssue = ({ issueId = null }) => {
             dangerouslySetInnerHTML={{ __html: issue.content_html }} 
             className="newsletter-content"
           />
+
+          {/* Actionable Prompt Playground Access */}
+          {currentPrompt && (
+            <div style={{ 
+              marginTop: '40px',
+              marginBottom: '30px', 
+              padding: '20px', 
+              background: 'rgba(16, 185, 129, 0.08)', 
+              border: '1px solid rgba(16, 185, 129, 0.2)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '20px',
+              boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)'
+            }}>
+              <div>
+                <div style={{ color: '#10b981', fontWeight: '800', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
+                  Interactive Insight Pipeline
+                </div>
+                <div style={{ color: '#ffffff', fontSize: '0.95rem', fontWeight: '600' }}>
+                  Execute this week's neural protocol in the side-sandbox.
+                </div>
+              </div>
+              <button 
+                onClick={openPlayground}
+                className="submit-btn" 
+                style={{ width: 'auto', padding: '10px 20px', fontSize: '0.9rem' }}
+              >
+                Open Terminal
+              </button>
+            </div>
+          )}
           
           <div style={{ marginTop: '60px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '40px' }}>
             <p style={{ marginBottom: '20px' }}>{issueId ? 'Interested in future signals?' : 'Want this delivered to your inbox?'}</p>
@@ -115,6 +173,15 @@ const LatestIssue = ({ issueId = null }) => {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showPlayground && (
+          <PromptPlayground 
+            initialPrompt={currentPrompt} 
+            onClose={() => setShowPlayground(false)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
