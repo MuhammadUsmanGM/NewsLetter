@@ -4,6 +4,7 @@ import Welcome from './components/Welcome'
 import Dashboard from './components/Dashboard'
 import Feedback from './components/Feedback'
 import LatestIssue from './components/LatestIssue'
+import ArchiveExplorer from './components/ArchiveExplorer'
 import logo from './assets/Favicon.png'
 import './App.css'
 
@@ -26,8 +27,9 @@ function App() {
   const [successTransition, setSuccessTransition] = useState(false);
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [unsubscribed, setUnsubscribed] = useState(false);
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard', 'feedback', 'latest'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard', 'feedback', 'latest', 'archive', 'issue'
   const [userName, setUserName] = useState('Commander');
+  const [selectedIssueId, setSelectedIssueId] = useState(null);
 
   useEffect(() => {
     // Get user timezone and update form data
@@ -67,6 +69,14 @@ function App() {
       setShowWelcome(false);
     } else if (viewParam === 'latest') {
       setCurrentView('latest');
+      setShowWelcome(false);
+    } else if (viewParam === 'archive') {
+      setCurrentView('archive');
+      setShowWelcome(false);
+    } else if (viewParam === 'issue') {
+      const id = params.get('id');
+      if (id) setSelectedIssueId(id);
+      setCurrentView('issue');
       setShowWelcome(false);
     }
 
@@ -267,6 +277,14 @@ function App() {
     return <LatestIssue />;
   }
 
+  if (currentView === 'archive') {
+    return <ArchiveExplorer />;
+  }
+
+  if (currentView === 'issue') {
+    return <LatestIssue issueId={selectedIssueId} />;
+  }
+
   return (
     <div className="newsletter-container">
       <div className="newsletter-card">
@@ -416,21 +434,21 @@ function App() {
                 </span>
               ) : 'Access The Signal'}
             </button>
-            <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+            <div style={{ marginTop: '1.5rem', display: 'flex', gap: '10px' }}>
               <button 
                 type="button"
                 onClick={() => window.location.href = '/?view=latest'}
                 className="secondary-btn"
                 style={{
+                  flex: 1,
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   color: '#94a3b8',
-                  padding: '12px 24px',
+                  padding: '12px 10px',
                   borderRadius: '12px',
-                  fontSize: '0.9rem',
+                  fontSize: '0.85rem',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  width: '100%',
                   transition: 'all 0.3s ease'
                 }}
                 onMouseOver={(e) => {
@@ -444,7 +462,36 @@ function App() {
                   e.currentTarget.style.color = '#94a3b8';
                 }}
               >
-                Check Latest Briefing
+                Latest Signal
+              </button>
+              <button 
+                type="button"
+                onClick={() => window.location.href = '/?view=archive'}
+                className="secondary-btn"
+                style={{
+                  flex: 1,
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: '#94a3b8',
+                  padding: '12px 10px',
+                  borderRadius: '12px',
+                  fontSize: '0.85rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                  e.currentTarget.style.color = '#10b981';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = '#94a3b8';
+                }}
+              >
+                The Vault (Archive)
               </button>
             </div>
             </form>

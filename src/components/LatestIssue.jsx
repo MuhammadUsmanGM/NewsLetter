@@ -10,34 +10,42 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const LatestIssue = () => {
+const LatestIssue = ({ issueId = null }) => {
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchLatestIssue();
-  }, []);
+    fetchIssue();
+  }, [issueId]);
 
-  const fetchLatestIssue = async () => {
+  const fetchIssue = async () => {
     try {
+      setLoading(true);
       // Simulate at least 1.5s loading time for the animation to be felt
       const minLoadTime = new Promise(resolve => setTimeout(resolve, 1500));
       
-      const fetchPromise = supabase
-        .from('newsletter_archive')
-        .select('*')
-        .order('id', { ascending: false })
-        .limit(1);
+      let query = supabase.from('newsletter_archive').select('*');
+      
+      if (issueId) {
+        query = query.eq('id', issueId).single();
+      } else {
+        query = query.order('id', { ascending: false }).limit(1);
+      }
         
-      const [_, { data, error }] = await Promise.all([minLoadTime, fetchPromise]);
+      const [_, result] = await Promise.all([minLoadTime, query]);
 
-      if (error) throw error;
+      const data = result.data;
+      const error = result.error;
 
-      if (data && data.length > 0) {
+      if (error && !issueId) throw error; // Optional error handling for single fetch
+
+      if (issueId) {
+        setIssue(data);
+      } else if (data && data.length > 0) {
         setIssue(data[0]);
       }
     } catch (err) {
-      console.error('Error fetching latest issue:', err);
+      console.error('Error fetching issue:', err);
     } finally {
       setLoading(false);
     }
@@ -57,7 +65,7 @@ const LatestIssue = () => {
             <div className="loading-bar"></div>
           </div>
           <div className="welcome-subtitle">
-            Decrypting Latest Protocol
+            {issueId ? 'Accessing Protocol Record...' : 'Decrypting Latest Protocol'}
           </div>
         </div>
       </div>
@@ -68,9 +76,9 @@ const LatestIssue = () => {
     return (
       <div className="feedback-container">
         <div className="feedback-card" style={{ textAlign: 'center', padding: '40px' }}>
-          <h2 className="feedback-title">No Intelligence Yet</h2>
-          <p className="feedback-subtitle">The protocol hasn't archived its first signal yet. Check back Monday.</p>
-          <a href="/" className="back-link">Return to Base</a>
+          <h2 className="feedback-title">Signal Not Found</h2>
+          <p className="feedback-subtitle">The requested intelligence record is missing or classified.</p>
+          <a href="/?view=archive" className="back-link">Return to Archive</a>
         </div>
       </div>
     );
@@ -81,7 +89,7 @@ const LatestIssue = () => {
       <div className="feedback-card" style={{ maxWidth: '800px', width: '100%' }}>
         {/* Header */}
         <div className="feedback-header">
-          <div className="feedback-badge">Latest Protocol Release</div>
+          <div className="feedback-badge">{issueId ? `Protocol Record #${issueId}` : 'Latest Protocol Release'}</div>
           <h1 className="feedback-title">THE SIGNAL.</h1>
           <p className="feedback-subtitle">{issue.week_date}</p>
         </div>
@@ -95,10 +103,15 @@ const LatestIssue = () => {
           />
           
           <div style={{ marginTop: '60px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '40px' }}>
-            <p style={{ marginBottom: '20px' }}>Want this delivered to your inbox?</p>
-            <a href="/" className="submit-btn" style={{ textDecoration: 'none', display: 'inline-flex', width: 'auto', padding: '12px 30px' }}>
-              Subscribe to Protocol
-            </a>
+            <p style={{ marginBottom: '20px' }}>{issueId ? 'Interested in future signals?' : 'Want this delivered to your inbox?'}</p>
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a href="/" className="submit-btn" style={{ textDecoration: 'none', display: 'inline-flex', width: 'auto', padding: '12px 30px' }}>
+                Subscribe to Protocol
+              </a>
+              <a href="/?view=archive" className="back-link" style={{ marginTop: 0 }}>
+                Protocol Archive
+              </a>
+            </div>
           </div>
         </div>
       </div>
