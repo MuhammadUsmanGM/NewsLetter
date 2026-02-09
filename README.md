@@ -25,6 +25,7 @@
 - 🏛️ **The Protocol Vault** – A full historical archive of all past signals and breakthroughs.
 - 📡 **Live Signal Ticker** – Real-time AI news feed scrolling at the bottom of the interface.
 - 🧪 **Neural Playground** – Interactive terminal sandbox to test and execute weekly AI prompts immediately.
+- 🎙️ **Neural Voice Relay** – Built-in browser-based text-to-speech engine to listen to briefings hands-free.
 - 🖼️ **Dynamic Social Previews** – AI-generated Open Graph images for every issue to drive professional engagement on X and LinkedIn.
 - 🎨 **Premium Aesthetic** – Stunning glassmorphism landing page, feedback form, and modern, card-based email design.
 - 🛠️ **Serverless Architecture** – Fully automated via GitHub Actions + Vercel Cron Jobs and Supabase.

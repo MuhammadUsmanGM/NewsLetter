@@ -5,6 +5,7 @@ import './Feedback.css'; // Reuse premium styles for content
 import './Welcome.css';  // Reuse loading styles
 import { Share2 } from 'lucide-react';
 import PromptPlayground from './PromptPlayground';
+import AudioSynthesis from './AudioSynthesis';
 import { AnimatePresence } from 'framer-motion';
 
 // Initialize Supabase client
@@ -153,6 +154,9 @@ const LatestIssue = ({ issueId = null }) => {
 
         {/* Content Body */}
         <div className="feedback-form" style={{ color: '#cbd5e1', lineHeight: '1.7' }}>
+          {/* Audio Protocol */}
+          <AudioSynthesis contentHtml={issue.content_html} />
+
           {/* We inject the saved HTML directly here */}
           <div 
             dangerouslySetInnerHTML={{ __html: issue.content_html }} 
