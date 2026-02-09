@@ -292,6 +292,34 @@
 .meta-lbl { color: var(--text-muted); }
 .meta-val { color: #fff; font-family: 'JetBrains Mono', monospace; }
 
+/* Mobile specific adjustments */
+@media (max-width: 480px) {
+  .hero-card {
+    padding: 1.5rem !important;
+  }
+  
+  .greeting-wrap h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+  }
+  
+  .timer-num {
+    font-size: 2.5rem;
+  }
+  
+  .timer-box {
+    min-width: 60px;
+  }
+}
+
 /* Grid Interaction */
 .main-column > .glass-card:hover {
   border-color: rgba(16, 185, 129, 0.3);

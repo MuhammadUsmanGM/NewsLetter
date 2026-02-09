@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/src/assets/Favicon.png" />
+    <link rel="icon" type="image/png" href="/Favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="THE SIGNAL" />
+    <link rel="apple-touch-icon" href="/Favicon.png" />
     <title>THE SIGNAL | Weekly 3-2-1 AI Intelligence Protocol</title>
     <meta name="description" content="Cutting through the noise. THE SIGNAL delivers 3 critical stories, 2 elite tools, and 1 actionable insight for technical founders and AI engineers every Monday." />
     <meta property="og:title" content="THE SIGNAL | Intelligence Protocol" />
@@ -12,5 +17,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </body>
 </html>

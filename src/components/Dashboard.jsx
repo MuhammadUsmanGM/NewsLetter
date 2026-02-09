@@ -10,7 +10,8 @@ import {
   Linkedin, 
   ExternalLink,
   Activity,
-  Award
+  Award,
+  Download
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import logo from '../assets/Favicon.png';
@@ -255,6 +256,9 @@ const Dashboard = ({ name, email }) => {
                 </a>
                 <a href="https://www.linkedin.com/in/muhammad-usman-ai-dev" target="_blank" rel="noopener noreferrer" className="sync-btn">
                   <Linkedin size={18} /> LinkedIn Terminal
+                </a>
+                <a href="/?view=install" className="sync-btn" style={{ background: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }}>
+                  <Download size={18} /> Deploy Mobile Protocol
                 </a>
               </div>
             </div>
