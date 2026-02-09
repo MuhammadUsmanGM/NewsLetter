@@ -416,6 +416,37 @@ function App() {
                 </span>
               ) : 'Access The Signal'}
             </button>
+            <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+              <button 
+                type="button"
+                onClick={() => window.location.href = '/?view=latest'}
+                className="secondary-btn"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: '#94a3b8',
+                  padding: '12px 24px',
+                  borderRadius: '12px',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  width: '100%',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.color = '#fff';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = '#94a3b8';
+                }}
+              >
+                Check Latest Briefing
+              </button>
+            </div>
             </form>
           )}
         </div>

@@ -222,6 +222,12 @@ async function sendNewsletter() {
                         <p style="margin-bottom: 40px;">Your weekly intelligence harvest has completed. Below is the curated signal extracted from this week's neural network shifts.</p>
                         
                         ${sharedEmailBody}
+
+                        <div style="margin-top: 50px; text-align: center;">
+                          <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 16px 32px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 16px;">
+                            Check on Web
+                          </a>
+                        </div>
                       </td>
                     </tr>
                     <!-- Footer -->
