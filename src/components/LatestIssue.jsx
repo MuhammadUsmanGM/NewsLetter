@@ -4,9 +4,7 @@ import logo from '../assets/Favicon.png';
 import './Feedback.css'; // Reuse premium styles for content
 import './Welcome.css';  // Reuse loading styles
 import { Share2 } from 'lucide-react';
-import PromptPlayground from './PromptPlayground';
 import AudioSynthesis from './AudioSynthesis';
-import { AnimatePresence } from 'framer-motion';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -16,7 +14,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const LatestIssue = ({ issueId = null }) => {
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showPlayground, setShowPlayground] = useState(false);
   const [currentPrompt, setCurrentPrompt] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -187,11 +184,11 @@ const LatestIssue = ({ issueId = null }) => {
                 </div>
               </div>
               <button 
-                onClick={openPlayground}
+                onClick={() => window.open(`https://chatgpt.com/?q=${encodeURIComponent(currentPrompt)}`, '_blank')}
                 className="submit-btn" 
                 style={{ width: 'auto', padding: '10px 20px', fontSize: '0.9rem' }}
               >
-                Open Terminal
+                Initialize External Protocol
               </button>
             </div>
           )}
@@ -210,14 +207,6 @@ const LatestIssue = ({ issueId = null }) => {
         </div>
       </div>
 
-      <AnimatePresence>
-        {showPlayground && (
-          <PromptPlayground 
-            initialPrompt={currentPrompt} 
-            onClose={() => setShowPlayground(false)} 
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };
