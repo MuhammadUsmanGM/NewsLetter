@@ -61,7 +61,11 @@ function App() {
 
     if (viewParam === 'dashboard') {
       const nameParam = params.get('name');
+      const emailParam = params.get('email');
       if (nameParam) setUserName(nameParam);
+      if (emailParam) {
+        setFormData(prev => ({ ...prev, email: emailParam }));
+      }
       setCurrentView('dashboard');
       setShowWelcome(false); // Skip welcome screen for direct dashboard access
     } else if (viewParam === 'feedback') {
@@ -266,7 +270,7 @@ function App() {
   }
 
   if (currentView === 'dashboard') {
-    return <Dashboard name={userName} />;
+    return <Dashboard name={userName} email={formData.email} />;
   }
 
   if (currentView === 'feedback') {

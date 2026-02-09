@@ -224,9 +224,16 @@ async function sendNewsletter() {
                         ${sharedEmailBody}
 
                         <div style="margin-top: 50px; text-align: center;">
-                          <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 16px 32px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 16px;">
-                            Check on Web
-                          </a>
+                          <div style="display: inline-block; margin: 0 10px;">
+                            <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 14px 28px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px;">
+                              Check on Web
+                            </a>
+                          </div>
+                          <div style="display: inline-block; margin: 0 10px;">
+                            <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" style="display: inline-block; padding: 14px 28px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px;">
+                              Neural Dashboard
+                            </a>
+                          </div>
                         </div>
                       </td>
                     </tr>

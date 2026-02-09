@@ -317,7 +317,7 @@ export default async function handler(req, res) {
                   <p class="intro-p" style="margin-bottom: 20px;">Your first intelligence drop arrives this <strong>Monday at 9:00 AM sharp</strong> in your local timezone.</p>
                   
                   <div class="cta-wrap">
-                    <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(name)}" class="action-btn">Enter Neural Dashboard</a>
+                    <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}" class="action-btn">Enter Neural Dashboard</a>
                   </div>
                 </div>
 

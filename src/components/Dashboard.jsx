@@ -12,14 +12,29 @@ import {
   Activity,
   Award
 } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
+import logo from '../assets/Favicon.png';
 import './Dashboard.css';
 
-const Dashboard = ({ name }) => {
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const Dashboard = ({ name, email }) => {
   const [timeLeft, setTimeLeft] = useState({ d: '00', h: '00', m: '00', s: '03' });
   const [isLoaded, setIsLoaded] = useState(false);
+  const [tierInfo, setTierInfo] = useState({
+    title: 'Alpha Initiate',
+    icon: <Zap size={14} />,
+    color: '#10b981',
+    daysJoined: 0
+  });
 
   useEffect(() => {
     setIsLoaded(true);
+    fetchSubscriberData();
+    
     const calculateTimeLeft = () => {
       const now = new Date();
       let target = new Date();
@@ -56,7 +71,51 @@ const Dashboard = ({ name }) => {
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [email]);
+
+  const fetchSubscriberData = async () => {
+    if (!email) return;
+    try {
+      const { data, error } = await supabase
+        .from('newsletter_subscribers')
+        .select('created_at')
+        .eq('email', email)
+        .single();
+        
+      if (data) {
+        const joinDate = new Date(data.created_at);
+        const now = new Date();
+        const diffDays = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
+        
+        let tier = {
+          title: 'Alpha Initiate',
+          icon: <Shield size={14} />,
+          color: '#10b981',
+          daysJoined: diffDays
+        };
+
+        if (diffDays >= 30) {
+          tier = {
+            title: 'Signal Architect',
+            icon: <Globe size={14} />,
+            color: '#8b5cf6',
+            daysJoined: diffDays
+          };
+        } else if (diffDays >= 7) {
+          tier = {
+            title: 'Node Commander',
+            icon: <Cpu size={14} />,
+            color: '#3b82f6',
+            daysJoined: diffDays
+          };
+        }
+        
+        setTierInfo(tier);
+      }
+    } catch (err) {
+      console.error('Error fetching tier data:', err);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -84,8 +143,8 @@ const Dashboard = ({ name }) => {
           
           {/* Hero Command Header */}
           <motion.div className="glass-card hero-card" variants={itemVariants}>
-            <div className="member-badge">
-              <Shield size={14} /> Founding Member Active
+            <div className="member-badge" style={{ borderColor: `${tierInfo.color}44`, color: tierInfo.color }}>
+              {tierInfo.icon} {tierInfo.title} Active
             </div>
             <div className="greeting-wrap">
               <h1 className="hero-title">
@@ -145,7 +204,7 @@ const Dashboard = ({ name }) => {
           <div className="stats-grid">
             <motion.div className="stat-item" variants={itemVariants}>
               <div className="stat-label">Intelligence Tier</div>
-              <div className="stat-value" style={{ color: '#10b981' }}>Alpha-1</div>
+              <div className="stat-value" style={{ color: tierInfo.color }}>{tierInfo.title.split(' ')[1] || tierInfo.title}</div>
             </motion.div>
             <motion.div className="stat-item" variants={itemVariants}>
               <div className="stat-label">Network Status</div>
@@ -174,11 +233,11 @@ const Dashboard = ({ name }) => {
             <div className="id-meta">
               <div className="meta-row">
                 <span className="meta-lbl">ID Protocol</span>
-                <span className="meta-val">AIW-8821</span>
+                <span className="meta-val">{tierInfo.title}</span>
               </div>
               <div className="meta-row">
-                <span className="meta-lbl">Join Order</span>
-                <span className="meta-val">Early Adopter</span>
+                <span className="meta-lbl">Protocol Age</span>
+                <span className="meta-val">{tierInfo.daysJoined} Days</span>
               </div>
               <div className="meta-row">
                 <span className="meta-lbl">Neural Sync</span>
