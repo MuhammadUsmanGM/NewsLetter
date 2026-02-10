@@ -1,6 +1,10 @@
+// api/og.js
 
 import { ImageResponse } from '@vercel/og';
-import { createClient } from '@supabase/supabase-js';
+
+// Vercel Edge Functions do not support `createClient` from `@supabase/supabase-js` directly
+// because it relies on Node.js APIs not available in Edge Runtime.
+// Instead, we fetch directly from the Supabase REST API.
 
 export const config = {
   runtime: 'edge',
@@ -8,7 +12,6 @@ export const config = {
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req) {
   try {
@@ -16,7 +19,7 @@ export default async function handler(req) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return new ImageResponse(
+       return new ImageResponse(
         (
           <div
             style={{
@@ -45,14 +48,26 @@ export default async function handler(req) {
         }
       );
     }
+    
+    // If ID is provided, fetch specific issue
+    const archiveUrl = `${process.env.VITE_SUPABASE_URL}/rest/v1/newsletter_archive?id=eq.${id}&select=*`;
+    
+    const response = await fetch(archiveUrl, {
+      headers: {
+        'apikey': process.env.SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`
+      }
+    });
 
-    const { data: issue, error } = await supabase
-      .from('newsletter_archive')
-      .select('*')
-      .eq('id', id)
-      .single();
+    if (!response.ok) {
+       console.error("Supabase fetch error:", response.statusText);
+       return new Response("Issue not found or database error", { status: 404 });
+    }
 
-    if (error || !issue) {
+    const data = await response.json();
+    const issue = data[0]; 
+
+    if (!issue) {
        return new Response("Issue not found", { status: 404 });
     }
 
