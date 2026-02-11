@@ -28,7 +28,8 @@ export default async function handler(req, res) {
     const headlines = headlineMatches.map(h => h.replace(/<[^>]*>/g, '').trim());
     const description = headlines.length > 0 ? `Featuring: ${headlines.join(', ')}` : 'Weekly AI Intelligence Protocol';
 
-    const ogImageUrl = `${process.env.APP_URL}/api/og?id=${id}`;
+    // Use a static OG image instead of dynamic generation
+    const ogImageUrl = `${process.env.APP_URL}/Favicon.png`;
     const issueUrl = `${process.env.APP_URL}/?view=issue&id=${id}`;
 
     const html = `
