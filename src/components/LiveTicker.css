@@ -43,22 +43,37 @@
 
 .ticker-wrap {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   height: 100%;
   display: flex;
   align-items: center;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: auto; /* Required for seamless JS jumps */
+}
+
+.ticker-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.ticker-wrap:active {
+  cursor: grabbing;
 }
 
 .ticker-move {
   display: flex;
   white-space: nowrap;
-  animation: ticker-scroll 60s linear infinite;
+  will-change: scroll-position;
 }
+
 
 .ticker-item {
   display: inline-flex;
   align-items: center;
-  padding: 0 30px;
+  padding: 0 40px;
   color: #94a3b8;
   font-size: 0.75rem;
   letter-spacing: 0.5px;
@@ -73,11 +88,6 @@
   color: #10b981;
   margin-right: 15px;
   font-weight: bold;
-}
-
-@keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
 }
 
 @keyframes pulse {
