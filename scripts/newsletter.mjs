@@ -186,85 +186,114 @@ async function sendNewsletter() {
         
         const premiumEmailHtml = `
           <!DOCTYPE html>
+<!DOCTYPE html>
           <html lang="en">
           <head>
             <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>THE SIGNAL: Intelligence Protocol</title>
             <style>
               @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
+              
+              /* Reset */
+              body { margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', sans-serif; color: #94a3b8; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+              table { border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+              img { border: 0; -ms-interpolation-mode: bicubic; }
+              
+              /* Wrapper */
+              .wrapper { width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #020617; }
+              .webkit { max-width: 600px; margin: 0 auto; }
+              
+              /* Mobile Styles */
+              @media screen and (max-width: 600px) {
+                .outer { width: 100% !important; margin: 0 auto !important; }
+                .inner { width: 100% !important; margin: 0 auto !important; padding: 0 16px !important; }
+                .content-padding { padding: 30px 20px !important; }
+                .header-padding { padding: 40px 20px !important; }
+                .mobile-full { width: 100% !important; display: block !important; }
+                .mobile-center { text-align: center !important; }
+                h1 { font-size: 28px !important; }
+                p { font-size: 16px !important; }
+              }
             </style>
           </head>
           <body style="margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', sans-serif; color: #94a3b8;">
-            <!-- View in Browser Link -->
-            <div style="text-align: center; padding: 10px; background-color: #020617;">
-              <a href="${process.env.APP_URL}/?view=latest" style="color: #475569; font-size: 11px; text-decoration: none; letter-spacing: 0.5px;">
-                View this signal in your neural interface
-              </a>
-            </div>
-            
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #020617; padding: 20px 0 40px 0;">
-              <tr>
-                <td align="center">
-                  <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #0f172a; border-radius: 32px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
-                    <!-- Header -->
-                    <tr>
-                      <td style="padding: 60px 48px; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); text-align: center;">
-                        <div style="display: inline-block; padding: 8px 16px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px;">
-                          Weekly Protocol Release
-                        </div>
-                        <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -1.5px;">THE <span style="color: #10b981;">SIGNAL.</span></h1>
-                        <p style="color: #94a3b8; margin: 12px 0 0 0; font-size: 16px; letter-spacing: 0.05em;">${dateStr}</p>
+            <center class="wrapper" style="width: 100%; table-layout: fixed; background-color: #020617; padding-bottom: 40px;">
+              <div class="webkit" style="max-width: 600px; margin: 0 auto;">
+                
+                <!-- View in Browser Link -->
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; padding: 0 10px;">
+                   <tr>
+                      <td align="center" style="padding: 10px 0; color: #475569; font-size: 11px;">
+                        <a href="${process.env.APP_URL}/?view=latest" style="color: #475569; text-decoration: none; letter-spacing: 0.5px;">View this signal in your neural interface</a>
                       </td>
-                    </tr>
-                    <!-- Content -->
-                    <tr>
-                      <td style="padding: 48px; color: #cbd5e1; line-height: 1.7; font-size: 16px;">
-                        <div style="color: #ffffff; font-size: 24px; font-weight: 700; margin-bottom: 24px;">Greetings, ${subscriber.name}.</div>
-                        <p style="margin-bottom: 40px;">Your weekly intelligence harvest has completed. Below is the curated signal extracted from this week's neural network shifts.</p>
-                        
-                        ${sharedEmailBody}
+                   </tr>
+                </table>
 
-                        <div style="margin-top: 50px; text-align: center;">
-                          <div style="display: inline-block; margin: 5px 10px;">
-                            <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 14px 24px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px;">
-                              Check on Web
-                            </a>
-                          </div>
-                          <div style="display: inline-block; margin: 5px 10px;">
-                            <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 14px 24px; background-color: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px;">
-                              🎙️ Listen to Relay
-                            </a>
-                          </div>
-                          <div style="display: inline-block; margin: 5px 10px;">
-                            <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" style="display: inline-block; padding: 14px 24px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px;">
-                              Neural Dashboard
-                            </a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <!-- Footer -->
-                    <tr>
-                      <td style="padding: 48px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
-                        <p style="margin: 0; color: #475569; font-size: 14px;">Forged for the technical elite.</p>
-                        <div style="margin-top: 24px;">
-                          <table align="center" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="padding: 0 10px;">
-                                <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" style="color: #10b981; text-decoration: none; font-size: 12px; font-weight: 700;">Transmit Feedback</a>
-                              </td>
-                              <td style="padding: 0 10px; color: #334155;">|</td>
-                              <td style="padding: 0 10px;">
-                                <a href="${unsubscribeUrl}" style="color: #64748b; text-decoration: underline; font-size: 12px;">Protocol Deactivation</a>
-                              </td>
-                            </tr>
-                          </table>
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
+                <!-- Main Email Card -->
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0f172a; max-width: 600px; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);">
+                  
+                  <!-- Header -->
+                  <tr>
+                    <td class="header-padding" style="padding: 50px 40px; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); text-align: center;">
+                      <div style="display: inline-block; padding: 6px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;">
+                        Weekly Protocol Release
+                      </div>
+                      <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1;">THE <span style="color: #10b981;">SIGNAL.</span></h1>
+                      <p style="color: #94a3b8; margin: 10px 0 0 0; font-size: 15px; letter-spacing: 0.05em;">${dateStr}</p>
+                    </td>
+                  </tr>
+
+                  <!-- Content Body -->
+                  <tr>
+                    <td class="content-padding" style="padding: 40px; background-color: #0f172a;">
+                      <div style="color: #ffffff; font-size: 22px; font-weight: 700; margin-bottom: 20px;">Greetings, ${subscriber.name}.</div>
+                      <p style="margin-bottom: 30px; font-size: 16px; line-height: 1.6; color: #cbd5e1;">Your weekly intelligence harvest has completed. Below is the curated signal extracted from this week's neural network shifts.</p>
+                      
+                      <!-- AI Generated Content Injection Point -->
+                      <div style="width: 100%;">
+                        ${sharedEmailBody}
+                      </div>
+
+                      <div style="margin-top: 40px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
+                         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+                           <tr>
+                             <td align="center">
+                               <!-- Determine stacking on mobile via specific widths or allow wrapping -->
+                                <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 12px 20px; margin: 5px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 13px;">Check on Web</a>
+                                <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 12px 20px; margin: 5px; background-color: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 13px;">🎙️ Listen to Relay</a>
+                                <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" style="display: inline-block; padding: 12px 20px; margin: 5px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 13px;">Neural Dashboard</a>
+                             </td>
+                           </tr>
+                         </table>
+                      </div>
+
+                    </td>
+                  </tr>
+
+                  <!-- Footer -->
+                  <tr>
+                    <td class="content-padding" style="padding: 30px 40px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
+                      <p style="margin: 0; color: #475569; font-size: 13px;">Forged for the technical elite.</p>
+                      <div style="margin-top: 20px;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td style="padding: 0 10px;">
+                              <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" style="color: #10b981; text-decoration: none; font-size: 11px; font-weight: 700;">Transmit Feedback</a>
+                            </td>
+                            <td style="padding: 0 10px; color: #334155;">|</td>
+                            <td style="padding: 0 10px;">
+                              <a href="${unsubscribeUrl}" style="color: #64748b; text-decoration: underline; font-size: 11px;">Protocol Deactivation</a>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+
+                </table>
+              </div>
+            </center>
           </body>
           </html>
         `;
