@@ -228,27 +228,18 @@ function App() {
         } else if (error.status >= 400 && error.status < 500) {
           setApiError('Invalid request. Please check your input and try again.');
         } else {
-          // Check for duplicate email specifically
+          let finalError = 'An error occurred while subscribing. Please try again.';
+
           if (error.code === '23505' || 
-              error.message.includes('newsletter_subscribers_email_key') || 
-              error.message.toLowerCase().includes('duplicate')) {
-            setApiError('Email already subscribed! Happy to have you continue receiving AI updates.');
-            // Don't return here, let the normal flow continue to show the message
-          } 
-          // Provide more specific error messages based on error details
-          else {
-            let errorMessage = 'An error occurred while subscribing. Please try again.';
-            
-            // Check for permission issues
-            if (error.message.toLowerCase().includes('permission') || 
-                error.message.toLowerCase().includes('policy')) {
-              errorMessage = 'Access denied. Please try again later.';
-            }
-            
-            setApiError(errorMessage);
+              (error.message && (error.message.includes('newsletter_subscribers_email_key') || 
+               error.message.toLowerCase().includes('duplicate')))) {
+            finalError = 'Email already subscribed! Happy to have you continue receiving AI updates.';
+          } else if (error.message && (error.message.toLowerCase().includes('permission') || 
+                     error.message.toLowerCase().includes('policy'))) {
+            finalError = 'Access denied. Please try again later.';
           }
           
-          setApiError(errorMessage);
+          setApiError(finalError);
         }
       }
     } else {
