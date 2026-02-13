@@ -439,8 +439,9 @@ function App() {
               
               <button type="submit" className="submit-btn" disabled={isLoading}>
                 {isLoading ? (
-                  <span className="btn-content">
-                    Subscribing...
+                  <span className="btn-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                    <div className="loading-spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
+                    Initiating Protocol
                   </span>
                 ) : 'Access The Signal'}
               </button>
