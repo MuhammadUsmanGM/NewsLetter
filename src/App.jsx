@@ -21,6 +21,7 @@ function App() {
     email: '',
     timezone: ''
   });
+  const [turnstileToken, setTurnstileToken] = useState('');
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -137,6 +138,12 @@ function App() {
     }
   };
 
+  // Turnstile callback
+  window.onTurnstileSuccess = (token) => {
+    setTurnstileToken(token);
+    setErrors(prev => ({ ...prev, turnstile: '' }));
+  };
+
   const validate = () => {
     const newErrors = {};
 
@@ -148,6 +155,10 @@ function App() {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
+    }
+
+    if (!turnstileToken) {
+      newErrors.turnstile = 'Please verify that you are a human';
     }
 
     return newErrors;
@@ -178,7 +189,8 @@ function App() {
           body: JSON.stringify({
             name: formData.name,
             email: formData.email,
-            timezone: formData.timezone
+            timezone: formData.timezone,
+            turnstileToken: turnstileToken
           }),
         });
 
@@ -415,6 +427,15 @@ function App() {
                 name="timezone"
                 value={formData.timezone}
               />
+              
+              <div 
+                className="cf-turnstile" 
+                data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} 
+                data-callback="onTurnstileSuccess"
+                data-theme="dark"
+                style={{ marginBottom: '1.5rem' }}
+              ></div>
+              {errors.turnstile && <p className="error-message fade-in" style={{ marginBottom: '1.5rem' }}>{errors.turnstile}</p>}
               
               <button type="submit" className="submit-btn" disabled={isLoading}>
                 {isLoading ? (

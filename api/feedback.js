@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import nodemailer from 'nodemailer';
+import axios from 'axios';
 
 // Configuration
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
@@ -21,10 +22,35 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message } = req.body;
+  const { name, email, message, turnstileToken } = req.body;
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
 
   if (!email || !message) {
     return res.status(400).json({ error: 'Email and message are required' });
+  }
+
+  // 0. Verify Cloudflare Turnstile
+  if (turnstileSecret) {
+    try {
+      const verifyResponse = await axios.post(
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        new URLSearchParams({
+          secret: turnstileSecret,
+          response: turnstileToken,
+        }).toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+
+      if (!verifyResponse.data.success) {
+        return res.status(400).json({ error: 'Human verification failed. Please try again.' });
+      }
+    } catch (err) {
+      console.error('Turnstile verification error:', err);
+    }
   }
 
   try {

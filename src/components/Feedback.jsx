@@ -9,6 +9,7 @@ const Feedback = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -34,12 +35,23 @@ const Feedback = () => {
     }));
   };
 
+  // Turnstile callback
+  window.onTurnstileSuccessFeedback = (token) => {
+    setTurnstileToken(token);
+    setError('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
     if (!formData.message.trim()) {
       setError('Please enter your feedback.');
+      return;
+    }
+
+    if (!turnstileToken) {
+      setError('Please verify that you are a human.');
       return;
     }
 
@@ -51,7 +63,10 @@ const Feedback = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken
+        }),
       });
 
       const data = await response.json();
@@ -153,6 +168,14 @@ const Feedback = () => {
               required
             />
           </div>
+
+          <div 
+            className="cf-turnstile" 
+            data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} 
+            data-callback="onTurnstileSuccessFeedback"
+            data-theme="dark"
+            style={{ marginBottom: '20px' }}
+          ></div>
 
           <button type="submit" className="submit-btn" disabled={isSubmitting}>
             {isSubmitting ? (
