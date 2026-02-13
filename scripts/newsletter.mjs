@@ -100,7 +100,8 @@ async function generateWeeklyIntelligence(articles) {
        - Use this HTML for the insight:
          <div style="border-left: 4px solid #10b981; padding: 24px; background: rgba(16, 185, 129, 0.05); border-radius: 0 16px 16px 0;">
            <h3 style="color: #ffffff; margin-top: 0;">This Week's Actionable Insight</h3>
-           <p style="color: #cbd5e1; font-style: italic;">[Insight/Prompt Content]</p>
+           <p style="color: #cbd5e1; font-style: italic; margin-bottom: 20px;">[Insight/Prompt Content]</p>
+           <a href="https://chat.openai.com/?q=[Insight/Prompt Content]" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">⚡ Execute Protocol</a>
          </div>
     
     Technical:
