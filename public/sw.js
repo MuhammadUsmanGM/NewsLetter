@@ -1,4 +1,4 @@
-const CACHE_NAME = 'the-signal-v1';
+const CACHE_NAME = 'the-signal-v2'; // Incremented version to force update
 const ASSETS = [
   '/',
   '/index.html',
@@ -12,12 +12,29 @@ self.addEventListener('install', (event) => {
       return cache.addAll(ASSETS);
     })
   );
+  self.skipWaiting(); // Force new service worker to activate immediately
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
 });
 
 self.addEventListener('fetch', (event) => {
+  // Simple network-first or cache-fallback strategy is safer for preventing blank screens
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
     })
   );
 });
