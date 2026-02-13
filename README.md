@@ -18,6 +18,7 @@
 
 ## ✨ Cutting-Edge Features
 
+- 🛡️ **Elite Security Layer** – Protected by **Cloudflare Turnstile** to ensure zero spam and bot-free comms.
 - 🧠 **AI-Powered Curation** – Leverages `gemini-2.5-flash-lite` to generate deep-dive technical insights.
 - 📡 **Real-time Global News** – Powered by NewsAPI to fetch the most discussed breakthroughs from tech giants like OpenAI, Nvidia, and Anthropic.
 - ⏰ **Dynamic Timezone Delivery** – Intelligent scheduling ensures users receive their update at exactly 9:00 AM local time, anywhere in the world.
@@ -40,7 +41,7 @@
 
 ```mermaid
 graph TD
-    A[React Landing Page] -->|Subscribe| B(Supabase DB)
+    A[React Landing Page] -->|Turnstile Verified| B(Supabase DB)
     C[GitHub Actions - Every 3h on Monday] -->|Trigger| D{api/cron.js}
     D -->|Fetch News| E[NewsAPI]
     D -->|Generate Insights| F[Google Gemini AI]
@@ -61,18 +62,13 @@ graph TD
 | Layer | Technology | Role |
 | :--- | :--- | :--- |
 | **Frontend** | React + Vite | Stunning subscription UI & feedback form |
+| **Security** | Cloudflare Turnstile | Advanced anti-spam & bot protection |
 | **Database** | Supabase | Secure user & timezone storage |
 | **Logic** | Node.js (Vercel) | Automated cron & processing |
 | **Intelligence** | Google Gemini | Content synthesis & insights |
 | **Insights** | NewsAPI | Real-time global technical data |
 | **Delivery** | Nodemailer | Premium template distribution |
 | **Automation** | GitHub Actions | Weekly cron trigger (optimized) |
-
----
-
-##  Premium Newsletter Sample
-![Sample Newsletter](src/assets/OutPut.png)
-*A high-end briefing designed to keep you ahead of the curve.*
 
 ---
 
