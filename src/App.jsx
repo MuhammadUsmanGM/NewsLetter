@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import Welcome from './components/Welcome'
 import Dashboard from './components/Dashboard'
@@ -138,11 +138,48 @@ function App() {
     }
   };
 
+  // Turnstile content
+  const turnstileRef = useRef(null);
+
   // Turnstile callback
   window.onTurnstileSuccess = (token) => {
     setTurnstileToken(token);
     setErrors(prev => ({ ...prev, turnstile: '' }));
   };
+
+  useEffect(() => {
+    // Explicitly render Turnstile when the component mounts
+    
+    const renderTurnstile = () => {
+      if (window.turnstile && turnstileRef.current) {
+        // specific check to avoid double rendering if already present
+        if (!turnstileRef.current.hasChildNodes()) {
+            try {
+              window.turnstile.render(turnstileRef.current, {
+                sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
+                callback: 'onTurnstileSuccess',
+                theme: 'dark',
+              });
+            } catch (e) {
+              console.error('Turnstile render error:', e);
+            }
+        }
+      }
+    };
+
+    // Try immediately
+    renderTurnstile();
+
+    // Also retry a few times in case script is slow
+    const intervalId = setInterval(() => {
+        if (window.turnstile) {
+            renderTurnstile();
+            clearInterval(intervalId);
+        }
+    }, 100);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const validate = () => {
     const newErrors = {};
@@ -429,10 +466,8 @@ function App() {
               />
               
               <div 
+                ref={turnstileRef}
                 className="cf-turnstile" 
-                data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'} 
-                data-callback="onTurnstileSuccess"
-                data-theme="dark"
                 style={{ marginBottom: '1.5rem' }}
               ></div>
               {errors.turnstile && <p className="error-message fade-in" style={{ marginBottom: '1.5rem' }}>{errors.turnstile}</p>}
