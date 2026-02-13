@@ -21,7 +21,6 @@ function App() {
     email: '',
     timezone: ''
   });
-  const [turnstileToken, setTurnstileToken] = useState('');
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -138,48 +137,7 @@ function App() {
     }
   };
 
-  // Turnstile content
-  const turnstileRef = useRef(null);
 
-  // Turnstile callback
-  window.onTurnstileSuccess = (token) => {
-    setTurnstileToken(token);
-    setErrors(prev => ({ ...prev, turnstile: '' }));
-  };
-
-  useEffect(() => {
-    // Explicitly render Turnstile when the component mounts
-    
-    const renderTurnstile = () => {
-      if (window.turnstile && turnstileRef.current) {
-        // specific check to avoid double rendering if already present
-        if (!turnstileRef.current.hasChildNodes()) {
-            try {
-              window.turnstile.render(turnstileRef.current, {
-                sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
-                callback: 'onTurnstileSuccess',
-                theme: 'dark',
-              });
-            } catch (e) {
-              console.error('Turnstile render error:', e);
-            }
-        }
-      }
-    };
-
-    // Try immediately
-    renderTurnstile();
-
-    // Also retry a few times in case script is slow
-    const intervalId = setInterval(() => {
-        if (window.turnstile) {
-            renderTurnstile();
-            clearInterval(intervalId);
-        }
-    }, 100);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   const validate = () => {
     const newErrors = {};
@@ -194,9 +152,7 @@ function App() {
       newErrors.email = 'Email is invalid';
     }
 
-    if (!turnstileToken) {
-      newErrors.turnstile = 'Please verify that you are a human';
-    }
+
 
     return newErrors;
   };
@@ -226,8 +182,7 @@ function App() {
           body: JSON.stringify({
             name: formData.name,
             email: formData.email,
-            timezone: formData.timezone,
-            turnstileToken: turnstileToken
+            timezone: formData.timezone
           }),
         });
 
@@ -465,12 +420,7 @@ function App() {
                 value={formData.timezone}
               />
               
-              <div 
-                ref={turnstileRef}
-                className="cf-turnstile" 
-                style={{ marginBottom: '1.5rem' }}
-              ></div>
-              {errors.turnstile && <p className="error-message fade-in" style={{ marginBottom: '1.5rem' }}>{errors.turnstile}</p>}
+
               
               <button type="submit" className="submit-btn" disabled={isLoading}>
                 {isLoading ? (
