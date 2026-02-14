@@ -420,12 +420,17 @@ function App() {
               
 
               
-              <div className="input-group" style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+              <div className="input-group" style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '65px', justifyContent: 'center' }}>
                 <Turnstile 
                   siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY} 
                   onSuccess={(token) => setTurnstileToken(token)}
                   theme="dark"
                 />
+                {!turnstileToken && (
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '5px', opacity: 0.6 }}>
+                    Initializing security protocol...
+                  </span>
+                )}
               </div>
 
               <button type="submit" className="submit-btn" disabled={isLoading || !turnstileToken}>
