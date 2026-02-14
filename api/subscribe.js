@@ -204,8 +204,8 @@ export default async function handler(req, res) {
                                 <tr>
                                    <td width="30" valign="top" style="padding-top: 2px;"><span style="font-size: 20px;">🛠️</span></td>
                                    <td style="padding-left: 15px;">
-                                      <div style="color: #f1f5f9; font-weight: 700; font-size: 15px; margin-bottom: 4px;">2 Tools to Try</div>
-                                      <div style="color: #94a3b8; font-size: 14px; line-height: 1.5;">Hand-picked agents and frameworks to optimize your workflow.</div>
+                                      <div style="color: #f1f5f9; font-weight: 700; font-size: 15px; margin-bottom: 4px;">2 Tools & 2 Repos</div>
+                                      <div style="color: #94a3b8; font-size: 14px; line-height: 1.5;">Hand-picked emerging tools and the week's most explosive GitHub repositories.</div>
                                    </td>
                                 </tr>
                              </table>
