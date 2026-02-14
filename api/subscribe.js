@@ -22,10 +22,32 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, timezone } = req.body;
+  const { name, email, timezone, turnstileToken } = req.body;
 
   if (!name || !email) {
     return res.status(400).json({ error: 'Name and email are required' });
+  }
+
+  // Verify Turnstile Token
+  if (!turnstileToken) {
+    return res.status(400).json({ error: 'Security verification failed. Please refresh and try again.' });
+  }
+
+  try {
+    const verifyResp = await axios.post(
+      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+      new URLSearchParams({
+        secret: process.env.TURNSTILE_SECRET_KEY,
+        response: turnstileToken,
+      })
+    );
+
+    if (!verifyResp.data.success) {
+      return res.status(400).json({ error: 'Failed security verification. Bot activity detected.' });
+    }
+  } catch (err) {
+    console.error('Turnstile verification error:', err);
+    // Continue if it's just a network error to avoid blocking real users, but log it
   }
 
   try {

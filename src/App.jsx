@@ -6,6 +6,7 @@ import Feedback from './components/Feedback'
 import LatestIssue from './components/LatestIssue'
 import ArchiveExplorer from './components/ArchiveExplorer'
 import LiveTicker from './components/LiveTicker'
+import { Turnstile } from '@marsidev/react-turnstile'
 import logo from './assets/Favicon.png'
 import './App.css'
 
@@ -31,6 +32,7 @@ function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home', 'dashboard', 'feedback', 'latest', 'archive', 'issue'
   const [userName, setUserName] = useState('Commander');
   const [selectedIssueId, setSelectedIssueId] = useState(null);
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   useEffect(() => {
     // Get user timezone and update form data
@@ -186,7 +188,8 @@ function App() {
           body: JSON.stringify({
             name: formData.name,
             email: formData.email,
-            timezone: formData.timezone
+            timezone: formData.timezone,
+            turnstileToken: turnstileToken
           }),
         });
 
@@ -417,7 +420,15 @@ function App() {
               
 
               
-              <button type="submit" className="submit-btn" disabled={isLoading}>
+              <div className="input-group" style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+                <Turnstile 
+                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY} 
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  theme="dark"
+                />
+              </div>
+
+              <button type="submit" className="submit-btn" disabled={isLoading || !turnstileToken}>
                 {isLoading ? (
                   <span className="btn-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                     <div className="loading-spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
