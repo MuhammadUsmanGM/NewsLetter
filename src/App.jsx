@@ -33,6 +33,7 @@ function App() {
   const [userName, setUserName] = useState('Commander');
   const [selectedIssueId, setSelectedIssueId] = useState(null);
   const [turnstileToken, setTurnstileToken] = useState('');
+  const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
 
   useEffect(() => {
     // Get user timezone and update form data
@@ -199,7 +200,14 @@ function App() {
           throw new Error(result.error || 'Failed to subscribe');
         }
         
-        console.log('User subscribed successfully:', result);
+        console.log('User response:', result);
+        if (result.alreadySubscribed) {
+          setIsAlreadySubscribed(true);
+          if (result.name) setUserName(result.name);
+        } else {
+          setIsAlreadySubscribed(false);
+        }
+        
         setSubmitted(true);
         setSuccessTransition(false);
         
@@ -211,12 +219,13 @@ function App() {
           setTimeout(() => {
             setSubmitted(false);
             setSuccessTransition(false); // Reset for next time
+            setIsAlreadySubscribed(false); // Reset for next time
             // Get user timezone and reset form with new timezone
             const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             setFormData({ name: '', email: '', timezone: userTimezone });
             setIsLoading(false);
           }, 500);
-        }, 3000);
+        }, 5000); // Keep it longer for them to read the "Welcome Back" message
       } catch (error) {
         console.error('Error subscribing:', error);
         setIsLoading(false);
@@ -357,11 +366,25 @@ function App() {
                   </svg>
                 </div>
                 <div className="success-content fade-in">
-                  <div className="success-badge">Access Granted</div>
-                  <h2>You're on the list!</h2>
-                  <p>Welcome to the inner circle of AI enthusiasts.</p>
+                  <div className="success-badge">{isAlreadySubscribed ? 'Neural Link Active' : 'Access Granted'}</div>
+                  <h2>{isAlreadySubscribed ? 'Welcome Back!' : "You're on the list!"}</h2>
+                  <p>{isAlreadySubscribed 
+                    ? `Good to see you again, ${userName}. Your intelligence protocol is already active.` 
+                    : "Welcome to the inner circle of AI enthusiasts."}
+                  </p>
+                  
+                  {isAlreadySubscribed && (
+                    <button 
+                      onClick={() => setCurrentView('dashboard')}
+                      className="submit-btn"
+                      style={{ marginTop: '1.5rem', width: 'auto', padding: '10px 25px', fontSize: '0.9rem' }}
+                    >
+                      Enter Dashboard
+                    </button>
+                  )}
+
                   <div className="success-footer">
-                    Check your inbox for a welcome gift
+                    {isAlreadySubscribed ? 'Redirecting to your terminal...' : 'Check your inbox for a welcome gift'}
                   </div>
                 </div>
               </div>
