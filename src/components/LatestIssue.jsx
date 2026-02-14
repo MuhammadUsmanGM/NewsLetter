@@ -3,8 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import logo from '../assets/Favicon.png';
 import './Feedback.css'; // Reuse premium styles for content
 import './Welcome.css';  // Reuse loading styles
-import { Share2 } from 'lucide-react';
+import { Share2, Zap, ArrowLeft } from 'lucide-react';
 import AudioSynthesis from './AudioSynthesis';
+import { useNeuralTheme } from '../context/ThemeContext';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -12,6 +13,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const LatestIssue = ({ issueId = null, setView }) => {
+  const { currentTheme } = useNeuralTheme();
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPrompt, setCurrentPrompt] = useState('');
@@ -34,7 +36,6 @@ const LatestIssue = ({ issueId = null, setView }) => {
       const parser = new DOMParser();
       const doc = parser.parseFromString(issue.content_html, 'text/html');
       
-      // Look for the specific pattern we defined in newsletter.mjs
       const insightHeader = Array.from(doc.querySelectorAll('h3')).find(h => 
         h.textContent.includes("This Week's Actionable Insight")
       );
@@ -79,22 +80,18 @@ const LatestIssue = ({ issueId = null, setView }) => {
     }
   };
 
-  const openPlayground = () => {
-    setShowPlayground(true);
-  };
-
   if (loading) {
     return (
       <div className="welcome-screen">
         <div className="welcome-content">
-          <div className="welcome-logo-container">
+          <div className="welcome-logo-container" style={{ borderColor: currentTheme.color }}>
             <img src={logo} alt="Company Logo" className="welcome-logo" />
           </div>
           <div className="welcome-text">
             THE SIGNAL
           </div>
           <div className="loading-container">
-            <div className="loading-bar"></div>
+            <div className="loading-bar" style={{ background: currentTheme.color }}></div>
           </div>
           <div className="welcome-subtitle">
             {issueId ? 'Accessing Protocol Record...' : 'Decrypting Latest Protocol'}
@@ -118,35 +115,39 @@ const LatestIssue = ({ issueId = null, setView }) => {
 
   return (
     <div className="feedback-container">
-      <div className="feedback-card" style={{ maxWidth: '800px', width: '100%' }}>
+      <div className="feedback-card" style={{ maxWidth: '800px', width: '100%', border: `1px solid ${currentTheme.color}22` }}>
         {/* Header */}
         <div className="feedback-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <div className="feedback-badge">{issueId ? `Protocol Record #${issueId}` : 'Latest Protocol Release'}</div>
+            <div className="feedback-badge" style={{ background: `${currentTheme.color}11`, color: currentTheme.color, borderColor: `${currentTheme.color}33` }}>
+              {issueId ? `Protocol Record #${issueId}` : 'Latest Protocol Release'}
+            </div>
             <h1 className="feedback-title">THE SIGNAL.</h1>
-            <p className="feedback-subtitle">{issue.week_date}</p>
+            <p className="feedback-subtitle" style={{ color: currentTheme.color }}>{issue.week_date}</p>
           </div>
-          <button 
-            onClick={handleShare}
-            className="secondary-btn"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '8px 16px',
-              background: copied ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-              border: `1px solid ${copied ? '#10b981' : 'rgba(255, 255, 255, 0.1)'}`,
-              color: copied ? '#10b981' : '#94a3b8',
-              borderRadius: '10px',
-              fontSize: '0.8rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            <Share2 size={14} />
-            {copied ? 'Copied!' : 'Share Signal'}
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button 
+              onClick={handleShare}
+              className="secondary-btn"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                background: copied ? `${currentTheme.color}11` : 'rgba(255, 255, 255, 0.05)',
+                border: `1px solid ${copied ? currentTheme.color : 'rgba(255, 255, 255, 0.1)'}`,
+                color: copied ? currentTheme.color : '#94a3b8',
+                borderRadius: '10px',
+                fontSize: '0.8rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <Share2 size={14} />
+              {copied ? 'Copied!' : 'Share Signal'}
+            </button>
+          </div>
         </div>
 
         {/* Content Body */}
@@ -165,18 +166,18 @@ const LatestIssue = ({ issueId = null, setView }) => {
             <div style={{ 
               marginTop: '40px',
               marginBottom: '30px', 
-              padding: '20px', 
-              background: 'rgba(16, 185, 129, 0.08)', 
-              border: '1px solid rgba(16, 185, 129, 0.2)', 
+              padding: '24px', 
+              background: `${currentTheme.color}08`, 
+              border: `1px solid ${currentTheme.color}33`, 
               borderRadius: '16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '20px',
-              boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)'
+              boxShadow: `0 10px 30px -10px ${currentTheme.color}22`
             }}>
               <div>
-                <div style={{ color: '#10b981', fontWeight: '800', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
+                <div style={{ color: currentTheme.color, fontWeight: '800', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
                   Interactive Insight Pipeline
                 </div>
                 <div style={{ color: '#ffffff', fontSize: '0.95rem', fontWeight: '600' }}>
@@ -186,7 +187,7 @@ const LatestIssue = ({ issueId = null, setView }) => {
               <button 
                 onClick={() => window.open(`https://chatgpt.com/?q=${encodeURIComponent(currentPrompt)}`, '_blank')}
                 className="submit-btn" 
-                style={{ width: 'auto', padding: '10px 20px', fontSize: '0.9rem' }}
+                style={{ width: 'auto', padding: '10px 20px', fontSize: '0.9rem', background: currentTheme.color }}
               >
                 Initialize External Protocol
               </button>
@@ -194,19 +195,18 @@ const LatestIssue = ({ issueId = null, setView }) => {
           )}
           
           <div style={{ marginTop: '60px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '40px' }}>
-            <p style={{ marginBottom: '20px' }}>{issueId ? 'Interested in future signals?' : 'Want this delivered to your inbox?'}</p>
+            <p style={{ marginBottom: '20px', color: 'var(--text-muted)' }}>{issueId ? 'Interested in future signals?' : 'Want this delivered to your inbox?'}</p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button onClick={() => setView('home')} className="submit-btn" style={{ textDecoration: 'none', display: 'inline-flex', width: 'auto', padding: '12px 30px' }}>
+              <button onClick={() => setView('home')} className="submit-btn" style={{ textDecoration: 'none', display: 'inline-flex', width: 'auto', padding: '12px 30px', background: currentTheme.color }}>
                 Subscribe to Protocol
               </button>
-              <button onClick={() => setView('archive')} className="back-link" style={{ marginTop: 0, background: 'none', border: 'none', cursor: 'pointer' }}>
+              <button onClick={() => setView('archive')} className="back-link" style={{ marginTop: 0, background: 'none', border: 'none', cursor: 'pointer', color: currentTheme.color }}>
                 Protocol Archive
               </button>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

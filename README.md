@@ -25,6 +25,8 @@
 - ⏰ **Dynamic Timezone Delivery** – Intelligent scheduling ensures users receive their update at exactly 9:00 AM local time, anywhere in the world.
 - 🌐 **Web Archive Protocol** – Users can access the latest intelligence briefing directly in the browser.
 - 🏛️ **The Protocol Vault** – A full historical archive of all past signals and breakthroughs.
+- 🎨 **Neural Theme Synchronization** – The entire UI evolves through a **10-tier weekly spectrum** (Green to Red) based on subscriber loyalty.
+- 🌈 **Prism Protocol** – Long-term loyalists (Week 10+) unlock total UI customization power.
 - 📱 **Mobile Protocol (PWA)** – Install THE SIGNAL as a standalone app on your mobile device for an elite, app-like experience.
 - 📡 **Live Signal Ticker** – Real-time AI news feed scrolling at the bottom of the interface.
 - 🎙️ **Neural Voice Relay** – Built-in browser-based text-to-speech engine to listen to briefings hands-free.
@@ -56,7 +58,8 @@ graph TD
     
     K -->|3-2-2-1 Briefing| L[User Inbox]
     
-    M[Web Archive Interface] -->|Query| E
+    M[Web Archive Interface] -->|Tier Sync| P[Neural Theme Engine]
+    P -->|CSS Variables| M
     N[Feedback Terminal] -->|Signal| O{api/feedback.js}
     O -->|Relay| K
     O -->|Store| E

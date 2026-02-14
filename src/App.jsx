@@ -8,6 +8,7 @@ import ArchiveExplorer from './components/ArchiveExplorer'
 import LiveTicker from './components/LiveTicker'
 import { Turnstile } from '@marsidev/react-turnstile'
 import logo from './assets/Favicon.png'
+import { useNeuralTheme } from './context/ThemeContext'
 import './App.css'
 
 // Initialize Supabase client
@@ -34,6 +35,8 @@ function App() {
   const [selectedIssueId, setSelectedIssueId] = useState(null);
   const [turnstileToken, setTurnstileToken] = useState('');
   const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
+
+  const { calculateTheme } = useNeuralTheme();
 
   useEffect(() => {
     // Get user timezone and update form data
@@ -204,8 +207,10 @@ function App() {
         if (result.alreadySubscribed) {
           setIsAlreadySubscribed(true);
           if (result.name) setUserName(result.name);
+          if (result.joinDate) calculateTheme(result.joinDate, result.preferredThemeIndex);
         } else {
           setIsAlreadySubscribed(false);
+          if (result.joinDate) calculateTheme(result.joinDate);
         }
         
         setSubmitted(true);

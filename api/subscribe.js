@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     // 1. Check if user already exists
     const { data: existingUser, error: fetchError } = await supabase
       .from('newsletter_subscribers')
-      .select('email, name')
+      .select('email, name, created_at, preferred_theme_index')
       .eq('email', email)
       .single();
 
@@ -71,16 +71,22 @@ export default async function handler(req, res) {
         success: true, 
         alreadySubscribed: true, 
         name: name || existingUser.name,
+        joinDate: existingUser.created_at,
+        preferredThemeIndex: existingUser.preferred_theme_index,
         message: 'Welcome back! Your neural link is already active.' 
       });
     }
 
     // 2. Insert into Supabase (New Subscriber)
-    const { error: insertError } = await supabase
+    const { data: newUser, error: insertError } = await supabase
       .from('newsletter_subscribers')
-      .insert([{ name, email, timezone }]);
+      .insert([{ name, email, timezone }])
+      .select('created_at')
+      .single();
 
     if (insertError) throw insertError;
+
+    const joinDate = newUser?.created_at || new Date().toISOString();
 
     // 3. Send Premium Welcome Email (Only for NEW subscribers)
     const welcomeHtml = `
@@ -279,7 +285,11 @@ export default async function handler(req, res) {
       html: welcomeHtml,
     });
 
-    return res.status(200).json({ success: true, message: 'Subscribed to THE SIGNAL. Your protocol has been initiated.' });
+    return res.status(200).json({ 
+      success: true, 
+      joinDate: joinDate,
+      message: 'Subscribed to THE SIGNAL. Your protocol has been initiated.' 
+    });
   } catch (error) {
     console.error('Subscription error:', error);
     return res.status(500).json({ error: 'Failed to subscribe. Please try again later.' });
