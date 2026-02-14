@@ -22,6 +22,40 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+async function fetchTrendingRepos() {
+  try {
+    console.log('Fetching trending AI repositories from GitHub...');
+    // Search for repos with AI-related topics, sort by stars, within the last week
+    const lastWeek = new Date();
+    lastWeek.setDate(lastWeek.getDate() - 7);
+    const dateQuery = lastWeek.toISOString().split('T')[0];
+    
+    const resp = await axios.get('https://api.github.com/search/repositories', {
+      params: {
+        q: `topic:ai OR topic:llm OR topic:machine-learning created:>${dateQuery}`,
+        sort: 'stars',
+        order: 'desc',
+        per_page: 5
+      },
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'TheSignal-Newsletter-Node'
+      }
+    });
+    
+    return (resp.data.items || []).map(repo => ({
+      name: repo.full_name,
+      description: repo.description,
+      stars: repo.stargazers_count,
+      url: repo.html_url,
+      language: repo.language
+    }));
+  } catch (e) {
+    console.error('GitHub fetch error:', e.message);
+    return [];
+  }
+}
+
 async function fetchAIIntelligence() {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -52,11 +86,14 @@ async function fetchAIIntelligence() {
     sortBy: 'popularity'
   });
 
-  console.log(`Found ${articles.length} potential signal sources.`);
-  return articles.slice(0, 15);
+  const repos = await fetchTrendingRepos();
+
+  console.log(`Found ${articles.length} signal sources and ${repos.length} potential technical nodes.`);
+  return { articles: articles.slice(0, 15), repos };
 }
 
-async function generateWeeklyIntelligence(articles) {
+async function generateWeeklyIntelligence(intelligenceData) {
+  const { articles, repos } = intelligenceData;
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
   const articlesContext = articles.map(a => `
@@ -67,18 +104,27 @@ async function generateWeeklyIntelligence(articles) {
     ImageURL: ${a.urlToImage}
   `).join('\n---\n');
 
+  const reposContext = repos.map(r => `
+    Repo: ${r.name}
+    Description: ${r.description}
+    Stars: ${r.stars}
+    Language: ${r.language}
+    URL: ${r.url}
+  `).join('\n---\n');
+
   const prompt = `
     You are the Lead Editor of "THE SIGNAL", a high-end intelligence protocol for technical founders and AI engineers.
     
-    Based on these sources:
+    Based on these news sources:
     ${articlesContext}
     
-    Create a premium weekly briefing following the exact **3-2-1 Structure**:
+    And these trending GitHub repositories:
+    ${reposContext}
     
-    1. **3 MAJOR NEW STORIES**: Select the 3 most impactful AI breakthroughs of the week. For each:
-       - Strategic Headline
-       - High-quality analysis of why this shift matters (The "Signal")
-       - Use this HTML for stories:
+    Create a premium weekly briefing following the exact **3-2-1 Structure**, but enhanced for hardcore developers:
+    
+    1. **3 MAJOR NEW STORIES**: Select the 3 most impactful AI breakthroughs.
+       - Use this HTML:
          <div style="margin-bottom: 40px;">
            <img src="[ImageURL]" style="width: 100%; height: auto; border-radius: 16px; margin-bottom: 20px;">
            <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 12px;">[Headline]</h2>
@@ -86,29 +132,37 @@ async function generateWeeklyIntelligence(articles) {
            <a href="[URL]" style="color: #10b981; font-weight: 700; text-decoration: none;">Read Technical Analysis →</a>
          </div>
 
-    2. **2 NEW TOOLS TO TRY**: Pick 2 emerging AI tools, frameworks, or agents. For each:
-       - Tool Name
-       - Quick value prop (How it optimizes workflows)
-       - Link
-       - Use this HTML for tools:
+    2. **2 ELITE TOOLS**: Pick 2 emerging AI tools OR frameworks.
+       - Use this HTML:
          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
-           <strong style="color: #10b981; font-size: 18px;">[Tool Name]</strong>
-           <p style="color: #cbd5e1; margin: 8px 0;">[Value Prop]</p>
+           <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">TOOL NODE</div>
+           <strong style="color: #ffffff; font-size: 18px;">[Tool Name]</strong>
+           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Value Prop / Technical Use-case]</p>
+           <a href="[URL]" style="color: #10b981; font-size: 13px; text-decoration: none; font-weight: 600;">Access Node →</a>
          </div>
 
-    3. **1 ACTIONABLE INSIGHT/PROMPT**: Provide one high-level strategic insight or a complex, multi-step LLM prompt that saves hours of work.
-       - Use this HTML for the insight:
+    3. **2 TRENDING REPOS**: Pick the 2 most significant GitHub repositories.
+       - Use this HTML:
+         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+           <div style="color: #8b5cf6; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">GITHUB NODE</div>
+           <strong style="color: #ffffff; font-size: 18px;">[Repo Name]</strong>
+           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[GitHub Data (Stars, primary utility)]</p>
+           <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">Explore Repository →</a>
+         </div>
+
+    4. **1 ACTIONABLE INSIGHT/PROMPT**: Provide one high-level strategic insight or a complex LLM prompt.
+       - Use this HTML:
          <div style="border-left: 4px solid #10b981; padding: 24px; background: rgba(16, 185, 129, 0.05); border-radius: 0 16px 16px 0;">
            <h3 style="color: #ffffff; margin-top: 0;">This Week's Actionable Insight</h3>
            <p style="color: #cbd5e1; font-style: italic; margin-bottom: 20px;">[Insight/Prompt Content]</p>
-           <a href="https://chat.openai.com/?q=[Insight/Prompt Content]" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">⚡ Execute Protocol</a>
+           <a href="https://chatgpt.com/?q=[Insight/Prompt Content]" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">⚡ Execute Protocol</a>
          </div>
     
     Technical:
     - Return ONLY the HTML content.
     - No markdown formatting.
     - Use inline styles only.
-    - Ensure all colors match the brand (White #ffffff, Primary #10b981, Muted #94a3b8, Dark Background #0f172a).
+    - Colors: White #ffffff, Primary #10b981, Muted #94a3b8, Dark Background #0f172a.
   `;
 
   try {
@@ -123,8 +177,8 @@ async function generateWeeklyIntelligence(articles) {
 async function sendNewsletter() {
   console.log('--- STARTING 3-2-1 WEEKLY INTELLIGENCE PROTOCOL ---');
 
-  const articles = await fetchAIIntelligence();
-  if (articles.length === 0) {
+  const intelligenceData = await fetchAIIntelligence();
+  if (intelligenceData.articles.length === 0) {
     console.log('Insufficient signal found. Aborting protocol.');
     return;
   }
@@ -159,7 +213,7 @@ async function sendNewsletter() {
       if ((isMonday && is9AMOrLater && !alreadySent) || forceSend) {
         if (!sharedEmailBody) {
           console.log('--- GENERATING NEURAL BRIEFING (3-2-1 STRUCTURE) ---');
-          sharedEmailBody = await generateWeeklyIntelligence(articles);
+          sharedEmailBody = await generateWeeklyIntelligence(intelligenceData);
           
           // ARCHIVE THE ISSUE: Save to Supabase for the web view
           try {
