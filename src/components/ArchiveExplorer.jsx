@@ -10,7 +10,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ArchiveExplorer = () => {
+const ArchiveExplorer = ({ setView }) => {
   const [archives, setArchives] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -71,9 +71,13 @@ const ArchiveExplorer = () => {
               </div>
             ) : (
               archives.map((item) => (
-                <a 
+                <div 
                   key={item.id} 
-                  href={`/?view=issue&id=${item.id}`}
+                  onClick={() => {
+                    // Update URL without reload for potential bookmarking
+                    window.history.pushState({}, '', `/?view=issue&id=${item.id}`);
+                    setView('issue');
+                  }}
                   style={{ 
                     textDecoration: 'none',
                     display: 'flex',
@@ -83,7 +87,8 @@ const ArchiveExplorer = () => {
                     background: 'rgba(255,255,255,0.03)',
                     border: '1px solid rgba(255,255,255,0.05)',
                     borderRadius: '20px',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.background = 'rgba(16, 185, 129, 0.05)';
@@ -118,13 +123,13 @@ const ArchiveExplorer = () => {
                   <div style={{ color: '#10b981', fontWeight: '700', fontSize: '0.9rem' }}>
                     Access Deep-Dive →
                   </div>
-                </a>
+                </div>
               ))
             )}
           </div>
 
           <div style={{ marginTop: '40px', textAlign: 'center' }}>
-            <a href="/" className="back-link">Return to Base</a>
+            <button onClick={() => setView('home')} className="back-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>Return to Base</button>
           </div>
         </div>
       </div>
