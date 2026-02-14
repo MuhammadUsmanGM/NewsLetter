@@ -149,13 +149,13 @@ const Dashboard = ({ name, email, setView }) => {
             </div>
             <div className="greeting-wrap">
               <h1 className="hero-title">
-                THE SIGNAL <span className="text-gradient">3-2-1</span>
+                THE SIGNAL <span className="text-gradient">3-2-2-1</span>
               </h1>
               <h2 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: '700', margin: '1rem 0' }}>
                 Welcome Back, {name || 'Commander'}
               </h2>
               <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem', fontSize: '1.1rem' }}>
-                Your neural link is stable. Next 3-2-1 intelligence protocol is being synthesized.
+                Your neural link is stable. Next 3-2-2-1 intelligence protocol is being synthesized.
               </p>
             </div>
           </motion.div>
@@ -178,7 +178,7 @@ const Dashboard = ({ name, email, setView }) => {
 
           {/* Optimized 3-2-1 Countdown */}
           <motion.div className="glass-card countdown-section" variants={itemVariants}>
-            <div className="countdown-title">Next 3-2-1 Intelligence Release</div>
+            <div className="countdown-title">Next 3-2-2-1 Intelligence Release</div>
             <div className="timer-grid">
               <div className="timer-box">
                 <span className="timer-num">{timeLeft.d}</span>
