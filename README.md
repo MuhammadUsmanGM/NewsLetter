@@ -19,7 +19,7 @@
 ## ✨ Cutting-Edge Features
 
 - 🛡️ **Elite Security Layer** – Protected by **Cloudflare Turnstile** to ensure zero spam and bot-free comms.
-- 🧠 **AI-Powered Curation** – Leverages `gemini-2.5-flash-lite` to generate deep-dive technical insights.
+- 🧠 **AI-Powered Curation** – Leverages `gemini-2.0-flash-lite` to generate deep-dive technical insights.
 - 📡 **Real-time Global News** – Powered by NewsAPI to fetch the most discussed breakthroughs from tech giants like OpenAI, Nvidia, and Anthropic.
 - ⏰ **Dynamic Timezone Delivery** – Intelligent scheduling ensures users receive their update at exactly 9:00 AM local time, anywhere in the world.
 - 🌐 **Web Archive Protocol** – Users can access the latest intelligence briefing directly in the browser.
@@ -41,18 +41,24 @@
 
 ```mermaid
 graph TD
-    A[React Landing Page] -->|Turnstile Verified| B(Supabase DB)
-    C[GitHub Actions - Every 3h on Monday] -->|Trigger| D{api/cron.js}
-    D -->|Fetch News| E[NewsAPI]
-    D -->|Generate Insights| F[Google Gemini AI]
-    D -->|Check Timezones| B
-    D -->|Send Mail| G[SMTP / Nodemailer]
-    D -->|Archive Issue| B
-    G -->|Premium Email| H[User Inbox]
-    I[Feedback Form] -->|Submit| J{api/feedback.js}
-    K[Web Archive View] -->|Fetch Latest| B
-    J -->|Email Admin| G
-    J -->|Store| B
+    A[User Terminal] -->|Interaction| B[React Landing Page]
+    B -->|Silent Challenge| C{Cloudflare Turnstile}
+    C -->|Valid Token| D[api/subscribe.js]
+    D -->|Secure Storage| E(Supabase DB)
+    
+    F[GitHub Actions cron] -->|Trigger| G{api/cron.js}
+    G -->|Fetch News| H[NewsAPI]
+    G -->|Neural Synthesis| I[Google Gemini AI]
+    G -->|Check Timezones| E
+    G -->|Send Signal| J[SMTP Delivery]
+    G -->|Archive Record| E
+    
+    J -->|Premium Briefing| K[User Inbox]
+    
+    L[Web Archive Interface] -->|Query| E
+    M[Feedback Terminal] -->|Signal| N{api/feedback.js}
+    N -->|Relay| J
+    N -->|Store| E
 ```
 
 ---
