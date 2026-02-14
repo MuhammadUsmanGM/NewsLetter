@@ -22,7 +22,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const Dashboard = ({ name, email }) => {
+const Dashboard = ({ name, email, setView }) => {
   const [timeLeft, setTimeLeft] = useState({ d: '00', h: '00', m: '00', s: '03' });
   const [isLoaded, setIsLoaded] = useState(false);
   const [tierInfo, setTierInfo] = useState({
@@ -166,10 +166,14 @@ const Dashboard = ({ name, email }) => {
               <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '4px' }}>Latest Signal Archive</h3>
               <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Access this week's 3-2-1 intelligence briefing immediately.</p>
             </div>
-            <a href="/?view=latest" className="sync-btn" style={{ width: 'auto', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+            <button 
+              onClick={() => setView('latest')} 
+              className="sync-btn" 
+              style={{ width: 'auto', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)', cursor: 'pointer' }}
+            >
               <Zap size={16} style={{ marginRight: '8px' }} />
               Read Protocol
-            </a>
+            </button>
           </motion.div>
 
           {/* Optimized 3-2-1 Countdown */}
@@ -257,9 +261,9 @@ const Dashboard = ({ name, email }) => {
                 <a href="https://www.linkedin.com/in/muhammad-usman-ai-dev" target="_blank" rel="noopener noreferrer" className="sync-btn">
                   <Linkedin size={18} /> LinkedIn Terminal
                 </a>
-                <a href="/?view=install" className="sync-btn" style={{ background: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }}>
+                <button onClick={() => setView('install')} className="sync-btn" style={{ background: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981', cursor: 'pointer', textAlign: 'left', width: '100%' }}>
                   <Download size={18} /> Deploy Mobile Protocol
-                </a>
+                </button>
               </div>
             </div>
           </motion.div>

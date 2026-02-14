@@ -102,12 +102,16 @@ function App() {
     setIsUnsubscribing(true);
     setApiError('');
     try {
-      const { error } = await supabase
-        .from('newsletter_subscribers')
-        .delete()
-        .eq('email', email);
+      const response = await fetch('/api/unsubscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.error || 'Failed to unsubscribe');
+      }
       
       setUnsubscribed(true);
       // Remove query params from URL without refreshing
@@ -263,11 +267,11 @@ function App() {
 
   const renderView = () => {
     if (showWelcome) return <Welcome onWelcomeComplete={handleWelcomeComplete} />;
-    if (currentView === 'dashboard') return <Dashboard name={userName} email={formData.email} />;
-    if (currentView === 'feedback') return <Feedback />;
-    if (currentView === 'latest') return <LatestIssue />;
-    if (currentView === 'archive') return <ArchiveExplorer />;
-    if (currentView === 'issue') return <LatestIssue issueId={selectedIssueId} />;
+    if (currentView === 'dashboard') return <Dashboard name={userName} email={formData.email} setView={setCurrentView} />;
+    if (currentView === 'feedback') return <Feedback setView={setCurrentView} />;
+    if (currentView === 'latest') return <LatestIssue setView={setCurrentView} />;
+    if (currentView === 'archive') return <ArchiveExplorer setView={setCurrentView} />;
+    if (currentView === 'issue') return <LatestIssue issueId={selectedIssueId} setView={setCurrentView} />;
     
     return (
       <div className="newsletter-container">
@@ -424,7 +428,7 @@ function App() {
               <div style={{ marginTop: '1.5rem', display: 'flex', gap: '10px' }}>
                 <button 
                   type="button"
-                  onClick={() => window.location.href = '/?view=latest'}
+                  onClick={() => setCurrentView('latest')}
                   className="secondary-btn"
                   style={{
                     flex: 1,
@@ -453,7 +457,7 @@ function App() {
                 </button>
                 <button 
                   type="button"
-                  onClick={() => window.location.href = '/?view=archive'}
+                  onClick={() => setCurrentView('archive')}
                   className="secondary-btn"
                   style={{
                     flex: 1,

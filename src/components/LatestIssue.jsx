@@ -11,7 +11,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const LatestIssue = ({ issueId = null }) => {
+const LatestIssue = ({ issueId = null, setView }) => {
   const [issue, setIssue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPrompt, setCurrentPrompt] = useState('');
@@ -110,7 +110,7 @@ const LatestIssue = ({ issueId = null }) => {
         <div className="feedback-card" style={{ textAlign: 'center', padding: '40px' }}>
           <h2 className="feedback-title">Signal Not Found</h2>
           <p className="feedback-subtitle">The requested intelligence record is missing or classified.</p>
-          <a href="/?view=archive" className="back-link">Return to Archive</a>
+          <button onClick={() => setView('archive')} className="back-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>Return to Archive</button>
         </div>
       </div>
     );
@@ -196,12 +196,12 @@ const LatestIssue = ({ issueId = null }) => {
           <div style={{ marginTop: '60px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '40px' }}>
             <p style={{ marginBottom: '20px' }}>{issueId ? 'Interested in future signals?' : 'Want this delivered to your inbox?'}</p>
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="/" className="submit-btn" style={{ textDecoration: 'none', display: 'inline-flex', width: 'auto', padding: '12px 30px' }}>
+              <button onClick={() => setView('home')} className="submit-btn" style={{ textDecoration: 'none', display: 'inline-flex', width: 'auto', padding: '12px 30px' }}>
                 Subscribe to Protocol
-              </a>
-              <a href="/?view=archive" className="back-link" style={{ marginTop: 0 }}>
+              </button>
+              <button onClick={() => setView('archive')} className="back-link" style={{ marginTop: 0, background: 'none', border: 'none', cursor: 'pointer' }}>
                 Protocol Archive
-              </a>
+              </button>
             </div>
           </div>
         </div>
