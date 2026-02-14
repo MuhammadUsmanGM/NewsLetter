@@ -12,14 +12,15 @@
 ---
 
 ## 📖 The Vision
-**THE SIGNAL** is not just a mailing list; it's a high-end, fully automated intelligence engine. It fetches the most impactful breakthroughs in artificial intelligence from reputable sources, processes them using state-of-the-art LLMs, and delivers a premium, personalized briefing directly to your inbox at the perfect moment—9:00 AM in your specific timezone.
+**THE SIGNAL** is not just a mailing list; it's a high-end, fully automated intelligence engine. It fetches the most impactful breakthroughs in artificial intelligence from reputable sources, processes them using state-of-the-art LLMs, and delivers a premium, personalized briefing directly to your inbox at the perfect moment—9:00 AM in your specific timezone. Following a strict **3-2-2-1** protocol, it ensures you never miss a signal.
 
 ---
 
 ## ✨ Cutting-Edge Features
 
 - 🛡️ **Elite Security Layer** – Protected by **Cloudflare Turnstile** to ensure zero spam and bot-free comms.
-- 🧠 **AI-Powered Curation** – Leverages `gemini-2.0-flash-lite` to generate deep-dive technical insights.
+- 🧠 **AI-Powered Curation** – Leverages `gemini-2.5-flash-lite` to synthesize a weekly **3-2-2-1** technical briefing.
+- 🐙 **GitHub Signal Node** – Scans trending AI repositories to identify explosive growth in dev tools and libraries.
 - 📡 **Real-time Global News** – Powered by NewsAPI to fetch the most discussed breakthroughs from tech giants like OpenAI, Nvidia, and Anthropic.
 - ⏰ **Dynamic Timezone Delivery** – Intelligent scheduling ensures users receive their update at exactly 9:00 AM local time, anywhere in the world.
 - 🌐 **Web Archive Protocol** – Users can access the latest intelligence briefing directly in the browser.
@@ -48,17 +49,18 @@ graph TD
     
     F[GitHub Actions cron] -->|Trigger| G{api/cron.js}
     G -->|Fetch News| H[NewsAPI]
-    G -->|Neural Synthesis| I[Google Gemini AI]
+    G -->|Scrape Stars| I[GitHub API]
+    G -->|Neural Synthesis| J[Google Gemini AI]
     G -->|Check Timezones| E
-    G -->|Send Signal| J[SMTP Delivery]
+    G -->|Send Signal| K[SMTP Delivery]
     G -->|Archive Record| E
     
-    J -->|Premium Briefing| K[User Inbox]
+    K -->|3-2-2-1 Briefing| L[User Inbox]
     
-    L[Web Archive Interface] -->|Query| E
-    M[Feedback Terminal] -->|Signal| N{api/feedback.js}
-    N -->|Relay| J
-    N -->|Store| E
+    M[Web Archive Interface] -->|Query| E
+    N[Feedback Terminal] -->|Signal| O{api/feedback.js}
+    O -->|Relay| K
+    O -->|Store| E
 ```
 
 ---
