@@ -51,15 +51,38 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Insert into Supabase
-    const { data, error } = await supabase
+    // 1. Check if user already exists
+    const { data: existingUser, error: fetchError } = await supabase
       .from('newsletter_subscribers')
-      .upsert({ name, email, timezone }, { onConflict: 'email' })
-      .select();
+      .select('email, name')
+      .eq('email', email)
+      .single();
 
-    if (error) throw error;
+    if (existingUser) {
+      // If the name provided is different from the stored name, update it
+      if (name && existingUser.name !== name) {
+        await supabase
+          .from('newsletter_subscribers')
+          .update({ name })
+          .eq('email', email);
+      }
 
-    // 2. Send Premium Welcome Email
+      return res.status(200).json({ 
+        success: true, 
+        alreadySubscribed: true, 
+        name: name || existingUser.name,
+        message: 'Welcome back! Your neural link is already active.' 
+      });
+    }
+
+    // 2. Insert into Supabase (New Subscriber)
+    const { error: insertError } = await supabase
+      .from('newsletter_subscribers')
+      .insert([{ name, email, timezone }]);
+
+    if (insertError) throw insertError;
+
+    // 3. Send Premium Welcome Email (Only for NEW subscribers)
     const welcomeHtml = `
       <!DOCTYPE html>
       <html lang="en">
