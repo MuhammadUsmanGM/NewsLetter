@@ -96,191 +96,119 @@ export default async function handler(req, res) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Intelligence Protocol Activated</title>
-        <!--[if mso]>
-        <style type="text/css">
-        body, table, td, a {font-family: Arial, Helvetica, sans-serif !important;}
-        </style>
-        <![endif]-->
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=JetBrains+Mono:wght@500&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
           
-          /* Reset */
-          body { margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', Helvetica, Arial, sans-serif; color: #94a3b8; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-          table { border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
-          img { border: 0; -ms-interpolation-mode: bicubic; display: block; }
-          a { text-decoration: none; color: #10b981; }
+          body { margin: 0 !important; padding: 0 !important; background-color: #020617 !important; font-family: 'Outfit', sans-serif; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+          table { border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; }
+          img { border: 0; -ms-interpolation-mode: bicubic; }
+          .wrapper { width: 100%; background-color: #020617; }
+          .content-table { max-width: 600px; margin: 0 auto; width: 100%; }
           
-          /* Wrapper */
-          .wrapper { width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #020617; }
-          .webkit { max-width: 600px; margin: 0 auto; }
-          
-          /* Mobile Styles */
           @media screen and (max-width: 600px) {
-            .outer { width: 100% !important; margin: 0 auto !important; }
-            .inner { width: 100% !important; margin: 0 auto !important; padding: 0 20px !important; }
+            .header-padding { padding: 40px 20px !important; }
             .content-padding { padding: 30px 20px !important; }
-            .header-padding { padding: 40px 24px !important; }
-            .mobile-full { width: 100% !important; display: block !important; }
-            .mobile-center { text-align: center !important; }
-            h1 { font-size: 32px !important; line-height: 1.1 !important; }
-            p { font-size: 16px !important; line-height: 1.6 !important; }
-            .access-key-card { padding: 24px !important; margin: 24px 0 !important; }
-            .key-value { font-size: 20px !important; word-break: break-all; }
-            .feature-item { margin-bottom: 20px !important; }
-            .feature-icon { margin-bottom: 0 !important; }
+            h1 { font-size: 34px !important; }
+            .btn { width: 100% !important; text-align: center !important; display: block !important; box-sizing: border-box !important; }
           }
         </style>
       </head>
-      <body style="margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', Helvetica, Arial, sans-serif; color: #94a3b8;">
-        <center class="wrapper" style="width: 100%; table-layout: fixed; background-color: #020617; padding-bottom: 40px;">
-          <div class="webkit" style="max-width: 600px; margin: 0 auto;">
-            
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="padding: 20px 0 0 0;">
-              <tr>
-                <td align="center">
-                  
-                  <div class="container" style="background-color: #0f172a; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 0 60px -15px rgba(16, 185, 129, 0.2); max-width: 600px; width: 100%;">
-                    
-                    <!-- Header -->
-                    <div class="header" style="background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); padding: 50px 40px; text-align: center; position: relative;">
-                      <!-- Grid Overlay -->
-                      <div class="header-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.4;"></div>
+      <body>
+        <div class="wrapper">
+          <!-- Full Width Header -->
+          <table border="0" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #064e3b 0%, #020617 100%);">
+            <tr>
+              <td align="center">
+                <!--[if mso | IE]>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
+                <![endif]-->
+                <table class="content-table" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="header-padding" align="center" style="padding: 80px 40px 60px 40px;">
+                      <img src="${process.env.APP_URL}/Favicon.png" alt="Logo" width="80" height="80" style="width: 80px; height: 80px; border: 2px solid #10b981; border-radius: 16px;">
+                      <div style="margin: 24px 0 12px 0; color: #34d399; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;">Neural Link Validated</div>
+                      <h1 style="color: #ffffff; font-size: 48px; font-weight: 800; margin: 0; letter-spacing: -2px; line-height: 1;">THE <span style="color: #34d399;">SIGNAL.</span></h1>
+                    </td>
+                  </tr>
+                </table>
+                <!--[if mso | IE]>
+                </td></tr></table>
+                <![endif]-->
+              </td>
+            </tr>
+          </table>
+
+          <!-- Content Section -->
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center">
+                <!--[if mso | IE]>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
+                <![endif]-->
+                <table class="content-table" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="content-padding" style="padding: 60px 40px;">
+                      <h2 style="color: #ffffff; font-size: 26px; font-weight: 700; margin: 0 0 20px 0;">Welcome, ${name}</h2>
+                      <p style="font-size: 17px; line-height: 1.6; color: #94a3b8; margin: 0 0 40px 0;">Your connection to the intelligence relay is now stable. You have priority access to weekly 3-2-2-1 breakthroughs, technical repositories, and strategic AI insights.</p>
                       
-                      <!-- Logo -->
-                      <table border="0" cellpadding="0" cellspacing="0" align="center" style="position: relative; z-index: 10; margin-bottom: 24px;">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-left: 2px solid #10b981; background: rgba(16, 185, 129, 0.05); margin: 40px 0;">
                         <tr>
-                          <td align="center">
-                            <img src="${process.env.APP_URL}/Favicon.png" alt="Logo" width="70" height="70" style="display: block; width: 70px; height: 70px; border-radius: 16px; border: 2px solid #10b981; background-color: rgba(6, 78, 59, 0.8);">
+                          <td style="padding: 25px 30px;">
+                            <div style="color: #34d399; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Access Identification</div>
+                            <div style="font-family: monospace; color: #ffffff; font-size: 24px; font-weight: 700;">USR-${Math.random().toString(36).substring(2, 10).toUpperCase()}</div>
                           </td>
                         </tr>
                       </table>
 
-                      <!-- Badge -->
-                      <div style="position: relative; z-index: 10; margin-bottom: 16px;">
-                         <span style="display: inline-block; padding: 6px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 100px; color: #34d399; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;">Protocol Initiated</span>
-                      </div>
-
-                      <!-- Main Title -->
-                      <h1 style="color: #ffffff; font-size: 40px; font-weight: 800; margin: 0; letter-spacing: -0.03em; line-height: 1.1; position: relative; z-index: 10; text-shadow: 0 4px 20px rgba(0,0,0,0.5);">THE <span style="color: #34d399;">SIGNAL.</span></h1>
-                    </div>
-
-                    <!-- Body -->
-                    <div class="content-body" style="padding: 40px 40px 50px 40px; background-color: #0f172a;">
-                      <!-- Personal Greeting -->
-                      <div style="text-align: left; margin-bottom: 24px;">
-                        <h2 style="color: #f8fafc; font-size: 22px; font-weight: 700; margin: 0 0 12px 0;">Welcome, ${name}</h2>
-                        <p style="font-size: 16px; line-height: 1.6; color: #cbd5e1; margin: 0;">You have successfully connected to the intelligence network. Your access privileges have been granted.</p>
-                      </div>
+                      <p style="margin: 40px 0; font-size: 16px; color: #94a3b8; line-height: 1.6;">The first briefing arrives this <strong>Monday at 09:00 AM sharp</strong>.</p>
                       
-                      <!-- Access Card -->
-                      <div class="access-key-card" style="background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 24px; margin: 32px 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <div align="left">
+                        <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}" class="btn" style="display: inline-block; background: #10b981; color: #ffffff; padding: 20px 45px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Initialize Dashboard</a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                <!--[if mso | IE]>
+                </td></tr></table>
+                <![endif]-->
+              </td>
+            </tr>
+          </table>
+
+          <!-- Seamless Footer -->
+          <table border="0" cellpadding="0" cellspacing="0" style="border-top: 1px solid rgba(255,255,255,0.05);">
+            <tr>
+              <td align="center" style="padding: 80px 40px;">
+                <!--[if mso | IE]>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
+                <![endif]-->
+                <table class="content-table" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center">
+                      <div style="margin-bottom: 40px;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: auto;">
                           <tr>
-                            <td valign="top">
-                              <div style="color: #34d399; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">Access Key</div>
-                              <div style="font-family: 'JetBrains Mono', 'Courier New', monospace; color: #ffffff; font-size: 20px; letter-spacing: 1px; font-weight: 500;">USR-${Math.random().toString(36).substring(2, 10).toUpperCase()}</div>
+                            <td style="padding: 0 15px;">
+                              <a href="https://github.com/MuhammadUsmanGM"><img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" width="24" height="24" style="opacity: 0.5;"></a>
                             </td>
-                          </tr>
-                          <tr>
-                            <td style="padding-top: 16px;">
-                               <div style="font-size: 13px; color: #64748b; font-weight: 500;">Priority: Alpha Node • Monday 09:00 Sync</div>
+                            <td style="padding: 0 15px;">
+                              <a href="https://linkedin.com/in/muhammad-usman-ai-dev"><img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" width="24" height="24" style="opacity: 0.5;"></a>
                             </td>
                           </tr>
                         </table>
                       </div>
-
-                      <!-- Features Grid -->
-                      <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
-                        <tr>
-                          <td style="padding-bottom: 24px;">
-                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                   <td width="30" valign="top" style="padding-top: 2px;"><span style="font-size: 20px;">📰</span></td>
-                                   <td style="padding-left: 15px;">
-                                      <div style="color: #f1f5f9; font-weight: 700; font-size: 15px; margin-bottom: 4px;">3 Major Stories</div>
-                                      <div style="color: #94a3b8; font-size: 14px; line-height: 1.5;">Critical AI breakthroughs synthesized for depth and clarity.</div>
-                                   </td>
-                                </tr>
-                             </table>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="padding-bottom: 24px;">
-                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                   <td width="30" valign="top" style="padding-top: 2px;"><span style="font-size: 20px;">🛠️</span></td>
-                                   <td style="padding-left: 15px;">
-                                      <div style="color: #f1f5f9; font-weight: 700; font-size: 15px; margin-bottom: 4px;">2 Tools & 2 Repos</div>
-                                      <div style="color: #94a3b8; font-size: 14px; line-height: 1.5;">Hand-picked emerging tools and the week's most explosive GitHub repositories.</div>
-                                   </td>
-                                </tr>
-                             </table>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="padding-bottom: 0;">
-                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                   <td width="30" valign="top" style="padding-top: 2px;"><span style="font-size: 20px;">💡</span></td>
-                                   <td style="padding-left: 15px;">
-                                      <div style="color: #f1f5f9; font-weight: 700; font-size: 15px; margin-bottom: 4px;">1 Actionable Insight</div>
-                                      <div style="color: #94a3b8; font-size: 14px; line-height: 1.5;">Strategic prompts or insights you can implement immediately.</div>
-                                   </td>
-                                </tr>
-                             </table>
-                          </td>
-                        </tr>
-                      </table>
-
-                      <div style="height: 1px; background-color: rgba(255,255,255,0.08); width: 100%; margin: 30px 0;"></div>
-
-                      <p style="margin: 0 0 30px 0; font-size: 15px; color: #cbd5e1; line-height: 1.6; text-align: center;">Your first briefing arrives this <strong>Monday at 9:00 AM sharp</strong>.</p>
-                      
-                      <!-- CTA -->
-                      <div class="cta-wrap" style="text-align: center;">
-                        <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}" style="display: inline-block; background: #10b981; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; padding: 16px 36px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 16px; box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4); border: 1px solid rgba(255,255,255,0.1);">Enter Neural Dashboard</a>
-                      </div>
-                    </div>
-
-                    <!-- Footer -->
-                    <div class="footer-section" style="padding: 30px 40px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
-                      <!-- Feedback Node -->
-                      <div style="margin: 20px 0; padding: 20px; background: rgba(16, 185, 129, 0.03); border: 1px dashed rgba(16, 185, 129, 0.2); border-radius: 12px; text-align: center;">
-                        <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 15px;">Have suggestions for our intelligence protocol?</p>
-                        <a href="${process.env.APP_URL}/?view=feedback" style="display: inline-block; padding: 8px 20px; background: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Transmit Feedback</a>
-                      </div>
-
-                      <p class="footer-text" style="color: #475569; font-size: 13px; line-height: 1.6; margin: 0 0 20px 0;">&copy; ${new Date().getFullYear()} THE SIGNAL.<br>Forged for the technical elite.</p>
-                      
-                      <!-- Social Links -->
-                      <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
-                        <tr>
-                          <td style="padding: 0 15px;">
-                            <a href="https://github.com/MuhammadUsmanGM" style="text-decoration: none;">
-                              <img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" alt="GitHub" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
-                            </a>
-                          </td>
-                          <td style="padding: 0 15px;">
-                            <a href="https://linkedin.com/in/muhammad-usman-ai-dev" style="text-decoration: none;">
-                              <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
-                            </a>
-                          </td>
-                        </tr>
-                      </table>
-
-                      <!-- Unsubscribe -->
-                      <p style="margin: 0; font-size: 11px; color: #334155;">
-                        <a href="${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color: #475569; text-decoration: none;">Protocol Deactivation</a>
-                      </p>
-                    </div>
-                  </div>
-
-                </td>
-              </tr>
-            </table>
-
-          </div>
-        </center>
+                      <p style="color: #475569; font-size: 13px; margin: 0 0 12px 0;">&copy; ${new Date().getFullYear()} THE SIGNAL. Forged for the technical elite.</p>
+                      <a href="${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color: #475569; font-size: 11px; text-decoration: underline;">Deactivate Neural Link</a>
+                    </td>
+                  </tr>
+                </table>
+                <!--[if mso | IE]>
+                </td></tr></table>
+                <![endif]-->
+              </td>
+            </tr>
+          </table>
+        </div>
       </body>
       </html>
     `;

@@ -241,7 +241,6 @@ async function sendNewsletter() {
         
         const premiumEmailHtml = `
           <!DOCTYPE html>
-<!DOCTYPE html>
           <html lang="en">
           <head>
             <meta charset="utf-8">
@@ -250,126 +249,129 @@ async function sendNewsletter() {
             <style>
               @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
               
-              /* Reset */
-              body { margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', sans-serif; color: #94a3b8; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-              table { border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+              body { margin: 0 !important; padding: 0 !important; background-color: #020617 !important; font-family: 'Outfit', sans-serif; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+              table { border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; }
               img { border: 0; -ms-interpolation-mode: bicubic; }
+              .wrapper { width: 100%; background-color: #020617; }
+              .content-table { max-width: 600px; margin: 0 auto; width: 100%; }
               
-              /* Wrapper */
-              .wrapper { width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #020617; }
-              .webkit { max-width: 600px; margin: 0 auto; }
-              
-              /* Mobile Styles */
               @media screen and (max-width: 600px) {
-                .outer { width: 100% !important; margin: 0 auto !important; }
-                .inner { width: 100% !important; margin: 0 auto !important; padding: 0 16px !important; }
-                .content-padding { padding: 30px 20px !important; }
                 .header-padding { padding: 40px 20px !important; }
-                .mobile-full { width: 100% !important; display: block !important; }
-                .mobile-center { text-align: center !important; }
-                h1 { font-size: 28px !important; }
-                p { font-size: 16px !important; }
+                .content-padding { padding: 30px 20px !important; }
+                h1 { font-size: 34px !important; }
+                .cta-btn { width: 100% !important; text-align: center !important; display: block !important; box-sizing: border-box !important; }
               }
             </style>
           </head>
-          <body style="margin: 0; padding: 0; background-color: #020617; font-family: 'Outfit', sans-serif; color: #94a3b8;">
-            <center class="wrapper" style="width: 100%; table-layout: fixed; background-color: #020617; padding-bottom: 40px;">
-              <div class="webkit" style="max-width: 600px; margin: 0 auto;">
-                
-                <!-- View in Browser Link -->
-                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; padding: 0 10px;">
-                   <tr>
-                      <td align="center" style="padding: 10px 0; color: #475569; font-size: 11px;">
-                        <a href="${process.env.APP_URL}/?view=latest" style="color: #475569; text-decoration: none; letter-spacing: 0.5px;">View this signal in your neural interface</a>
-                      </td>
-                   </tr>
-                </table>
+          <body>
+            <div class="wrapper">
+              <!-- View In Browser (Seamless Header) -->
+              <table border="0" cellpadding="0" cellspacing="0" style="background-color: #020617;">
+                <tr>
+                  <td align="center" style="padding: 10px 0; color: #475569; font-size: 11px;">
+                    <a href="${process.env.APP_URL}/?view=latest" style="color: #475569; text-decoration: none; letter-spacing: 0.5px;">View this signal in your neural interface</a>
+                  </td>
+                </tr>
+              </table>
 
-                <!-- Main Email Card -->
-                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0f172a; max-width: 600px; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);">
-                  
-                  <!-- Header -->
-                  <tr>
-                    <td class="header-padding" style="padding: 50px 40px; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); text-align: center;">
-                      <div style="display: inline-block; padding: 6px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;">
-                        Weekly Protocol Release
-                      </div>
-                      <h1 style="color: #ffffff; margin: 0; font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1;">THE <span style="color: #10b981;">SIGNAL.</span></h1>
-                      <p style="color: #94a3b8; margin: 10px 0 0 0; font-size: 15px; letter-spacing: 0.05em;">${dateStr}</p>
-                    </td>
-                  </tr>
+              <!-- Fluid Header Section -->
+              <table border="0" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #064e3b 0%, #020617 100%);">
+                <tr>
+                  <td align="center">
+                    <!--[if mso | IE]>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
+                    <![endif]-->
+                    <table class="content-table" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td class="header-padding" align="center" style="padding: 60px 40px;">
+                          <div style="display: inline-block; padding: 6px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;">
+                            Weekly Protocol Release
+                          </div>
+                          <h1 style="color: #ffffff; margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;">THE <span style="color: #10b981;">SIGNAL.</span></h1>
+                          <p style="color: #94a3b8; margin: 12px 0 0 0; font-size: 15px; letter-spacing: 0.05em;">${dateStr}</p>
+                        </td>
+                      </tr>
+                    </table>
+                    <!--[if mso | IE]>
+                    </td></tr></table>
+                    <![endif]-->
+                  </td>
+                </tr>
+              </table>
 
-                  <!-- Content Body -->
-                  <tr>
-                    <td class="content-padding" style="padding: 40px; background-color: #0f172a;">
-                      <div style="color: #ffffff; font-size: 22px; font-weight: 700; margin-bottom: 20px;">Greetings, ${subscriber.name}.</div>
-                      <p style="margin-bottom: 30px; font-size: 16px; line-height: 1.6; color: #cbd5e1;">Your weekly intelligence harvest has completed. Below is the curated signal extracted from this week's neural network shifts.</p>
-                      
-                      <!-- AI Generated Content Injection Point -->
-                      <div style="width: 100%;">
-                        ${sharedEmailBody}
-                      </div>
+              <!-- Main Content Area -->
+              <table border="0" cellpadding="0" cellspacing="0" style="background-color: #020617;">
+                <tr>
+                  <td align="center">
+                    <!--[if mso | IE]>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
+                    <![endif]-->
+                    <table class="content-table" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td class="content-padding" style="padding: 60px 40px;">
+                          <h2 style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0 0 20px 0;">Greetings, ${subscriber.name}.</h2>
+                          <p style="margin-bottom: 40px; font-size: 17px; line-height: 1.6; color: #94a3b8;">Your weekly intelligence harvest has completed. Curated signals extracted from the neural core follow below.</p>
+                          
+                          <div style="color: #cbd5e1;">
+                            ${sharedEmailBody}
+                          </div>
 
-                      <div style="margin-top: 40px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
-                         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-                           <tr>
-                             <td align="center">
-                               <!-- Determine stacking on mobile via specific widths or allow wrapping -->
-                                <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 12px 20px; margin: 5px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 13px;">Check on Web</a>
-                                <a href="${process.env.APP_URL}/?view=latest" style="display: inline-block; padding: 12px 20px; margin: 5px; background-color: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 13px;">🎙️ Listen to Relay</a>
-                                <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" style="display: inline-block; padding: 12px 20px; margin: 5px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 13px;">Neural Dashboard</a>
-                             </td>
-                           </tr>
-                         </table>
-                      </div>
+                          <div style="margin-top: 50px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); text-align: left;">
+                             <a href="${process.env.APP_URL}/?view=latest" class="cta-btn" style="display: inline-block; padding: 15px 25px; margin-right: 15px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Explore on Web</a>
+                             <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" class="cta-btn" style="display: inline-block; padding: 15px 25px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Neural Dashboard</a>
+                          </div>
 
-                    </td>
-                  </tr>
+                          <!-- Feedback Node -->
+                          <div style="margin: 50px 0; padding: 35px; border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 4px; text-align: center;">
+                            <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">Protocol Optimization</div>
+                            <p style="color: #cbd5e1; font-size: 15px; margin-bottom: 25px;">Was this intelligence harvest valuable to your current mission?</p>
+                            <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" 
+                               style="display: inline-block; color: #10b981; text-decoration: none; font-weight: 700; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #10b981;">Transmit Feedback →</a>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                    <!--[if mso | IE]>
+                    </td></tr></table>
+                    <![endif]-->
+                  </td>
+                </tr>
+              </table>
 
-                  <!-- Footer -->
-                  <tr>
-                    <td class="content-padding" style="padding: 30px 40px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
-                      <p style="margin: 0 0 20px 0; color: #475569; font-size: 13px;">Forged for the technical elite.</p>
-                      
-                      <!-- Social Nodes -->
-                      <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
-                        <tr>
-                          <td style="padding: 0 15px;">
-                            <a href="https://github.com/MuhammadUsmanGM" style="text-decoration: none;">
-                              <img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" alt="GitHub" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
-                            </a>
-                          </td>
-                          <td style="padding: 0 15px;">
-                            <a href="https://linkedin.com/in/muhammad-usman-ai-dev" style="text-decoration: none;">
-                              <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
-                            </a>
-                          </td>
-                        </tr>
-                      </table>
-
-                      <!-- Feedback & Interaction Node -->
-                      <div style="margin: 30px 0; padding: 25px; background: rgba(16, 185, 129, 0.03); border: 1px dashed rgba(16, 185, 129, 0.2); border-radius: 16px; text-align: center;">
-                        <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">Protocol Optimization</div>
-                        <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">Help us refine the signal. Was this intelligence harvest valuable to your current mission?</p>
-                        <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" 
-                           style="display: inline-block; padding: 12px 30px; background: #10b981; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">Transmit Feedback</a>
-                      </div>
-
-                      <div style="margin-top: 20px;">
-                        <table align="center" border="0" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td style="padding: 0 10px;">
-                              <a href="${unsubscribeUrl}" style="color: #475569; text-decoration: underline; font-size: 11px; letter-spacing: 0.5px;">Protocol Deactivation (Unsubscribe)</a>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
-
-                </table>
-              </div>
-            </center>
+              <!-- Seamless Footer Section -->
+              <table border="0" cellpadding="0" cellspacing="0" style="background-color: #020617; border-top: 1px solid rgba(255,255,255,0.05);">
+                <tr>
+                  <td align="center" style="padding: 60px 40px;">
+                    <!--[if mso | IE]>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
+                    <![endif]-->
+                    <table class="content-table" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center">
+                          <div style="margin-bottom: 30px;">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: auto;">
+                              <tr>
+                                <td style="padding: 0 15px;">
+                                  <a href="https://github.com/MuhammadUsmanGM"><img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" width="22" height="22" style="opacity: 0.5;"></a>
+                                </td>
+                                <td style="padding: 0 15px;">
+                                  <a href="https://linkedin.com/in/muhammad-usman-ai-dev"><img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" width="22" height="22" style="opacity: 0.5;"></a>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                          <p style="margin: 0 0 15px 0; color: #475569; font-size: 12px;">Forged for the technical elite AI practitioners.</p>
+                          <a href="${unsubscribeUrl}" style="color: #475569; text-decoration: underline; font-size: 11px;">Deactivate Neural Link</a>
+                        </td>
+                      </tr>
+                    </table>
+                    <!--[if mso | IE]>
+                    </td></tr></table>
+                    <![endif]-->
+                  </td>
+                </tr>
+              </table>
+            </div>
           </body>
           </html>
         `;
