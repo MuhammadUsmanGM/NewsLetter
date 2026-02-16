@@ -329,7 +329,24 @@ async function sendNewsletter() {
                   <!-- Footer -->
                   <tr>
                     <td class="content-padding" style="padding: 30px 40px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
-                      <p style="margin: 0; color: #475569; font-size: 13px;">Forged for the technical elite.</p>
+                      <p style="margin: 0 0 20px 0; color: #475569; font-size: 13px;">Forged for the technical elite.</p>
+                      
+                      <!-- Social Nodes -->
+                      <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
+                        <tr>
+                          <td style="padding: 0 15px;">
+                            <a href="https://github.com/MuhammadUsmanGM" style="text-decoration: none;">
+                              <img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" alt="GitHub" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
+                            </a>
+                          </td>
+                          <td style="padding: 0 15px;">
+                            <a href="https://linkedin.com/in/muhammad-usman-ai-dev" style="text-decoration: none;">
+                              <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+
                       <div style="margin-top: 20px;">
                         <table align="center" border="0" cellpadding="0" cellspacing="0">
                           <tr>
