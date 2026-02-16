@@ -352,10 +352,10 @@ async function sendNewsletter() {
                             <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: auto;">
                               <tr>
                                 <td style="padding: 0 15px;">
-                                  <a href="https://github.com/MuhammadUsmanGM"><img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" width="22" height="22" style="opacity: 0.5;"></a>
+                                  <a href="https://github.com/MuhammadUsmanGM"><img src="https://img.icons8.com/ios-filled/50/10b981/github.png" width="22" height="22" style="display: block;"></a>
                                 </td>
                                 <td style="padding: 0 15px;">
-                                  <a href="https://linkedin.com/in/muhammad-usman-ai-dev"><img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" width="22" height="22" style="opacity: 0.5;"></a>
+                                  <a href="https://linkedin.com/in/muhammad-usman-ai-dev"><img src="https://img.icons8.com/ios-filled/50/10b981/linkedin.png" width="22" height="22" style="display: block;"></a>
                                 </td>
                               </tr>
                             </table>
