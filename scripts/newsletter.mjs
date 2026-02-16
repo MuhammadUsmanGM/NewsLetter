@@ -265,14 +265,6 @@ async function sendNewsletter() {
           </head>
           <body>
             <div class="wrapper">
-              <!-- View In Browser (Seamless Header) -->
-              <table border="0" cellpadding="0" cellspacing="0" style="background-color: #020617;">
-                <tr>
-                  <td align="center" style="padding: 10px 0; color: #475569; font-size: 11px;">
-                    <a href="${process.env.APP_URL}/?view=latest" style="color: #475569; text-decoration: none; letter-spacing: 0.5px;">View this signal in your neural interface</a>
-                  </td>
-                </tr>
-              </table>
 
               <!-- Fluid Header Section -->
               <table border="0" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #064e3b 0%, #020617 100%);">
