@@ -276,7 +276,7 @@ async function sendNewsletter() {
                     <table class="content-table" border="0" cellpadding="0" cellspacing="0">
                       <tr>
                         <td class="header-padding" align="center" style="padding: 60px 40px;">
-                          <img src="${process.env.APP_URL}/Favicon.png" alt="Signal Logo" width="70" height="70" style="width: 70px; height: 70px; margin-bottom: 24px; border: 2px solid #10b981; border-radius: 14px;">
+                          <img src="${process.env.APP_URL}/Favicon.png" alt="Signal Logo" width="70" height="70" style="display: block; width: 70px; height: 70px; margin: 0 auto 24px auto; border: 2px solid #10b981; border-radius: 14px;">
                           <div style="display: inline-block; padding: 6px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;">
                             Weekly Protocol Release
                           </div>
