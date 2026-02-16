@@ -249,14 +249,20 @@ export default async function handler(req, res) {
                       <!-- Social Links -->
                       <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
                         <tr>
-                          <td style="padding: 0 12px;">
-                            <a href="https://github.com/MuhammadUsmanGM" style="color: #64748b; text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: 0.5px;">GITHUB</a>
+                          <td style="padding: 0 15px;">
+                            <a href="https://github.com/MuhammadUsmanGM" style="text-decoration: none;">
+                              <img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" alt="GitHub" width="24" height="24" style="display: block; width: 24px; height: 24px; opacity: 0.8;">
+                            </a>
                           </td>
-                          <td style="padding: 0 12px;">
-                            <a href="https://linkedin.com/in/muhammad-usman-ai-dev" style="color: #64748b; text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: 0.5px;">LINKEDIN</a>
+                          <td style="padding: 0 15px;">
+                            <a href="https://linkedin.com/in/muhammad-usman-ai-dev" style="text-decoration: none;">
+                              <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn" width="24" height="24" style="display: block; width: 24px; height: 24px; opacity: 0.8;">
+                            </a>
                           </td>
-                          <td style="padding: 0 12px;">
-                            <a href="${process.env.APP_URL}/?view=feedback" style="color: #34d399; text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: 0.5px;">FEEDBACK</a>
+                          <td style="padding: 0 15px;">
+                            <a href="${process.env.APP_URL}/?view=feedback" style="text-decoration: none;">
+                              <img src="https://img.icons8.com/ios-filled/50/34d399/external-link.png" alt="Feedback" width="24" height="24" style="display: block; width: 24px; height: 24px; opacity: 0.8;">
+                            </a>
                           </td>
                         </tr>
                       </table>
