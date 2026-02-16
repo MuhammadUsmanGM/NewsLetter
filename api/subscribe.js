@@ -244,6 +244,12 @@ export default async function handler(req, res) {
 
                     <!-- Footer -->
                     <div class="footer-section" style="padding: 30px 40px; background-color: #020617; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
+                      <!-- Feedback Node -->
+                      <div style="margin: 20px 0; padding: 20px; background: rgba(16, 185, 129, 0.03); border: 1px dashed rgba(16, 185, 129, 0.2); border-radius: 12px; text-align: center;">
+                        <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 15px;">Have suggestions for our intelligence protocol?</p>
+                        <a href="${process.env.APP_URL}/?view=feedback" style="display: inline-block; padding: 8px 20px; background: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Transmit Feedback</a>
+                      </div>
+
                       <p class="footer-text" style="color: #475569; font-size: 13px; line-height: 1.6; margin: 0 0 20px 0;">&copy; ${new Date().getFullYear()} THE SIGNAL.<br>Forged for the technical elite.</p>
                       
                       <!-- Social Links -->
@@ -251,17 +257,12 @@ export default async function handler(req, res) {
                         <tr>
                           <td style="padding: 0 15px;">
                             <a href="https://github.com/MuhammadUsmanGM" style="text-decoration: none;">
-                              <img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" alt="GitHub" width="24" height="24" style="display: block; width: 24px; height: 24px; opacity: 0.8;">
+                              <img src="https://img.icons8.com/ios-filled/50/ffffff/github.png" alt="GitHub" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
                             </a>
                           </td>
                           <td style="padding: 0 15px;">
                             <a href="https://linkedin.com/in/muhammad-usman-ai-dev" style="text-decoration: none;">
-                              <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn" width="24" height="24" style="display: block; width: 24px; height: 24px; opacity: 0.8;">
-                            </a>
-                          </td>
-                          <td style="padding: 0 15px;">
-                            <a href="${process.env.APP_URL}/?view=feedback" style="text-decoration: none;">
-                              <img src="https://img.icons8.com/ios-filled/50/34d399/external-link.png" alt="Feedback" width="24" height="24" style="display: block; width: 24px; height: 24px; opacity: 0.8;">
+                              <img src="https://img.icons8.com/ios-filled/50/ffffff/linkedin.png" alt="LinkedIn" width="22" height="22" style="display: block; width: 22px; height: 22px; opacity: 0.6;">
                             </a>
                           </td>
                         </tr>

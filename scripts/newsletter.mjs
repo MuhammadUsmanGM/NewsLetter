@@ -347,15 +347,19 @@ async function sendNewsletter() {
                         </tr>
                       </table>
 
+                      <!-- Feedback & Interaction Node -->
+                      <div style="margin: 30px 0; padding: 25px; background: rgba(16, 185, 129, 0.03); border: 1px dashed rgba(16, 185, 129, 0.2); border-radius: 16px; text-align: center;">
+                        <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">Protocol Optimization</div>
+                        <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">Help us refine the signal. Was this intelligence harvest valuable to your current mission?</p>
+                        <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" 
+                           style="display: inline-block; padding: 12px 30px; background: #10b981; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">Transmit Feedback</a>
+                      </div>
+
                       <div style="margin-top: 20px;">
                         <table align="center" border="0" cellpadding="0" cellspacing="0">
                           <tr>
                             <td style="padding: 0 10px;">
-                              <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" style="color: #10b981; text-decoration: none; font-size: 11px; font-weight: 700;">Transmit Feedback</a>
-                            </td>
-                            <td style="padding: 0 10px; color: #334155;">|</td>
-                            <td style="padding: 0 10px;">
-                              <a href="${unsubscribeUrl}" style="color: #64748b; text-decoration: underline; font-size: 11px;">Protocol Deactivation</a>
+                              <a href="${unsubscribeUrl}" style="color: #475569; text-decoration: underline; font-size: 11px; letter-spacing: 0.5px;">Protocol Deactivation (Unsubscribe)</a>
                             </td>
                           </tr>
                         </table>
