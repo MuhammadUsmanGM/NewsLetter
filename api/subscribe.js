@@ -125,8 +125,8 @@ export default async function handler(req, res) {
                 <table class="content-table" border="0" cellpadding="0" cellspacing="0">
                   <tr>
                     <td class="header-padding" align="center" style="padding: 80px 40px 60px 40px;">
-                      <img src="${process.env.APP_URL}/Favicon.png" alt="Logo" width="80" height="80" style="width: 80px; height: 80px; border: 2px solid #10b981; border-radius: 16px;">
-                      <div style="margin: 24px 0 12px 0; color: #34d399; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;">Neural Link Validated</div>
+                      <img src="${process.env.APP_URL}/Favicon.png" alt="Signal Logo" width="80" height="80" style="width: 80px; height: 80px; margin-bottom: 24px; border: 2px solid #10b981; border-radius: 16px;">
+                      <div style="margin: 0 0 12px 0; color: #34d399; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;">Neural Link Validated</div>
                       <h1 style="color: #ffffff; font-size: 48px; font-weight: 800; margin: 0; letter-spacing: -2px; line-height: 1;">THE <span style="color: #34d399;">SIGNAL.</span></h1>
                     </td>
                   </tr>
