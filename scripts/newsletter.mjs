@@ -317,8 +317,8 @@ async function sendNewsletter() {
                           </div>
 
                           <div style="margin-top: 50px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); text-align: left;">
-                             <a href="${process.env.APP_URL}/?view=latest" class="cta-btn" style="display: inline-block; padding: 15px 25px; margin-right: 15px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Explore on Web</a>
-                             <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" class="cta-btn" style="display: inline-block; padding: 15px 25px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Neural Dashboard</a>
+                             <a href="${process.env.APP_URL}/?view=latest" class="cta-btn" style="display: inline-block; padding: 15px 25px; margin-right: 15px; margin-bottom: 6px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Explore on Web</a>
+                             <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" class="cta-btn" style="display: inline-block; padding: 15px 25px; margin-bottom: 6px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Neural Dashboard</a>
                           </div>
 
                           <!-- Feedback Node -->
