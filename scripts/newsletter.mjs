@@ -79,21 +79,28 @@ async function fetchAIIntelligence() {
     }
   };
 
-  // Broad search for high-quality AI breakthroughs over the week
+  // 1. Broad search for high-quality AI breakthroughs
   let articles = await fetchWithParams({
     q: 'artificial intelligence OR "machine learning" OR "generative AI" OR "AI agents" OR "LLM breakthroughs"',
     from: fromDate,
     sortBy: 'popularity'
   });
 
+  // 2. Focused search for AI Gadgets/Hardware
+  let gadgets = await fetchWithParams({
+    q: '"AI hardware" OR "AI gadget" OR "AI wearable" OR "AI glasses" OR "AI pin" OR "smart glasses"',
+    from: fromDate,
+    sortBy: 'relevancy'
+  });
+
   const repos = await fetchTrendingRepos();
 
-  console.log(`Found ${articles.length} signal sources and ${repos.length} potential technical nodes.`);
-  return { articles: articles.slice(0, 15), repos };
+  console.log(`Found ${articles.length} signals, ${gadgets.length} gadgets, and ${repos.length} repos.`);
+  return { articles: articles.slice(0, 15), gadgets: gadgets.slice(0, 8), repos };
 }
 
 async function generateWeeklyIntelligence(intelligenceData) {
-  const { articles, repos } = intelligenceData;
+  const { articles, gadgets, repos } = intelligenceData;
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
   const articlesContext = articles.map(a => `
@@ -102,6 +109,13 @@ async function generateWeeklyIntelligence(intelligenceData) {
     Source: ${a.source.name}
     URL: ${a.url}
     ImageURL: ${a.urlToImage}
+  `).join('\n---\n');
+
+  const gadgetsContext = gadgets.map(g => `
+    Gadget/Device: ${g.title}
+    Details: ${g.description}
+    URL: ${g.url}
+    ImageURL: ${g.urlToImage}
   `).join('\n---\n');
 
   const reposContext = repos.map(r => `
@@ -115,15 +129,14 @@ async function generateWeeklyIntelligence(intelligenceData) {
   const prompt = `
     You are the Lead Editor of "THE SIGNAL", a high-end intelligence protocol for technical founders and AI engineers.
     
-    Based on these news sources:
-    ${articlesContext}
+    Based on these sources:
+    STORIES: ${articlesContext}
+    GADGETS: ${gadgetsContext}
+    REPOS: ${reposContext}
     
-    And these trending GitHub repositories:
-    ${reposContext}
+    Create a premium weekly briefing following the **3-3-2-2-1 Structure**:
     
-    Create a premium weekly briefing following the exact **3-2-1 Structure**, but enhanced for hardcore developers:
-    
-    1. **3 MAJOR NEW STORIES**: Select the 3 most impactful AI breakthroughs.
+    1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs.
        - Use this HTML:
          <div style="margin-bottom: 40px;">
            <img src="[ImageURL]" style="width: 100%; height: auto; border-radius: 16px; margin-bottom: 20px;">
@@ -132,37 +145,31 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #10b981; font-weight: 700; text-decoration: none;">Read Technical Analysis →</a>
          </div>
 
-    2. **2 ELITE TOOLS**: Pick 2 emerging AI tools OR frameworks.
+    2. **3 TOP AI GADGETS**: Pick the 3 most innovative hardware releases or updates.
+       - Use this HTML:
+         <div style="background: linear-gradient(to right, #0d2a1f, #0a1628); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 22px; margin-bottom: 16px;">
+           <div style="color: #10b981; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">GADGET PROTOCOL</div>
+           <strong style="color: #ffffff; font-size: 18px; display: block; margin-bottom: 6px;">[Gadget Name]</strong>
+           <p style="color: #94a3b8; margin: 0; font-size: 14px; line-height: 1.5;">[Why it matters / Hardware specs]</p>
+           <a href="[URL]" style="display: inline-block; margin-top: 12px; color: #10b981; font-size: 12px; font-weight: 700; text-decoration: none; text-transform: uppercase;">View Hardware →</a>
+         </div>
+
+    3. **2 ELITE TOOLS**: Pick 2 emerging software AI tools.
        - Use this HTML:
          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
            <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">TOOL NODE</div>
            <strong style="color: #ffffff; font-size: 18px;">[Tool Name]</strong>
-           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Value Prop / Technical Use-case]</p>
+           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Value Prop]</p>
            <a href="[URL]" style="color: #10b981; font-size: 13px; text-decoration: none; font-weight: 600;">Access Node →</a>
          </div>
 
-    3. **2 TRENDING REPOS**: Pick the 2 most significant GitHub repositories.
-       - Use this HTML:
-         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
-           <div style="color: #8b5cf6; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">GITHUB NODE</div>
-           <strong style="color: #ffffff; font-size: 18px;">[Repo Name]</strong>
-           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[GitHub Data (Stars, primary utility)]</p>
-           <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">Explore Repository →</a>
-         </div>
+    4. **2 TRENDING REPOS**: Pick 2 significant GitHub repos.
+       - Use this HTML: (Same as tools but with violet title 'GITHUB NODE' and #8b5cf6 color)
 
-    4. **1 ACTIONABLE INSIGHT/PROMPT**: Provide one high-level strategic insight or a complex LLM prompt.
-       - Use this HTML:
-         <div style="border-left: 4px solid #10b981; padding: 24px; background: rgba(16, 185, 129, 0.05); border-radius: 0 16px 16px 0;">
-           <h3 style="color: #ffffff; margin-top: 0;">This Week's Actionable Insight</h3>
-           <p style="color: #cbd5e1; font-style: italic; margin-bottom: 20px;">[Insight/Prompt Content]</p>
-           <a href="https://chatgpt.com/?q=[Insight/Prompt Content]" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">⚡ Execute Protocol</a>
-         </div>
+    5. **1 ACTIONABLE INSIGHT**: Provide one high-level insight.
+       - Use a quote-style block with #10b981 border.
     
-    Technical:
-    - Return ONLY the HTML content.
-    - No markdown formatting.
-    - Use inline styles only.
-    - Colors: White #ffffff, Primary #10b981, Muted #94a3b8, Dark Background #0f172a.
+    Technical: Return ONLY the HTML content. No markdown. Inline styles only. White #ffffff, Primary #10b981, Muted #94a3b8.
   `;
 
   try {
@@ -480,17 +487,21 @@ async function sendNewsletter() {
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
                style="background:#0a1628;border:1px solid #1e293b;border-radius:10px;">
           <tr class="stat-row">
-            <td class="stat-cell" style="padding:20px 10px;border-right:1px solid #1e293b;">
-              <p class="mono" style="margin:0 0 4px 0;font-size:22px;color:#10b981;">3</p>
-              <p class="mono" style="margin:0;font-size:9px;color:#475569;letter-spacing:2px;">TOOLS</p>
+            <td class="stat-cell" style="padding:15px 5px;border-right:1px solid #1e293b;width:25%;">
+              <p class="mono" style="margin:0 0 2px 0;font-size:20px;color:#10b981;">3</p>
+              <p class="mono" style="margin:0;font-size:8px;color:#475569;letter-spacing:1px;">SIGNALS</p>
             </td>
-            <td class="stat-cell" style="padding:20px 10px;border-right:1px solid #1e293b;">
-              <p class="mono" style="margin:0 0 4px 0;font-size:22px;color:#10b981;">2+2</p>
-              <p class="mono" style="margin:0;font-size:9px;color:#475569;letter-spacing:2px;">READS &amp; REPOS</p>
+            <td class="stat-cell" style="padding:15px 5px;border-right:1px solid #1e293b;width:25%;">
+              <p class="mono" style="margin:0 0 2px 0;font-size:20px;color:#10b981;">3</p>
+              <p class="mono" style="margin:0;font-size:8px;color:#475569;letter-spacing:1px;">GADGETS</p>
             </td>
-            <td class="stat-cell" style="padding:20px 10px;">
-              <p class="mono" style="margin:0 0 4px 0;font-size:22px;color:#10b981;">1</p>
-              <p class="mono" style="margin:0;font-size:9px;color:#475569;letter-spacing:2px;">KEY INSIGHT</p>
+            <td class="stat-cell" style="padding:15px 5px;border-right:1px solid #1e293b;width:25%;">
+              <p class="mono" style="margin:0 0 2px 0;font-size:20px;color:#10b981;">2+2</p>
+              <p class="mono" style="margin:0;font-size:8px;color:#475569;letter-spacing:1px;">NODES</p>
+            </td>
+            <td class="stat-cell" style="padding:15px 5px;width:25%;">
+              <p class="mono" style="margin:0 0 2px 0;font-size:20px;color:#10b981;">1</p>
+              <p class="mono" style="margin:0;font-size:8px;color:#475569;letter-spacing:1px;">INSIGHT</p>
             </td>
           </tr>
         </table>

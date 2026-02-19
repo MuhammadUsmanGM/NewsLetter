@@ -342,7 +342,7 @@ export default async function handler(req, res) {
                       <tr class="priv-row">
                         <td class="priv-cell-l">
                           <p style="margin:0 0 4px 0;font-size:13px;color:#10b981;font-weight:700;">⬡ &nbsp;WEEKLY BRIEF</p>
-                          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.55;">3-2-2-1 format — tools, reads, repos, one idea. Every Monday.</p>
+                          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.55;">3-3-2-2-1 format — breakthrough stories, gadgets, tools, and repos. Every Monday.</p>
                         </td>
                         <td class="priv-cell-r">
                           <p style="margin:0 0 4px 0;font-size:13px;color:#10b981;font-weight:700;">⬡ &nbsp;ALPHA DROPS</p>
@@ -385,23 +385,27 @@ export default async function handler(req, res) {
                       BRIEF_#001 &nbsp;|&nbsp; MONDAY_09:00_UTC
                     </p>
 
-                    <!-- 3-2-2-1 rows -->
+                    <!-- 3-3-2-2-1 rows -->
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
                         <td class="brief-num">3x</td>
-                        <td class="brief-text">AI tools the industry is quietly adopting — before the hype cycle hits.</td>
+                        <td class="brief-text">Precision-picked breakthrough stories from the neural core.</td>
+                      </tr>
+                      <tr>
+                        <td class="brief-num">3x</td>
+                        <td class="brief-text">Top AI Gadgets: Hardware releases that actually matter.</td>
                       </tr>
                       <tr>
                         <td class="brief-num">2x</td>
-                        <td class="brief-text">Deep reads: the papers and threads worth your actual attention.</td>
+                        <td class="brief-text">Elite Software Tools: Frameworks and nodes for your stack.</td>
                       </tr>
                       <tr>
                         <td class="brief-num">2x</td>
-                        <td class="brief-text">Open-source repositories you'll actually clone and use.</td>
+                        <td class="brief-text">Trending Repos: Open-source power to clone and build.</td>
                       </tr>
                       <tr>
                         <td class="brief-num brief-last">1x</td>
-                        <td class="brief-text brief-last">The one strategic insight that changes how you think this week.</td>
+                        <td class="brief-text brief-last">Actionable Insight: The one idea to execute this week.</td>
                       </tr>
                     </table>
 

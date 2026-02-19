@@ -299,7 +299,7 @@ function App() {
                 <img src={logo} alt="AI Logo" className="brand-logo" />
               </div>
               <h1>Tune Into The Signal</h1>
-              <p>Join thousands of AI professionals getting weekly 3-2-2-1 breakthroughs, repositories, and technical insights.</p>
+              <p>Join thousands of AI professionals getting weekly 3-3-2-2-1 breakthroughs: Stories, Gadgets, Tools, Repositories, and Technical Insights.</p>
               <div className="social-links-container">
                 <div className="social-link">
                   <a href="https://github.com/MuhammadUsmanGM" target="_blank" rel="noopener noreferrer" aria-label="Visit my GitHub profile">
@@ -397,7 +397,7 @@ function App() {
               <form onSubmit={handleSubmit} className="newsletter-form" noValidate>
                 <div className="form-header">
                   <h2>Join our list</h2>
-                  <p>Start your weekly 3-2-2-1 intelligence protocol.</p>
+                  <p>Start your weekly 3-3-2-2-1 intelligence protocol.</p>
                 </div>
                 {apiError && (
                   <div 

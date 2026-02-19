@@ -142,13 +142,13 @@ const Dashboard = ({ name, email, setView }) => {
             </div>
             <div className="greeting-wrap">
               <h1 className="hero-title">
-                THE SIGNAL <span className="text-gradient" style={{ backgroundImage: `linear-gradient(135deg, ${currentTheme.color} 0%, #fff 100%)` }}>3-2-2-1</span>
+                THE SIGNAL <span className="text-gradient" style={{ backgroundImage: `linear-gradient(135deg, ${currentTheme.color} 0%, #fff 100%)` }}>3-3-2-2-1</span>
               </h1>
               <h2 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: '700', margin: '1rem 0' }}>
                 Welcome Back, {name || 'Commander'}
               </h2>
               <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem', fontSize: '1.1rem' }}>
-                Your neural link is stable. Next 3-2-2-1 intelligence protocol is being synthesized.
+                Your neural link is stable. Next 3-3-2-2-1 intelligence protocol is being synthesized.
               </p>
               
               <div className="tier-badge" style={{ background: `${currentTheme.color}22`, color: currentTheme.color, border: `1px solid ${currentTheme.color}44`, display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '100px', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '1rem' }}>
@@ -162,7 +162,7 @@ const Dashboard = ({ name, email, setView }) => {
           <motion.div className="glass-card" variants={itemVariants} style={{ marginBottom: '24px', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${currentTheme.color}33` }}>
             <div>
               <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '4px' }}>Latest Signal Archive</h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Access this week's 3-2-2-1 intelligence briefing immediately.</p>
+              <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Access this week's 3-3-2-2-1 intelligence briefing immediately.</p>
             </div>
             <button 
               onClick={() => setView('latest')} 
@@ -176,7 +176,7 @@ const Dashboard = ({ name, email, setView }) => {
 
           {/* Optimized 3-2-2-1 Countdown */}
           <motion.div className="glass-card countdown-section" variants={itemVariants}>
-            <div className="countdown-title">Next 3-2-2-1 Intelligence Release</div>
+            <div className="countdown-title">Next 3-3-2-2-1 Intelligence Release</div>
             <div className="timer-grid">
               <div className="timer-box">
                 <span className="timer-num" style={{ color: currentTheme.color }}>{timeLeft.d}</span>
