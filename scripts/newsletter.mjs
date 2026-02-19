@@ -240,134 +240,419 @@ async function sendNewsletter() {
         const unsubscribeUrl = `${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(subscriber.email)}`;
         
         const premiumEmailHtml = `
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>THE SIGNAL: Intelligence Protocol</title>
-            <style>
-              @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
-              
-              body { margin: 0 !important; padding: 0 !important; background-color: #020617 !important; font-family: 'Outfit', sans-serif; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-              table { border-spacing: 0; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; }
-              img { border: 0; -ms-interpolation-mode: bicubic; }
-              .wrapper { width: 100%; background-color: #020617; }
-              .content-table { max-width: 600px; margin: 0 auto; width: 100%; }
-              
-              @media screen and (max-width: 600px) {
-                .header-padding { padding: 40px 20px !important; }
-                .content-padding { padding: 30px 20px !important; }
-                h1 { font-size: 34px !important; }
-                .cta-btn { width: 100% !important; text-align: center !important; display: block !important; box-sizing: border-box !important; }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="wrapper">
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>THE SIGNAL: Intelligence Protocol</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@400;600;700;800&display=swap');
 
-              <!-- Fluid Header Section -->
-              <table border="0" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #064e3b 0%, #020617 100%);">
+    /* ── RESET ─────────────────────────────── */
+    * { box-sizing: border-box; }
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; }
+    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    body { margin: 0 !important; padding: 0 !important; background-color: #020617 !important; }
+
+    /* ── TYPOGRAPHY ────────────────────────── */
+    body, p, h1, h2, h3, td, a { font-family: 'Outfit', Arial, sans-serif; }
+    .mono { font-family: 'Share Tech Mono', 'Courier New', monospace !important; }
+
+    /* ── LAYOUT ────────────────────────────── */
+    .email-body { width: 100%; max-width: 600px; margin: 0 auto; }
+
+    /* ── PADDING ───────────────────────────── */
+    .pad   { padding: 40px !important; }
+    .pad-t { padding: 36px 40px 0 !important; }
+
+    /* ── ISSUE NUMBER STAMP ────────────────── */
+    .issue-pill {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 20px;
+      color: #10b981;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    /* ── SECTION LABEL ─────────────────────── */
+    .section-label {
+      font-family: 'Share Tech Mono','Courier New',monospace;
+      font-size: 10px;
+      color: #10b981;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin: 0 0 14px 0;
+    }
+
+    /* ── CONTENT BLOCK (each 3-2-2-1 item) ── */
+    .content-block {
+      background: #0a1628;
+      border: 1px solid #1e293b;
+      border-left: 3px solid #10b981;
+      border-radius: 10px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .content-block-pad { padding: 24px 26px; }
+
+    .block-tag {
+      font-family: 'Share Tech Mono','Courier New',monospace;
+      font-size: 9px;
+      color: #10b981;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      display: inline-block;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-bottom: 10px;
+    }
+    .block-title {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.3;
+    }
+    .block-body {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #94a3b8;
+    }
+    .block-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #10b981 !important;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── DIVIDER ───────────────────────────── */
+    .divider { border: 0; border-top: 1px solid #1e293b; margin: 0; width: 100%; }
+
+    /* ── CTA BUTTONS ───────────────────────── */
+    .btn-outline {
+      display: inline-block;
+      padding: 14px 28px;
+      background: transparent;
+      border: 1px solid #10b981;
+      border-radius: 8px;
+      color: #10b981 !important;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+    .btn-solid {
+      display: inline-block;
+      padding: 14px 28px;
+      background: #10b981;
+      border: 1px solid #10b981;
+      border-radius: 8px;
+      color: #020617 !important;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    /* ── FEEDBACK CARD ─────────────────────── */
+    .feedback-card {
+      background: linear-gradient(135deg, #0d2a1f 0%, #0a1628 100%);
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: 12px;
+      width: 100%;
+    }
+
+    /* ── STAT ROW ──────────────────────────── */
+    .stat-cell { width: 33.33%; text-align: center; vertical-align: top; padding: 0 10px; }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE ≤ 620px
+    ═══════════════════════════════════════ */
+    @media screen and (max-width: 620px) {
+      .email-body { width: 100% !important; }
+      .pad   { padding: 24px 18px !important; }
+      .pad-t { padding: 24px 18px 0 !important; }
+      .content-block-pad { padding: 18px 16px !important; }
+
+      h1 { font-size: 36px !important; letter-spacing: -1px !important; }
+      h2 { font-size: 20px !important; }
+
+      /* stack CTA buttons */
+      .btn-outline,
+      .btn-solid {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 10px !important;
+        margin-right: 0 !important;
+        padding: 16px 10px !important;
+      }
+      .btn-gap { display: none !important; }
+
+      /* stat row stacks */
+      .stat-row  { display: block !important; }
+      .stat-cell { display: block !important; width: 100% !important; padding: 10px 0 !important; border-right: none !important; border-bottom: 1px solid #1e293b !important; }
+      .stat-cell:last-child { border-bottom: none !important; }
+
+      /* footer stack */
+      .footer-copy  { display: block !important; width: 100% !important; text-align: center !important; }
+      .footer-icons { display: block !important; width: 100% !important; text-align: center !important; padding-top: 18px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#020617;">
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#020617;">
+<tr>
+<td align="center">
+
+  <table role="presentation" class="email-body" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;">
+
+
+    <!-- ═══════════════════════════════
+         HEADER
+    ════════════════════════════════ -->
+    <tr>
+      <td class="pad" style="background:linear-gradient(160deg,#061a12 0%,#020617 100%);border-bottom:2px solid #10b981;text-align:center;">
+        <img src="${process.env.APP_URL}/Favicon.png" alt="Signal" width="64" height="64"
+             style="display:block;margin:0 auto 20px auto;border:1px solid #10b981;border-radius:14px;width:64px;height:64px;">
+
+        <div class="issue-pill">Weekly Protocol Release</div>
+
+        <h1 style="margin:18px 0 0 0;font-size:50px;font-weight:800;color:#ffffff;letter-spacing:-2px;line-height:1;">
+          THE <span style="color:#10b981;">SIGNAL.</span>
+        </h1>
+
+        <p class="mono" style="margin:14px 0 0 0;font-size:12px;color:#475569;letter-spacing:2px;">
+          ${dateStr}
+        </p>
+      </td>
+    </tr>
+
+
+    <!-- ═══════════════════════════════
+         GREETING
+    ════════════════════════════════ -->
+    <tr>
+      <td class="pad-t">
+        <p class="mono section-label">// TRANSMISSION_BEGINS</p>
+        <h2 style="margin:0 0 14px 0;font-size:24px;font-weight:700;color:#f1f5f9;line-height:1.2;">
+          Greetings, ${subscriber.name}.
+        </h2>
+        <p style="margin:0;font-size:16px;line-height:1.75;color:#94a3b8;">
+          Your weekly intelligence harvest is ready. Every item below was hand-picked from the noise — read deliberately, act precisely.
+        </p>
+      </td>
+    </tr>
+
+    <!-- rule -->
+    <tr>
+      <td class="pad-t"><hr class="divider"></td>
+    </tr>
+
+
+    <!-- ═══════════════════════════════
+         ISSUE STATS BAR
+    ════════════════════════════════ -->
+    <tr>
+      <td class="pad-t">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+               style="background:#0a1628;border:1px solid #1e293b;border-radius:10px;">
+          <tr class="stat-row">
+            <td class="stat-cell" style="padding:20px 10px;border-right:1px solid #1e293b;">
+              <p class="mono" style="margin:0 0 4px 0;font-size:22px;color:#10b981;">3</p>
+              <p class="mono" style="margin:0;font-size:9px;color:#475569;letter-spacing:2px;">TOOLS</p>
+            </td>
+            <td class="stat-cell" style="padding:20px 10px;border-right:1px solid #1e293b;">
+              <p class="mono" style="margin:0 0 4px 0;font-size:22px;color:#10b981;">2+2</p>
+              <p class="mono" style="margin:0;font-size:9px;color:#475569;letter-spacing:2px;">READS &amp; REPOS</p>
+            </td>
+            <td class="stat-cell" style="padding:20px 10px;">
+              <p class="mono" style="margin:0 0 4px 0;font-size:22px;color:#10b981;">1</p>
+              <p class="mono" style="margin:0;font-size:9px;color:#475569;letter-spacing:2px;">KEY INSIGHT</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+
+    <!-- ═══════════════════════════════
+         MAIN CONTENT (sharedEmailBody)
+         The ${sharedEmailBody} variable renders
+         your actual issue content here.
+         Wrap each item in .content-block
+         divs on the sending side for best
+         results, or let it render as-is.
+    ════════════════════════════════ -->
+    <tr>
+      <td class="pad-t">
+        <p class="mono section-label">// THIS_WEEKS_SIGNALS</p>
+
+        <!-- content block wrapper -->
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td style="color:#cbd5e1;font-size:15px;line-height:1.8;">
+              ${sharedEmailBody}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+
+    <!-- ═══════════════════════════════
+         CTA BUTTONS
+    ════════════════════════════════ -->
+    <tr>
+      <td class="pad-t">
+        <hr class="divider" style="margin-bottom:28px;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td>
+              <a href="${process.env.APP_URL}/?view=latest" class="btn-outline">
+                Explore on Web
+              </a>
+            </td>
+            <td class="btn-gap" width="12">&nbsp;</td>
+            <td>
+              <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}"
+                 class="btn-solid">
+                Neural Dashboard →
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+
+    <!-- ═══════════════════════════════
+         FEEDBACK CARD
+    ════════════════════════════════ -->
+    <tr>
+      <td class="pad-t">
+        <table role="presentation" class="feedback-card" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td style="padding:32px 30px;">
+
+              <!-- top row: label + link -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td align="center">
-                    <!--[if mso | IE]>
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
-                    <![endif]-->
-                    <table class="content-table" border="0" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td class="header-padding" align="center" style="padding: 60px 40px;">
-                          <img src="${process.env.APP_URL}/Favicon.png" alt="Signal Logo" width="70" height="70" style="display: block; width: 70px; height: 70px; margin: 0 auto 24px auto; border: 2px solid #10b981; border-radius: 14px;">
-                          <div style="display: inline-block; padding: 6px 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; color: #10b981; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;">
-                            Weekly Protocol Release
-                          </div>
-                          <h1 style="color: #ffffff; margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;">THE <span style="color: #10b981;">SIGNAL.</span></h1>
-                          <p style="color: #94a3b8; margin: 12px 0 0 0; font-size: 15px; letter-spacing: 0.05em;">${dateStr}</p>
-                        </td>
-                      </tr>
-                    </table>
-                    <!--[if mso | IE]>
-                    </td></tr></table>
-                    <![endif]-->
+                  <td style="vertical-align:middle;">
+                    <p class="mono" style="margin:0 0 6px 0;font-size:10px;color:#10b981;letter-spacing:3px;">
+                      // PROTOCOL_OPTIMIZATION
+                    </p>
+                    <p style="margin:0;font-size:16px;font-weight:700;color:#f1f5f9;line-height:1.3;">
+                      Was this brief worth your time?
+                    </p>
                   </td>
                 </tr>
               </table>
 
-              <!-- Main Content Area -->
-              <table border="0" cellpadding="0" cellspacing="0" style="background-color: #020617;">
+              <p style="margin:12px 0 24px 0;font-size:14px;line-height:1.7;color:#64748b;">
+                Every reply, every rating shapes the next issue. I read all of it — I'm always listening.
+              </p>
+
+              <!-- inner divider -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:22px;">
+                <tr><td style="border-top:1px solid rgba(16,185,129,0.15);font-size:0;line-height:0;">&nbsp;</td></tr>
+              </table>
+
+              <!-- bottom row: label + btn -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td align="center">
-                    <!--[if mso | IE]>
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
-                    <![endif]-->
-                    <table class="content-table" border="0" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td class="content-padding" style="padding: 60px 40px;">
-                          <h2 style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0 0 20px 0;">Greetings, ${subscriber.name}.</h2>
-                          <p style="margin-bottom: 40px; font-size: 17px; line-height: 1.6; color: #94a3b8;">Your weekly intelligence harvest has completed. Curated signals extracted from the neural core follow below.</p>
-                          
-                          <div style="color: #cbd5e1;">
-                            ${sharedEmailBody}
-                          </div>
-
-                          <div style="margin-top: 50px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); text-align: left;">
-                             <a href="${process.env.APP_URL}/?view=latest" class="cta-btn" style="display: inline-block; padding: 15px 25px; margin-right: 15px; margin-bottom: 6px; background-color: transparent; border: 1px solid #10b981; color: #10b981; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Explore on Web</a>
-                             <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}" class="cta-btn" style="display: inline-block; padding: 15px 25px; margin-bottom: 6px; background-color: #10b981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;">Neural Dashboard</a>
-                          </div>
-
-                          <!-- Feedback Node -->
-                          <div style="margin: 50px 0; padding: 35px; border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 4px; text-align: center;">
-                            <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">Protocol Optimization</div>
-                            <p style="color: #cbd5e1; font-size: 15px; margin-bottom: 25px;">Was this intelligence harvest valuable to your current mission?</p>
-                            <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}" 
-                               style="display: inline-block; color: #10b981; text-decoration: none; font-weight: 700; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #10b981;">Transmit Feedback →</a>
-                          </div>
-                        </td>
-                      </tr>
-                    </table>
-                    <!--[if mso | IE]>
-                    </td></tr></table>
-                    <![endif]-->
+                  <td style="vertical-align:middle;">
+                    <p class="mono" style="margin:0;font-size:10px;color:#475569;letter-spacing:2px;">AND I MEAN IT.</p>
+                  </td>
+                  <td style="vertical-align:middle;text-align:right;">
+                    <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}"
+                       style="display:inline-block;background:transparent;color:#10b981 !important;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:10px 20px;border-radius:6px;border:1px solid #10b981;text-decoration:none;">
+                      Tell Me Something →
+                    </a>
                   </td>
                 </tr>
               </table>
 
-              <!-- Seamless Footer Section -->
-              <table border="0" cellpadding="0" cellspacing="0" style="background-color: #020617; border-top: 1px solid rgba(255,255,255,0.05);">
-                <tr>
-                  <td align="center" style="padding: 60px 40px;">
-                    <!--[if mso | IE]>
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"><tr><td>
-                    <![endif]-->
-                    <table class="content-table" border="0" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td align="center">
-                          <div style="margin-bottom: 30px;">
-                            <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: auto;">
-                              <tr>
-                                <td style="padding: 0 15px;">
-                                  <a href="https://github.com/MuhammadUsmanGM"><img src="https://img.icons8.com/ios-filled/50/10b981/github.png" width="22" height="22" style="display: block;"></a>
-                                </td>
-                                <td style="padding: 0 15px;">
-                                  <a href="https://linkedin.com/in/muhammad-usman-ai-dev"><img src="https://img.icons8.com/ios-filled/50/10b981/linkedin.png" width="22" height="22" style="display: block;"></a>
-                                </td>
-                              </tr>
-                            </table>
-                          </div>
-                          <p style="margin: 0 0 15px 0; color: #475569; font-size: 12px;">Forged for the technical elite AI practitioners.</p>
-                          <a href="${unsubscribeUrl}" style="color: #475569; text-decoration: underline; font-size: 11px;">Deactivate Neural Link</a>
-                        </td>
-                      </tr>
-                    </table>
-                    <!--[if mso | IE]>
-                    </td></tr></table>
-                    <![endif]-->
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </body>
-          </html>
-        `;
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+
+    <!-- ═══════════════════════════════
+         FOOTER
+    ════════════════════════════════ -->
+    <tr>
+      <td class="pad">
+
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:28px;">
+          <tr><td style="border-top:1px solid #1e293b;font-size:0;line-height:0;">&nbsp;</td></tr>
+        </table>
+
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td class="footer-copy" style="vertical-align:middle;">
+              <p class="mono" style="margin:0 0 4px 0;font-size:11px;color:#475569;letter-spacing:2px;">
+                THE SIGNAL &nbsp;|&nbsp; NEURAL RELAY ACTIVE
+              </p>
+              <p style="margin:0;font-size:12px;color:#334155;">
+                © ${new Date().getFullYear()} THE SIGNAL. Forged for the technical elite.
+              </p>
+            </td>
+            <td class="footer-icons" width="80" style="vertical-align:middle;text-align:right;">
+              <a href="https://github.com/MuhammadUsmanGM" style="display:inline-block;margin-left:14px;">
+                <img src="https://img.icons8.com/ios-filled/50/10b981/github.png" width="20" height="20" alt="GitHub"
+                     style="display:block;width:20px;height:20px;">
+              </a>
+              <a href="https://linkedin.com/in/muhammad-usman-ai-dev" style="display:inline-block;margin-left:14px;">
+                <img src="https://img.icons8.com/ios-filled/50/10b981/linkedin.png" width="20" height="20" alt="LinkedIn"
+                     style="display:block;width:20px;height:20px;">
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin:20px 0 0 0;font-size:11px;color:#334155;text-align:center;">
+          <a href="${unsubscribeUrl}" style="color:#334155;text-decoration:underline;">
+            Deactivate Neural Link
+          </a>
+        </p>
+
+      </td>
+    </tr>
+
+
+  </table><!-- /email-body -->
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+`;
 
         await transporter.sendMail({
           from: process.env.SMTP_FROM,
