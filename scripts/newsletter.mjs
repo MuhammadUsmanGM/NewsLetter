@@ -134,9 +134,10 @@ async function generateWeeklyIntelligence(intelligenceData) {
     GADGETS: ${gadgetsContext}
     REPOS: ${reposContext}
     
-    Create a premium weekly briefing following the **3-3-2-2-1 Structure**:
+    Create a premium weekly briefing following the **3-3-2-2-1 Structure**.
+    CRITICAL INSTRUCTION: You MUST REPLACE all bracketed placeholders (like [Headline], [URL], [Repo Name], [Value Prop]) with real content from the provided sources. DO NOT output the literal placeholders.
     
-    1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs.
+    1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs from STORIES.
        - Use this HTML:
          <div style="margin-bottom: 40px;">
            <img src="[ImageURL]" style="width: 100%; height: auto; border-radius: 16px; margin-bottom: 20px;">
@@ -145,7 +146,7 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #10b981; font-weight: 700; text-decoration: none;">Read Technical Analysis →</a>
          </div>
 
-    2. **3 TOP AI GADGETS**: Pick the 3 most innovative hardware releases or updates.
+    2. **3 TOP AI GADGETS**: Pick the 3 most innovative hardware releases or updates from GADGETS.
        - Use this HTML:
          <div style="background: linear-gradient(to right, #0d2a1f, #0a1628); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 22px; margin-bottom: 16px;">
            <div style="color: #10b981; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">GADGET PROTOCOL</div>
@@ -163,8 +164,14 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #10b981; font-size: 13px; text-decoration: none; font-weight: 600;">Access Node →</a>
          </div>
 
-    4. **2 TRENDING REPOS**: Pick 2 significant GitHub repos.
-       - Use this HTML: (Same as tools but with violet title 'GITHUB NODE' and #8b5cf6 color)
+    4. **2 TRENDING REPOS**: Pick 2 significant GitHub repos from REPOS.
+       - Use this HTML:
+         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+           <div style="color: #8b5cf6; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">GITHUB NODE</div>
+           <strong style="color: #ffffff; font-size: 18px;">[Repo Name]</strong>
+           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Description] (Stars: [Stars], Language: [Language])</p>
+           <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">View Repository →</a>
+         </div>
 
     5. **1 ACTIONABLE INSIGHT**: Provide one high-level insight.
        - Use a quote-style block with #10b981 border.
