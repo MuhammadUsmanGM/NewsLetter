@@ -6,6 +6,7 @@ import Feedback from './components/Feedback'
 import LatestIssue from './components/LatestIssue'
 import ArchiveExplorer from './components/ArchiveExplorer'
 import LiveTicker from './components/LiveTicker'
+import CopyPage from './components/CopyPage'
 import { Turnstile } from '@marsidev/react-turnstile'
 import logo from './assets/Favicon.png'
 import { useNeuralTheme } from './context/ThemeContext'
@@ -88,6 +89,9 @@ function App() {
       const id = params.get('id');
       if (id) setSelectedIssueId(id);
       setCurrentView('issue');
+      setShowWelcome(false);
+    } else if (viewParam === 'getcopy') {
+      setCurrentView('getcopy');
       setShowWelcome(false);
     }
 
@@ -289,6 +293,7 @@ function App() {
     if (currentView === 'latest') return <LatestIssue setView={setCurrentView} />;
     if (currentView === 'archive') return <ArchiveExplorer setView={setCurrentView} />;
     if (currentView === 'issue') return <LatestIssue issueId={selectedIssueId} setView={setCurrentView} />;
+    if (currentView === 'getcopy') return <CopyPage setView={setCurrentView} />;
     
     return (
       <div className="newsletter-container">
