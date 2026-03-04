@@ -120,9 +120,9 @@ async function generateWeeklyIntelligence(intelligenceData) {
 
   const reposContext = repos.map(r => `
     Repo: ${r.name}
-    Description: ${r.description}
-    Stars: ${r.stars}
-    Language: ${r.language}
+    Description: ${r.description || 'No description provided.'}
+    Stars: ${r.stars || 0}
+    Language: ${r.language || 'Multiple/Other'}
     URL: ${r.url}
   `).join('\n---\n');
 
@@ -135,7 +135,7 @@ async function generateWeeklyIntelligence(intelligenceData) {
     REPOS: ${reposContext}
     
     Create a premium weekly briefing following the **3-3-2-2-1 Structure**.
-    CRITICAL INSTRUCTION: You MUST REPLACE all bracketed placeholders (like [Headline], [URL], [Repo Name], [Value Prop]) with real content from the provided sources. DO NOT output the literal placeholders.
+    CRITICAL INSTRUCTION: You MUST REPLACE all bracketed placeholders (like [Headline], [URL], [Repo Name], [Value Prop], [Stars], [Language], [Description]) with real content from the provided sources. DO NOT output the literal placeholders.
     
     1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs from STORIES.
        - Use this HTML:
@@ -164,12 +164,13 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #10b981; font-size: 13px; text-decoration: none; font-weight: 600;">Access Node →</a>
          </div>
 
-    4. **2 TRENDING REPOS**: Pick 2 significant GitHub repos from REPOS.
+    4. **2 TRENDING REPOS**: Pick exactly 2 significant GitHub repos EXCLUSIVELY from the REPOS list (Do NOT use STORIES or GADGETS here).
        - Use this HTML:
          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
            <div style="color: #8b5cf6; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">GITHUB NODE</div>
            <strong style="color: #ffffff; font-size: 18px;">[Repo Name]</strong>
-           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Description] (Stars: [Stars], Language: [Language])</p>
+           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Description]</p>
+           <div style="color: #8b5cf6; font-size: 13px; font-weight: 700; margin-bottom: 12px;">★ [Stars] Stars • [Language]</div>
            <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">View Repository →</a>
          </div>
 
@@ -417,12 +418,34 @@ async function sendNewsletter() {
       .btn-solid {
         display: block !important;
         width: 100% !important;
+        box-sizing: border-box !important;
         text-align: center !important;
         margin-bottom: 10px !important;
         margin-right: 0 !important;
         padding: 16px 10px !important;
       }
       .btn-gap { display: none !important; }
+
+      /* util stack column */
+      .stack-column {
+        display: block !important;
+        width: 100% !important;
+      }
+      .stack-column-center {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 14px !important;
+      }
+      .feedback-pad {
+        padding: 24px 20px !important;
+      }
+      .feedback-btn {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+      }
 
       /* stat row stacks */
       .stat-row  { display: block !important; }
@@ -546,15 +569,15 @@ async function sendNewsletter() {
     <tr>
       <td class="pad-t">
         <hr class="divider" style="margin-bottom:28px;">
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
-            <td>
+            <td class="stack-column">
               <a href="${process.env.APP_URL}/?view=latest" class="btn-outline">
                 Explore on Web
               </a>
             </td>
             <td class="btn-gap" width="12">&nbsp;</td>
-            <td>
+            <td class="stack-column">
               <a href="${process.env.APP_URL}/?view=dashboard&name=${encodeURIComponent(subscriber.name)}&email=${encodeURIComponent(subscriber.email)}"
                  class="btn-solid">
                 Neural Dashboard →
@@ -573,7 +596,7 @@ async function sendNewsletter() {
       <td class="pad-t">
         <table role="presentation" class="feedback-card" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
-            <td style="padding:32px 30px;">
+            <td class="feedback-pad" style="padding:32px 30px;">
 
               <!-- top row: label + link -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -601,11 +624,12 @@ async function sendNewsletter() {
               <!-- bottom row: label + btn -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td style="vertical-align:middle;">
+                  <td class="stack-column-center" style="vertical-align:middle;">
                     <p class="mono" style="margin:0;font-size:10px;color:#475569;letter-spacing:2px;">AND I MEAN IT.</p>
                   </td>
-                  <td style="vertical-align:middle;text-align:right;">
+                  <td class="stack-column" style="vertical-align:middle;text-align:right;">
                     <a href="${process.env.APP_URL}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}"
+                       class="feedback-btn"
                        style="display:inline-block;background:transparent;color:#10b981 !important;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:10px 20px;border-radius:6px;border:1px solid #10b981;text-decoration:none;">
                       Tell Me Something →
                     </a>
