@@ -55,16 +55,14 @@ graph TD
     G -->|Neural Synthesis| J[Google Gemini AI]
     G -->|Check Timezones| E
     G -->|Send Signal| K[SMTP Delivery]
-    G -->|Archive Record| E
-    
-    K -->|3-3-2-2-1 Briefing| L[User Inbox]
-```    
+    G -->|Archive Record| E 
+    K -->|3-3-2-2-1 Briefing| L[User Inbox]  
     M[Web Archive Interface] -->|Tier Sync| P[Neural Theme Engine]
     P -->|CSS Variables| M
     N[Feedback Terminal] -->|Signal| O{api/feedback.js}
     O -->|Relay| K
     O -->|Store| E
-
+```
 
 ---
 
