@@ -70,7 +70,7 @@ const CopyPage = ({ setView }) => {
     // 1. TOP SIGNALS (The 3)
     const stories = Array.from(doc.querySelectorAll("h2"));
     if (stories.length > 0) {
-      formattedBody += `\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n◈ 01. THE SIGNALS | MAJOR BREAKTHROUGHS\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n`;
+      formattedBody += `◈ 01. THE SIGNALS | MAJOR BREAKTHROUGHS`;
       stories.forEach((h, i) => {
         const headline = getText(h).toUpperCase();
         const parent = h.parentElement;
@@ -95,7 +95,7 @@ const CopyPage = ({ setView }) => {
         d.textContent.includes("GADGET PROTOCOL") && d.querySelector("strong"),
     );
     if (gadgetCards.length > 0) {
-      formattedBody += `\n\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n◈ 02. HARDWARE | THE GADGET PROTOCOL\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n`;
+      formattedBody += `\n◈ 02. HARDWARE | THE GADGET PROTOCOL`;
       gadgetCards.forEach((node) => {
         const name = getText(node.querySelector("strong"));
         const details = getText(node.querySelector("p"));
@@ -116,7 +116,7 @@ const CopyPage = ({ setView }) => {
       (d) => d.textContent.includes("TOOL NODE") && d.querySelector("strong"),
     );
     if (toolCards.length > 0) {
-      formattedBody += `\n\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n◈ 03. THE TOOLKIT | ELITE SYSTEMS\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n`;
+      formattedBody += `\n◈ 03. THE TOOLKIT | ELITE SYSTEMS`;
       toolCards.forEach((node) => {
         const name = getText(node.querySelector("strong"));
         const details = getText(node.querySelector("p"));
@@ -160,7 +160,7 @@ const CopyPage = ({ setView }) => {
         }
       });
       if (count > 0) {
-        formattedBody += `\n\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n◈ 04. THE SOURCE | TRENDING REPOS\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n${repoContent}`;
+        formattedBody += `\n◈ 04. THE SOURCE | TRENDING REPOS\n${repoContent}`;
       }
     }
 
@@ -200,7 +200,7 @@ const CopyPage = ({ setView }) => {
       }
 
       if (insightText) {
-        formattedBody += `\n\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n◈ 05. NEURAL INSIGHT | ACTIONABLE\n▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n`;
+        formattedBody += `\n◈ 05. NEURAL INSIGHT | ACTIONABLE\n`;
         formattedBody += `\n"${insightText}"\n`;
       }
     }
@@ -384,61 +384,56 @@ const CopyPage = ({ setView }) => {
     }
 
     let out = "";
-    const issueNum =
-      issue && issue.id ? String(issue.id).padStart(2, "0") : "??";
-    out += `THE SIGNAL #${issueNum} — 3 Breakthroughs, 3 Tools, 2 Repos & 1 Insight You Can't Miss This Week\n\n`;
-    out += `Precision intelligence for the AI elite. No hype — just the architecture of tomorrow.\n\n`;
-    out += `Here's your 3-3-2-2-1 protocol for this week 👇\n\n`;
+    const issueNum = issue && issue.id ? String(issue.id).padStart(2, "0") : "??";
+    
+    // Header
+    out += `◈ THE SIGNAL #${issueNum} | INTELLIGENCE PROTOCOL ◈\n`;
+    out += `Precision intelligence for the AI elite.\n\n`;
+    out += `Here is your 3-3-2-2-1 protocol for this week 👇\n\n`;
 
-    out += `──────────────────────────────\n`;
-    out += `◈ 01 | MAJOR BREAKTHROUGHS\n`;
-    out += `──────────────────────────────\n\n`;
+    // 01. Breakthroughs
+    out += `◈ 01. THE SIGNALS | MAJOR BREAKTHROUGHS\n`;
     stories.forEach((s) => {
       out += `▶ ${s.headline}\n${s.summary}\n`;
-      if (s.url) out += `🔗 Source → ${s.url}\n`;
+      if (s.url) out += `🔗 Analysis: ${s.url}\n`;
       out += `\n`;
     });
 
-    out += `──────────────────────────────\n`;
-    out += `◈ 02 | AI GADGET PROTOCOL\n`;
-    out += `──────────────────────────────\n\n`;
+    // 02. Gadgets
+    out += `◈ 02. HARDWARE | THE GADGET PROTOCOL\n`;
     gadgets.forEach((g) => {
-      out += `⚡ ${g.name}\n${g.details}\n`;
-      if (g.url) out += `🔗 Source → ${g.url}\n`;
+      out += `⚡︎ ${g.name}\n${g.details}\n`;
+      if (g.url) out += `🔗 Technical Specs: ${g.url}\n`;
       out += `\n`;
     });
 
-    out += `──────────────────────────────\n`;
-    out += `◈ 03 | THE TOOLKIT\n`;
-    out += `──────────────────────────────\n\n`;
+    // 03. Tools
+    out += `◈ 03. THE TOOLKIT | ELITE SYSTEMS\n`;
     tools.forEach((t) => {
-      out += `⚙ ${t.name}\n${t.details}\n`;
-      if (t.url) out += `🔗 Source → ${t.url}\n`;
+      out += `⚙︎ ${t.name}\n${t.details}\n`;
+      if (t.url) out += `🔗 Protocol Access: ${t.url}\n`;
       out += `\n`;
     });
 
-    out += `──────────────────────────────\n`;
-    out += `◈ 04 | TRENDING REPOS\n`;
-    out += `──────────────────────────────\n\n`;
+    // 04. Repos
+    out += `◈ 04. THE SOURCE | TRENDING REPOS\n`;
     repos.forEach((r) => {
       out += `❏ ${r.name}\n${r.details}\n`;
-      if (r.url) out += `🔗 GitHub → ${r.url}\n`;
+      if (r.url) out += `🔗 Repository: ${r.url}\n`;
       out += `\n`;
     });
 
-    out += `──────────────────────────────\n`;
-    out += `◈ 05 | THE SIGNAL — MASTER INSIGHT\n`;
-    out += `──────────────────────────────\n\n`;
+    // 05. Insight
     if (insight) {
-      out += `💡 ${insight}\n\n`;
+      out += `◈ 05. NEURAL INSIGHT | ACTIONABLE\n`;
+      out += `\n"${insight}"\n\n`;
     }
 
-    out += `──────────────────────────────\n`;
-    out += `📬 GET THIS IN YOUR INBOX\n`;
-    out += `──────────────────────────────\n\n`;
-    out += `THE SIGNAL delivers this briefing to 1,000+ engineers every Monday at 9:00 AM — in your exact timezone. Fully automated. Zero noise.\n\n`;
-    out += `👉 Subscribe free → ${window.location.origin}\n\n`;
-    out += `#AI #ArtificialIntelligence #TheSignal #MachineLearning #FutureTech #Engineering #AITools #WeeklyIntelligence`;
+    // World-Class CTA Footer
+    out += `📬 START RECEIVING THE SIGNAL\n`;
+    out += `Join 1,000+ engineers getting the weekly briefing:\n`;
+    out += `➔ ${window.location.origin}\n\n`;
+    out += `#AI #ArtificialIntelligence #TheSignal #MachineLearning #Engineering #AITools`;
 
     return out;
   };

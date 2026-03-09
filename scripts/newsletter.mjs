@@ -32,10 +32,10 @@ async function fetchTrendingRepos() {
     
     const resp = await axios.get('https://api.github.com/search/repositories', {
       params: {
-        q: `topic:ai OR topic:llm OR topic:machine-learning created:>${dateQuery}`,
+        q: `topic:ai OR topic:llm OR topic:machine-learning OR topic:artificial-intelligence OR topic:deep-learning created:>${dateQuery}`,
         sort: 'stars',
         order: 'desc',
-        per_page: 5
+        per_page: 8
       },
       headers: {
         'Accept': 'application/vnd.github.v3+json',
@@ -118,25 +118,34 @@ async function generateWeeklyIntelligence(intelligenceData) {
     ImageURL: ${g.urlToImage}
   `).join('\n---\n');
 
-  const reposContext = repos.map(r => `
-    Repo: ${r.name}
-    Description: ${r.description || 'No description provided.'}
-    Stars: ${r.stars || 0}
-    Language: ${r.language || 'Multiple/Other'}
-    URL: ${r.url}
-  `).join('\n---\n');
+  const reposContext = repos.length > 0 
+    ? repos.map(r => `
+        Repo: ${r.name}
+        Description: ${r.description || 'No description provided.'}
+        Stars: ${r.stars || 0}
+        Language: ${r.language || 'Multiple/Other'}
+        URL: ${r.url}
+      `).join('\n---\n')
+    : "NO GITHUB REPOSITORIES FOUND. SKIP SECTION 4.";
 
   const prompt = `
     You are the Lead Editor of "THE SIGNAL", a high-end intelligence protocol for technical founders and AI engineers.
     
-    Based on these sources:
+    SOURCES:
     STORIES: ${articlesContext}
     GADGETS: ${gadgetsContext}
     REPOS: ${reposContext}
     
     Create a premium weekly briefing following the **3-3-2-2-1 Structure**.
-    CRITICAL INSTRUCTION: You MUST REPLACE all bracketed placeholders (like [Headline], [URL], [Repo Name], [Value Prop], [Stars], [Language], [Description]) with real content from the provided sources. DO NOT output the literal placeholders.
     
+    STRICT SOURCE MAPPING RULES:
+    - Section 1 (STORIES) MUST only use items from the STORIES list.
+    - Section 2 (GADGETS) MUST only use items from the GADGETS list.
+    - Section 3 (TOOLS) can use items from STORIES or GADGETS that represent software/frameworks.
+    - Section 4 (REPOS) MUST EXCLUSIVELY use items from the REPOS list. 
+    - CRITICAL: Every URL in the REPOS section MUST start with 'https://github.com/'. DO NOT use news article links (gizmodo, npr, etc.) in the REPOS section.
+
+    INSTRUCTIONS:
     1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs from STORIES.
        - Use this HTML:
          <div style="margin-bottom: 40px;">
@@ -164,7 +173,9 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #10b981; font-size: 13px; text-decoration: none; font-weight: 600;">Access Node →</a>
          </div>
 
-    4. **2 TRENDING REPOS**: Pick exactly 2 significant GitHub repos EXCLUSIVELY from the REPOS list (Do NOT use STORIES or GADGETS here).
+    4. **2 TRENDING REPOS**: 
+       - IF "NO GITHUB REPOSITORIES FOUND" is provided in the REPOS source, output: <div style="color: #94a3b8; padding: 20px; text-align: center; border: 1px dashed #1e293b; border-radius: 12px;">GitHub Node scanning for signals... Check back next week.</div>
+       - OTHERWISE, pick exactly 2 GitHub repos from the REPOS list.
        - Use this HTML:
          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
            <div style="color: #8b5cf6; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">GITHUB NODE</div>
@@ -174,10 +185,10 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">View Repository →</a>
          </div>
 
-    5. **1 ACTIONABLE INSIGHT**: Provide one high-level insight.
-       - Use a quote-style block with #10b981 border.
+    5. **1 ACTIONABLE INSIGHT**: Provide one high-level insight based on the week's trends.
+       - Use a quote-style block with #10b981 left border.
     
-    Technical: Return ONLY the HTML content. No markdown. Inline styles only. White #ffffff, Primary #10b981, Muted #94a3b8.
+    Technical: Return ONLY the HTML content. No markdown. Inline styles only.
   `;
 
   try {
