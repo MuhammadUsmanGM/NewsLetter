@@ -272,6 +272,16 @@
   color: #fff;
 }
 
+.action-buttons-container {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.action-buttons-container > button {
+  flex: 1;
+}
+
 .success-state {
   text-align: center;
   padding: 1rem 0;
@@ -521,6 +531,16 @@
   .submit-btn {
     padding: 1rem;
     font-size: 1rem;
+  }
+
+  .secondary-btn {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .action-buttons-container {
+    flex-direction: column;
+    gap: 10px;
   }
 
   .success-state h2 {
