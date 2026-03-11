@@ -1,28 +1,93 @@
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
 // Configuration
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT),
+  secure: process.env.SMTP_PORT === '465',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email } = req.body;
+  const { email, reasons } = req.body;
 
   if (!email) {
     return res.status(400).json({ error: 'Email is required' });
   }
 
   try {
+    // 1. Delete from newsletter_subscribers
     const { error } = await supabase
       .from('newsletter_subscribers')
       .delete()
       .eq('email', email);
 
     if (error) throw error;
+
+    // 2. Send Notification Email to Admin about the Unsubscribe
+    const reasonsList = reasons && reasons.length > 0 
+      ? reasons.map(r => `<li>${r}</li>`).join('') 
+      : '<li>No reason provided</li>';
+
+    const unsubscribeHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: sans-serif; background-color: #fff1f2; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; border: 1px solid #fecaca; }
+          .header { font-size: 20px; font-weight: bold; color: #991b1b; margin-bottom: 20px; border-bottom: 2px solid #ef4444; padding-bottom: 10px; }
+          .field { margin-bottom: 15px; }
+          .label { font-size: 12px; font-weight: bold; color: #7f1d1d; text-transform: uppercase; margin-bottom: 4px; }
+          .value { font-size: 16px; color: #450a0a; line-height: 1.5; }
+          .reason-box { background: #fff5f5; padding: 15px; border-radius: 8px; border: 1px solid #fee2e2; }
+          ul { padding-left: 20px; margin: 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">Signal Lost: Unsubscribe Event 🛑</div>
+          
+          <div class="field">
+            <div class="label">User Email</div>
+            <div class="value">${email}</div>
+          </div>
+
+          <div class="field">
+            <div class="label">Reasons for Leaving</div>
+            <div class="value reason-box">
+              <ul>${reasonsList}</ul>
+            </div>
+          </div>
+          
+          <div class="field">
+            <div class="label">Timestamp</div>
+            <div class="value">${new Date().toLocaleString()}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Send email to the admin
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to: process.env.SMTP_USER,
+      subject: `[UNSUBSCRIBE] User left: ${email}`,
+      html: unsubscribeHtml,
+    });
 
     return res.status(200).json({ success: true, message: 'Protocol deactivated. Connection closed.' });
   } catch (error) {

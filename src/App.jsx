@@ -7,6 +7,7 @@ import LatestIssue from './components/LatestIssue'
 import ArchiveExplorer from './components/ArchiveExplorer'
 import LiveTicker from './components/LiveTicker'
 import CopyPage from './components/CopyPage'
+import Unsubscribe from './components/Unsubscribe'
 import { Turnstile } from '@marsidev/react-turnstile'
 import logo from './assets/Favicon.png'
 import { useNeuralTheme } from './context/ThemeContext'
@@ -96,7 +97,9 @@ function App() {
     }
 
     if (isUnsubscribeAction && unsubscribeEmail) {
-      handleUnsubscribe(unsubscribeEmail);
+      setFormData(prev => ({ ...prev, email: unsubscribeEmail }));
+      setCurrentView('unsubscribe');
+      setShowWelcome(false);
     }
     
     window.addEventListener('online', handleOnline);
@@ -107,32 +110,6 @@ function App() {
       window.removeEventListener('offline', handleOffline);
     };
   }, [apiError, isLoading]);
-
-  const handleUnsubscribe = async (email) => {
-    setIsUnsubscribing(true);
-    setApiError('');
-    try {
-      const response = await fetch('/api/unsubscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.error || 'Failed to unsubscribe');
-      }
-      
-      setUnsubscribed(true);
-      // Remove query params from URL without refreshing
-      window.history.replaceState({}, document.title, window.location.pathname);
-    } catch (error) {
-      console.error('Error unsubscribing:', error);
-      setApiError('Failed to unsubscribe. Please try again or contact support.');
-    } finally {
-      setIsUnsubscribing(false);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -294,6 +271,17 @@ function App() {
     if (currentView === 'archive') return <ArchiveExplorer setView={setCurrentView} />;
     if (currentView === 'issue') return <LatestIssue issueId={selectedIssueId} setView={setCurrentView} />;
     if (currentView === 'getcopy') return <CopyPage setView={setCurrentView} />;
+    if (currentView === 'unsubscribe') return (
+      <Unsubscribe 
+        email={formData.email} 
+        setView={setCurrentView} 
+        onUnsubscribe={() => {
+          setUnsubscribed(true);
+          setCurrentView('home');
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }} 
+      />
+    );
     
     return (
       <div className="newsletter-container">
