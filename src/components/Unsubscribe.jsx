@@ -139,12 +139,12 @@ const Unsubscribe = ({ email, setView, onUnsubscribe }) => {
 
             {error && <div className="api-error-message fade-in" style={{ marginBottom: '20px' }}>{error}</div>}
 
-            <div style={{ display: 'flex', gap: '15px' }}>
+            <div className="action-buttons-container">
               <button 
                 type="button" 
                 onClick={() => setView('home')} 
                 className="secondary-btn"
-                style={{ flex: 1, padding: '14px', borderRadius: '12px' }}
+                style={{ padding: '14px', borderRadius: '12px' }}
                 disabled={isSubmitting}
               >
                 Go Back
@@ -152,7 +152,7 @@ const Unsubscribe = ({ email, setView, onUnsubscribe }) => {
               <button 
                 type="submit" 
                 className="submit-btn" 
-                style={{ flex: 1, padding: '14px', borderRadius: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)' }}
+                style={{ padding: '14px', borderRadius: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)' }}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Processing...' : 'Unsubscribe'}
