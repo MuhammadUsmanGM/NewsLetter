@@ -220,48 +220,50 @@ async function sendNewsletter() {
 
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  let sharedEmailBody = null;
+  const forceSend = process.argv && Array.isArray(process.argv) ? process.argv.includes('--force') : false;
 
-  for (const subscriber of subscribers) {
+  // Determine if ANY subscriber qualifies before generating content,
+  // so we only generate & archive the issue once per send cycle.
+  const qualifyingSubscribers = subscribers.filter(subscriber => {
+    const localeOptions = { timeZone: subscriber.timezone, hour12: false };
+    const userFullDate = new Intl.DateTimeFormat('en-CA', { ...localeOptions, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+    const userDay = new Intl.DateTimeFormat('en-US', { ...localeOptions, weekday: 'long' }).format(now);
+    const userHour = parseInt(new Intl.DateTimeFormat('en-US', { ...localeOptions, hour: 'numeric' }).format(now));
+    const isMonday = userDay === 'Monday';
+    const is9AMOrLater = userHour >= 9;
+    const alreadySent = subscriber.last_sent_date === userFullDate;
+    console.log(`[TARGET] ${subscriber.email} | Day: ${userDay} | Hour: ${userHour} | Sent: ${alreadySent}`);
+    return (isMonday && is9AMOrLater && !alreadySent) || forceSend;
+  });
+
+  if (qualifyingSubscribers.length === 0) {
+    console.log('No qualifying subscribers at this time. Skipping send.');
+    return;
+  }
+
+  // Generate content ONCE and archive it ONCE before the send loop
+  console.log('--- GENERATING NEURAL BRIEFING (3-2-1 STRUCTURE) ---');
+  const sharedEmailBody = await generateWeeklyIntelligence(intelligenceData);
+
+  try {
+    console.log('--- ARCHIVING SIGNAL FOR WEB VIEW ---');
+    const { error: archiveError } = await supabase
+      .from('newsletter_archive')
+      .insert([{ week_date: dateStr, content_html: sharedEmailBody }]);
+
+    if (archiveError) {
+      console.error('Failed to archive newsletter:', archiveError);
+    } else {
+      console.log('Signal archived successfully for web view.');
+    }
+  } catch (archiveErr) {
+    console.error('Archive error:', archiveErr);
+  }
+
+  for (const subscriber of qualifyingSubscribers) {
     try {
       const localeOptions = { timeZone: subscriber.timezone, hour12: false };
       const userFullDate = new Intl.DateTimeFormat('en-CA', { ...localeOptions, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
-      const userDay = new Intl.DateTimeFormat('en-US', { ...localeOptions, weekday: 'long' }).format(now);
-      const userHour = parseInt(new Intl.DateTimeFormat('en-US', { ...localeOptions, hour: 'numeric' }).format(now));
-
-      const isMonday = userDay === 'Monday';
-      const is9AMOrLater = userHour >= 9;
-      const alreadySent = subscriber.last_sent_date === userFullDate;
-      const forceSend = process.argv && Array.isArray(process.argv) ? process.argv.includes('--force') : false;
-
-      console.log(`[TARGET] ${subscriber.email} | Day: ${userDay} | Hour: ${userHour} | Sent: ${alreadySent}`);
-
-      if ((isMonday && is9AMOrLater && !alreadySent) || forceSend) {
-        if (!sharedEmailBody) {
-          console.log('--- GENERATING NEURAL BRIEFING (3-2-1 STRUCTURE) ---');
-          sharedEmailBody = await generateWeeklyIntelligence(intelligenceData);
-          
-          // ARCHIVE THE ISSUE: Save to Supabase for the web view
-          try {
-            console.log('--- ARCHIVING SIGNAL FOR WEB VIEW ---');
-            const { error: archiveError } = await supabase
-              .from('newsletter_archive')
-              .insert([
-                { 
-                  week_date: dateStr, 
-                  content_html: sharedEmailBody 
-                }
-              ]);
-            
-            if (archiveError) {
-              console.error('Failed to archive newsletter:', archiveError);
-            } else {
-              console.log('Signal archived successfully for web view.');
-            }
-          } catch (archiveErr) {
-            console.error('Archive error:', archiveErr);
-          }
-        }
 
         const unsubscribeUrl = `${process.env.APP_URL}/?unsubscribe=true&email=${encodeURIComponent(subscriber.email)}`;
         
@@ -720,7 +722,6 @@ async function sendNewsletter() {
           .from('newsletter_subscribers')
           .update({ last_sent_date: userFullDate })
           .eq('email', subscriber.email);
-      }
     } catch (err) {
       console.error(`[ERROR] Protocol failed for ${subscriber.email}:`, err);
     }

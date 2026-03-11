@@ -10,7 +10,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ArchiveExplorer = ({ setView }) => {
+const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
   const [archives, setArchives] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -76,6 +76,7 @@ const ArchiveExplorer = ({ setView }) => {
                   onClick={() => {
                     // Update URL without reload for potential bookmarking
                     window.history.pushState({}, '', `/?view=issue&id=${item.id}`);
+                    if (setSelectedIssueId) setSelectedIssueId(item.id);
                     setView('issue');
                   }}
                   style={{ 

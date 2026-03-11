@@ -268,7 +268,7 @@ function App() {
     if (currentView === 'dashboard') return <Dashboard name={userName} email={formData.email} setView={setCurrentView} />;
     if (currentView === 'feedback') return <Feedback setView={setCurrentView} />;
     if (currentView === 'latest') return <LatestIssue setView={setCurrentView} />;
-    if (currentView === 'archive') return <ArchiveExplorer setView={setCurrentView} />;
+    if (currentView === 'archive') return <ArchiveExplorer setView={setCurrentView} setSelectedIssueId={setSelectedIssueId} />;
     if (currentView === 'issue') return <LatestIssue issueId={selectedIssueId} setView={setCurrentView} />;
     if (currentView === 'getcopy') return <CopyPage setView={setCurrentView} />;
     if (currentView === 'unsubscribe') return (
