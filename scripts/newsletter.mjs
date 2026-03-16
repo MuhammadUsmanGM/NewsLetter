@@ -32,7 +32,7 @@ async function fetchTrendingRepos() {
     
     const resp = await axios.get('https://api.github.com/search/repositories', {
       params: {
-        q: `topic:ai OR topic:llm OR topic:machine-learning OR topic:artificial-intelligence OR topic:deep-learning created:>${dateQuery}`,
+        q: `AI OR LLM OR "Machine Learning" OR "Generative AI" OR "Artificial Intelligence" created:>${dateQuery} stars:>10`,
         sort: 'stars',
         order: 'desc',
         per_page: 8
