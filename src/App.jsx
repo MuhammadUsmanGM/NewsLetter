@@ -8,6 +8,7 @@ import ArchiveExplorer from './components/ArchiveExplorer'
 import LiveTicker from './components/LiveTicker'
 import CopyPage from './components/CopyPage'
 import Unsubscribe from './components/Unsubscribe'
+import Commander from './components/Commander'
 import { Turnstile } from '@marsidev/react-turnstile'
 import logo from './assets/Favicon.png'
 import { useNeuralTheme } from './context/ThemeContext'
@@ -107,6 +108,9 @@ function App() {
       setShowWelcome(false);
     } else if (viewParam === 'getcopy') {
       setCurrentView('getcopy');
+      setShowWelcome(false);
+    } else if (viewParam === 'commander') {
+      setCurrentView('commander');
       setShowWelcome(false);
     }
 
@@ -299,6 +303,7 @@ function App() {
         }} 
       />
     );
+    if (currentView === 'commander') return <Commander setView={setCurrentView} />;
     
     return (
       <div className="newsletter-container">
