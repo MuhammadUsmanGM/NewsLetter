@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Unsubscribe = ({ email, setView, onUnsubscribe }) => {
+const Unsubscribe = ({ email, token, setView, onUnsubscribe }) => {
   const [reasons, setReasons] = useState({
     tooMany: false,
     notRelevant: false,
@@ -41,6 +41,7 @@ const Unsubscribe = ({ email, setView, onUnsubscribe }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           email,
+          token,
           reasons: selectedReasons
         })
       });
@@ -50,7 +51,6 @@ const Unsubscribe = ({ email, setView, onUnsubscribe }) => {
         throw new Error(result.error || 'Failed to unsubscribe');
       }
 
-      // Automatically assume the parent will handle the success state, e.g. updating the URL and showing success
       onUnsubscribe();
     } catch (err) {
       console.error('Error unsubscribing:', err);
@@ -71,10 +71,12 @@ const Unsubscribe = ({ email, setView, onUnsubscribe }) => {
           </div>
           
           <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', padding: '15px 20px', borderRadius: '8px', marginBottom: '30px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-            <span style={{ color: '#94a3b8', fontSize: '0.9rem', display: 'block', marginBottom: '5px' }}>Target Email</span>
-            <strong style={{ color: '#fff', fontSize: '1.2rem', wordBreak: 'break-all' }}>{email}</strong>
+            <span style={{ color: '#94a3b8', fontSize: '0.9rem', display: 'block', marginBottom: '5px' }}>Target Identification</span>
+            <strong style={{ color: '#fff', fontSize: '1.2rem', wordBreak: 'break-all' }}>
+              {email || (token ? 'Secured Token Node' : 'Unknown Node')}
+            </strong>
           </div>
-
+          
           <form onSubmit={handleSubmit}>
             <p style={{ color: '#f1f5f9', fontWeight: 'bold', marginBottom: '15px' }}>Why do you want to unsubscribe?</p>
             

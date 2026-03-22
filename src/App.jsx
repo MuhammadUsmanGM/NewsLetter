@@ -62,11 +62,25 @@ function App() {
       }
     };
 
-    // Check for unsubscribe query parameters
+    // Check for query parameters (Routing & Notifications)
     const params = new URLSearchParams(window.location.search);
     const unsubscribeEmail = params.get('email');
+    const unsubscribeToken = params.get('token');
     const isUnsubscribeAction = params.get('unsubscribe') === 'true';
     const viewParam = params.get('view');
+    const verifiedStatus = params.get('verified');
+    const verifyError = params.get('error');
+
+    if (verifiedStatus === 'true') {
+      setApiError('Neural link activated successfully. Welcome to the inner circle.');
+      // Optionally redirect to dashboard if name/email are known, 
+      // but for now, just show a success message on home
+    } else if (verifiedStatus === 'failed') {
+      const errorMsg = verifyError === 'invalid_token' 
+        ? 'Verification token expired or invalid. Please request a new link.'
+        : 'Protocol activation failed. Please contact the operator.';
+      setApiError(errorMsg);
+    }
 
     if (viewParam === 'dashboard') {
       const nameParam = params.get('name');
@@ -76,7 +90,7 @@ function App() {
         setFormData(prev => ({ ...prev, email: emailParam }));
       }
       setCurrentView('dashboard');
-      setShowWelcome(false); // Skip welcome screen for direct dashboard access
+      setShowWelcome(false); 
     } else if (viewParam === 'feedback') {
       setCurrentView('feedback');
       setShowWelcome(false);
@@ -96,10 +110,12 @@ function App() {
       setShowWelcome(false);
     }
 
-    if (isUnsubscribeAction && unsubscribeEmail) {
-      setFormData(prev => ({ ...prev, email: unsubscribeEmail }));
+    if (isUnsubscribeAction && (unsubscribeEmail || unsubscribeToken)) {
+      if (unsubscribeEmail) setFormData(prev => ({ ...prev, email: unsubscribeEmail }));
       setCurrentView('unsubscribe');
       setShowWelcome(false);
+      // Pass token to unsubscribe view if needed
+      window.dispatchToken = unsubscribeToken; 
     }
     
     window.addEventListener('online', handleOnline);
@@ -274,6 +290,7 @@ function App() {
     if (currentView === 'unsubscribe') return (
       <Unsubscribe 
         email={formData.email} 
+        token={window.dispatchToken}
         setView={setCurrentView} 
         onUnsubscribe={() => {
           setUnsubscribed(true);
@@ -364,11 +381,11 @@ function App() {
                   </svg>
                 </div>
                 <div className="success-content fade-in">
-                  <div className="success-badge">{isAlreadySubscribed ? 'Neural Link Active' : 'Access Granted'}</div>
-                  <h2>{isAlreadySubscribed ? 'Welcome Back!' : "You're on the list!"}</h2>
+                  <div className="success-badge">{isAlreadySubscribed ? 'Neural Link Active' : 'Transmission Pending'}</div>
+                  <h2>{isAlreadySubscribed ? 'Welcome Back!' : "Verify Your Node"}</h2>
                   <p>{isAlreadySubscribed 
                     ? `Good to see you again, ${userName}. Your intelligence protocol is already active.` 
-                    : "Welcome to the inner circle of AI enthusiasts."}
+                    : `Greetings, ${formData.name}. We've sent a verification link to your inbox. Activate it to finalize the link.`}
                   </p>
                   
                   {isAlreadySubscribed && (
@@ -382,7 +399,7 @@ function App() {
                   )}
 
                   <div className="success-footer">
-                    {isAlreadySubscribed ? 'Redirecting to your terminal...' : 'Check your inbox for a welcome gift'}
+                    {isAlreadySubscribed ? 'Redirecting to your terminal...' : 'Connection established. Waiting for verification.'}
                   </div>
                 </div>
               </div>

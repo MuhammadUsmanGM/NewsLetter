@@ -7,7 +7,7 @@
  * @returns {string} - Full HTML string.
  */
 export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
-  const unsubscribeUrl = `${appUrl}/?unsubscribe=true&email=${encodeURIComponent(subscriber.email)}`;
+  const unsubscribeUrl = `${appUrl}/?unsubscribe=true&token=${subscriber.v_token || ''}`;
   
   return `
 <!DOCTYPE html>
@@ -442,6 +442,46 @@ export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
 </tr>
 </table>
 
+</body>
+</html>
+  `.trim();
+}
+
+/**
+ * Generates the verification email (Double Opt-in) for new subscribers.
+ * @param {string} name - User's name.
+ * @param {string} token - Verification token.
+ * @param {string} appUrl - Base app URL.
+ * @returns {string} - Full HTML string.
+ */
+export function getVerificationEmailHtml(name, token, appUrl) {
+  const verifyUrl = `${appUrl}/api/verify?token=${token}`;
+  
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@400;700&display=swap');
+    body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #94a3b8; padding: 40px; }
+    .card { max-width: 500px; margin: 0 auto; background: #0a1628; border: 1px solid #10b981; border-radius: 12px; padding: 40px; text-align: center; }
+    .logo { width: 48px; border-radius: 8px; border: 1px solid #10b981; margin-bottom: 24px; }
+    .mono { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: #10b981; text-transform: uppercase; margin-bottom: 20px; }
+    h1 { color: #fff; font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0 0 16px 0; }
+    p { font-size: 16px; line-height: 1.6; margin-bottom: 30px; }
+    .btn { display: inline-block; background: #10b981; color: #020617 !important; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .footer { font-size: 12px; color: #475569; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="${appUrl}/Favicon.png" class="logo" alt="Signal">
+    <div class="mono">// VERIFICATION_REQUIRED</div>
+    <h1>Initialize Transmission?</h1>
+    <p>Greetings, ${name}. We've detected a request to connect your node to <strong>THE SIGNAL</strong>. Please confirm your identity to activate the neural link.</p>
+    <a href="${verifyUrl}" class="btn">Verify Transmission →</a>
+    <div class="footer">If you didn't request this connection, please ignore this transmission. Connection will self-destruct in 24 hours.</div>
+  </div>
 </body>
 </html>
   `.trim();

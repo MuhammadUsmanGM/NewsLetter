@@ -214,10 +214,11 @@ async function sendNewsletter() {
     console.warn('Cache check failed, will proceed with generation if needed:', err.message);
   }
 
-  // 2. Fetch all subscribers
+  // 2. Fetch all VERIFIED subscribers
   const { data: subscribers, error } = await supabase
     .from('newsletter_subscribers')
-    .select('*');
+    .select('*')
+    .eq('is_verified', true);
 
   if (error) {
     console.error('Database connection failure:', error);

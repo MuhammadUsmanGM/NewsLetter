@@ -1,42 +1,45 @@
 import { createClient } from '@supabase/supabase-js';
-import nodemailer from 'nodemailer';
+import { sendMail } from '../src/utils/mailer.js';
 
 // Configuration
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT),
-  secure: process.env.SMTP_PORT === '465',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, reasons } = req.body;
+  const { email, token, reasons } = req.body;
 
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
+  if (!email && !token) {
+    return res.status(400).json({ error: 'Identification required' });
   }
 
   try {
-    // 1. Delete from newsletter_subscribers
+    // 1. Identify the user
+    let userToDelete = null;
+    if (token) {
+      const { data } = await supabase.from('newsletter_subscribers').select('email').eq('v_token', token).maybeSingle();
+      userToDelete = data?.email;
+    } else {
+      userToDelete = email; // Fallback
+    }
+
+    if (!userToDelete) {
+        return res.status(200).json({ success: true, message: 'Node already disconnected.' });
+    }
+
+    // 2. Delete from newsletter_subscribers
     const { error } = await supabase
       .from('newsletter_subscribers')
       .delete()
-      .eq('email', email);
+      .eq('email', userToDelete);
 
     if (error) throw error;
 
-    // 2. Send Notification Email to Admin about the Unsubscribe
+    // 3. Send Notification Email to Admin about the Unsubscribe
     const reasonsList = reasons && reasons.length > 0 
       ? reasons.map(r => `<li>${r}</li>`).join('') 
       : '<li>No reason provided</li>';
@@ -62,7 +65,7 @@ export default async function handler(req, res) {
           
           <div class="field">
             <div class="label">User Email</div>
-            <div class="value">${email}</div>
+            <div class="value">${userToDelete}</div>
           </div>
 
           <div class="field">
@@ -81,13 +84,8 @@ export default async function handler(req, res) {
       </html>
     `;
 
-    // Send email to the admin
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: process.env.SMTP_USER,
-      subject: `[UNSUBSCRIBE] User left: ${email}`,
-      html: unsubscribeHtml,
-    });
+    // Send email to the admin/relay
+    await sendMail(process.env.SMTP_USER, `[UNSUBSCRIBE] User left: ${userToDelete}`, unsubscribeHtml);
 
     return res.status(200).json({ success: true, message: 'Protocol deactivated. Connection closed.' });
   } catch (error) {
