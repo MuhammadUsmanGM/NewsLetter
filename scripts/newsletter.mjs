@@ -3,6 +3,7 @@ import axios from 'axios';
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { inngest } from '../src/inngest/client.js';
+import { getNewsletterBodyHtml } from '../src/utils/templates.js';
 
 // Configuration
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
@@ -255,13 +256,19 @@ async function sendNewsletter() {
       return;
     }
 
-    sharedEmailBody = await generateWeeklyIntelligence(intelligenceData);
+    const contentHtml = await generateWeeklyIntelligence(intelligenceData);
+    sharedEmailBody = getNewsletterBodyHtml(null, dateStr, contentHtml); 
 
     try {
       console.log('--- ARCHIVING SIGNAL FOR WEB VIEW & FUTURE TIMEZONES ---');
       const { error: archiveError } = await supabase
         .from('newsletter_archive')
-        .insert([{ week_date: dateStr, content_html: sharedEmailBody }]);
+        .insert([{ 
+          week_date: dateStr, 
+          content_html: sharedEmailBody, 
+          raw_content: contentHtml, 
+          repositories: intelligenceData.repos.map(repo => repo.name) 
+        }]);
 
       if (archiveError) {
         console.error('Failed to archive freshly generated newsletter:', archiveError);

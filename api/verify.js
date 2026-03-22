@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import { sendMail } from '../src/utils/mailer.js';
+import { getWelcomeEmailHtml } from '../src/utils/templates.js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -12,10 +14,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Find user with this token who isn't verified yet
+    // 1. Find user with this token
     const { data: user, error: fetchError } = await supabase
       .from('newsletter_subscribers')
-      .select('email, is_verified')
+      .select('email, name, is_verified')
       .eq('v_token', token)
       .maybeSingle();
 
@@ -36,7 +38,17 @@ export default async function handler(req, res) {
 
     if (updateError) throw updateError;
 
-    // 3. Success: Redirect back to the UI with a success flag
+    // 3. Trigger Premium Welcome Email (Double Opt-in Complete)
+    try {
+      const welcomeHtml = getWelcomeEmailHtml(user.name, user.email, process.env.APP_URL);
+      await sendMail(user.email, 'THE SIGNAL: Intelligence Protocol Activated 📡', welcomeHtml);
+    } catch (mailErr) {
+      console.error('Failed to send welcome email after verification:', mailErr);
+      // We don't fail the verification just because the welcome email failed, 
+      // but we log it.
+    }
+
+    // 4. Success: Redirect back to the UI
     return res.redirect(`${process.env.APP_URL}/?verified=true`);
 
   } catch (error) {

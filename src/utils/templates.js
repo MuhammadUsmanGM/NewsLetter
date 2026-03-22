@@ -1,22 +1,44 @@
 /**
- * Generates the premium newsletter HTML wrapper for a specific subscriber.
- * @param {object} subscriber - User data (name, email).
- * @param {string} dateStr - Current issue date.
- * @param {string} contentHtml - The generated Gemini briefing content.
- * @param {string} appUrl - Base app URL.
+ * Generates the core HTML body for the newsletter content.
+ * Used for both email and web UI display.
+ */
+export function getNewsletterBodyHtml(subscriber, dateStr, contentHtml) {
+  return `
+    <div style="padding: 40px; color: #94a3b8; line-height: 1.75;">
+      <p style="font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: #10b981; text-transform: uppercase; margin-bottom: 20px;">
+        // WEEKLY_INTELLIGENCE_REPORT :: ${dateStr}
+      </p>
+      
+      <div class="newsletter-content-body">
+        ${contentHtml}
+      </div>
+
+      <div style="margin-top: 50px; padding: 30px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; text-align: center;">
+        <h3 style="color: #fff; margin-top: 0;">Transmission Complete</h3>
+        <p style="font-size: 14px; margin-bottom: 0;">You are receiving this because your neural node is authorized for Alpha-level signal reception.</p>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Generates the full HTML for the newsletter email.
+ * @param {Object} subscriber - Subscriber object.
+ * @param {string} dateStr - Date string for the newsletter.
+ * @param {string} contentHtml - The generated content from the LLM.
+ * @param {string} appUrl - The base URL of the application.
  * @returns {string} - Full HTML string.
  */
 export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
   const unsubscribeUrl = `${appUrl}/?unsubscribe=true&token=${subscriber.v_token || ''}`;
+  const bodyContent = getNewsletterBodyHtml(subscriber, dateStr, contentHtml);
   
   return `
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="x-apple-disable-message-reformatting">
   <title>THE SIGNAL: Intelligence Protocol</title>
   <!--[if mso]>
   <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
@@ -481,6 +503,69 @@ export function getVerificationEmailHtml(name, token, appUrl) {
     <p>Greetings, ${name}. We've detected a request to connect your node to <strong>THE SIGNAL</strong>. Please confirm your identity to activate the neural link.</p>
     <a href="${verifyUrl}" class="btn">Verify Transmission →</a>
     <div class="footer">If you didn't request this connection, please ignore this transmission. Connection will self-destruct in 24 hours.</div>
+  </div>
+</body>
+</html>
+  `.trim();
+}
+
+/**
+ * Generates the premium welcome (Alpha Clearance) email for verified subscribers.
+ * @param {string} name - User's name.
+ * @param {string} email - User's email.
+ * @param {string} appUrl - Base app URL.
+ * @returns {string} - Full HTML string.
+ */
+export function getWelcomeEmailHtml(name, email, appUrl) {
+  const subId = `USR-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+  
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@400;600;700;800&display=swap');
+    body { font-family: 'Outfit', Arial, sans-serif; background-color: #020617; margin: 0; padding: 0; }
+    .wrapper { width: 100%; max-width: 600px; margin: 0 auto; background: #020617; border: 1px solid #10b981; border-radius: 12px; overflow: hidden; }
+    .header { background: linear-gradient(160deg,#061a12 0%,#020617 100%); padding: 40px; text-align: center; border-bottom: 2px solid #10b981; }
+    .mono { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: #10b981; text-transform: uppercase; }
+    h1 { color: #fff; font-size: 48px; font-weight: 800; letter-spacing: -2px; margin: 20px 0 0 0; }
+    .content { padding: 40px; color: #94a3b8; line-height: 1.75; }
+    .card-vip { background: linear-gradient(135deg, #0d2a1f 0%, #0a1628 100%); border: 1px solid #10b981; border-radius: 12px; padding: 30px; margin-top: 30px; }
+    .badge { display: inline-block; background: #10b981; color: #020617; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; margin-bottom: 12px; }
+    .sub-id { font-size: 24px; color: #fff; font-weight: 800; margin-bottom: 4px; }
+    .cta { display: inline-block; background: #10b981; color: #020617 !important; padding: 18px 44px; border-radius: 8px; text-decoration: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 30px; }
+    .footer { padding: 40px; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #334155; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <img src="${appUrl}/Favicon.png" width="60" style="border-radius:12px; border:1px solid #10b981;">
+      <div class="mono" style="margin-top:20px;">// SIGNAL_RELAY :: CONNECTION_STABLE</div>
+      <h1>THE <span style="color:#10b981;">SIGNAL.</span></h1>
+    </div>
+    <div class="content">
+      <p class="mono">// TRANSMISSION_ACCEPTED</p>
+      <h2 style="color:#fff; font-size:26px;">Clearance granted, ${name}.</h2>
+      <p>Your neural node has been successfully verified. You are now part of the <strong>THE SIGNAL</strong> inner circle. Every Monday at 09:00 AM, you will receive our pinpoint-accurate intelligence briefing.</p>
+      
+      <div class="card-vip">
+        <div class="badge">CLEARANCE LEVEL: ALPHA</div>
+        <div class="mono sub-id">${subId}</div>
+        <p class="mono" style="color:#475569; font-size:10px;">AUTHORIZED PROTOCOL NODE &nbsp;|&nbsp; EST. 2026</p>
+        <div style="border-top:1px solid rgba(16,185,129,0.2); margin:20px 0; padding-top:20px;">
+          <p style="margin:0; font-size:14px;"><strong>Unlocked Assets:</strong> Weekly Intelligence, Alpha Drops, Full Archive Access, Community Node.</p>
+        </div>
+      </div>
+
+      <center>
+        <a href="${appUrl}/?view=dashboard&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}" class="cta">Initialize Terminal →</a>
+      </center>
+    </div>
+    <div class="footer">
+      © ${new Date().getFullYear()} THE SIGNAL. &nbsp;|&nbsp; <a href="${appUrl}/?unsubscribe=true&email=${encodeURIComponent(email)}" style="color:#334155;">Deactivate Link</a>
+    </div>
   </div>
 </body>
 </html>
