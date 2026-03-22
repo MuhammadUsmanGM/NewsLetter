@@ -595,3 +595,39 @@ export function getWelcomeEmailHtml(name, email, appUrl) {
 </html>
   `.trim();
 }
+
+/**
+ * Generates the Resurrection (Re-engagement) email for inactive nodes.
+ */
+export function getResurrectionEmailHtml(name, appUrl) {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@400;700&display=swap');
+    body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #94a3b8; padding: 40px; }
+    .card { max-width: 500px; margin: 0 auto; background: #020617; border: 1px solid #ef4444; border-radius: 12px; padding: 40px; text-align: center; }
+    .logo { width: 48px; border-radius: 8px; border: 1px solid #ef4444; margin-bottom: 24px; opacity: 0.5; }
+    .mono { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: #ef4444; text-transform: uppercase; margin-bottom: 20px; }
+    h1 { color: #fff; font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0 0 16px 0; }
+    p { font-size: 16px; line-height: 1.6; margin-bottom: 30px; }
+    .btn { display: inline-block; background: #ef4444; color: #fff !important; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .footer { font-size: 12px; color: #475569; margin-top: 40px; border-top: 1px solid rgba(239, 68, 68, 0.1); padding-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="${appUrl}/Favicon.png" class="logo" alt="Signal">
+    <div class="mono">// SIGNAL_LOST :: NODE_INACTIVE</div>
+    <h1>Is your node still active?</h1>
+    <p>Greetings, ${name}. Our telemetry indicates your neural terminal hasn't synced with <strong>THE SIGNAL</strong> in 21 days. We've temporarily throttled your bandwidth to protect the protocol.</p>
+    <a href="${appUrl}/?view=dashboard" class="btn">Re-Sync Node →</a>
+    <div class="footer">
+      No action required if you wish to stay dark. We'll attempt one final reconnection before terminal decommission.
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+}

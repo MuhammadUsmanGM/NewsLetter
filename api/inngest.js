@@ -2,7 +2,10 @@ import { serve } from "inngest/node";
 import { inngest } from "../src/inngest/client.js";
 import { sendMail } from "../src/utils/mailer.js";
 
-import { getNewsletterHtml } from "../src/utils/templates.js";
+import { getNewsletterHtml, getResurrectionEmailHtml } from "../src/utils/templates.js";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 /**
  * The individual worker job to send a single issue to a single user.
@@ -63,12 +66,64 @@ const newsletterDispatcher = inngest.createFunction(
 );
 
 /**
+ * 3. Resurrection Protocol (Re-engagement Automation)
+ * Runs weekly to find inactive nodes and send a 'Signal Lost' prompt.
+ */
+const resurrectionWatcher = inngest.createFunction(
+  { id: "resurrection-protocol" },
+  { cron: "0 10 * * 0" }, // Every Sunday at 10 AM
+  async ({ step }) => {
+    const threeWeeksAgo = new Date();
+    threeWeeksAgo.setDate(threeWeeksAgo.getDate() - 21);
+    const appUrl = process.env.APP_URL;
+
+    const { data: inactiveUsers } = await step.run("fetch-inactive-nodes", async () => {
+      const { data, error } = await supabase
+        .from('newsletter_subscribers')
+        .select('email, name, v_token, last_active_at, last_reengagement_sent_at')
+        .eq('is_verified', true)
+        .lt('last_active_at', threeWeeksAgo.toISOString())
+        .or(`last_reengagement_sent_at.is.null, last_reengagement_sent_at.lt.last_active_at`);
+      
+      if (error) throw error;
+      return data;
+    });
+
+    if (!inactiveUsers || inactiveUsers.length === 0) return { status: "no_inactive_nodes" };
+
+    const results = await step.run("send-resurrection-signals", async () => {
+      let sentCount = 0;
+
+      for (const user of inactiveUsers) {
+        try {
+          const html = getResurrectionEmailHtml(user.name, appUrl);
+          await sendMail(user.email, "SIGNAL LOST: Node Inactivity Detected 📡", html);
+          
+          await supabase
+            .from('newsletter_subscribers')
+            .update({ last_reengagement_sent_at: new Date().toISOString() })
+            .eq('email', user.email);
+            
+          sentCount++;
+        } catch (err) {
+          console.error(`Failed to resurrect ${user.email}:`, err);
+        }
+      }
+      return { sent: sentCount };
+    });
+
+    return { status: "complete", ...results };
+  }
+);
+
+/**
  * Handler for the /api/inngest endpoint.
  */
 export default serve({
   client: inngest,
   functions: [
     newsletterDispatcher,
-    sendIndividualIssue
+    sendIndividualIssue,
+    resurrectionWatcher
   ],
 });
