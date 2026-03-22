@@ -21,7 +21,7 @@ const sendIndividualIssue = inngest.createFunction(
       console.log(`[DELIVERY] Attempting send to ${subscriber.email}`);
       return await sendMail(
         subscriber.email, 
-        `THE SIGNAL: Intelligence Protocol for ${dateStr}`, 
+        `THE SIGNAL: ${subscriber.name}, Intelligence Protocol for ${dateStr}`, 
         fullHtml
       );
     });

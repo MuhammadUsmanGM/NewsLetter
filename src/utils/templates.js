@@ -1,13 +1,38 @@
 /**
+ * Determines the personnel rank based on join date.
+ */
+function getPersonnelRank(joinDateStr) {
+  const joinDate = new Date(joinDateStr);
+  const now = new Date();
+  const diffDays = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
+  const weekIndex = Math.floor(diffDays / 7);
+  
+  const ranks = [
+    'Alpha Initiate', 'Beta Observer', 'Gamma Link', 'Delta Signal', 
+    'Epsilon Core', 'Zeta Vanguard', 'Theta Master', 'Omega Prime', 
+    'Vertex Oracle', 'Signal Eternal'
+  ];
+  
+  return ranks[Math.min(weekIndex, 9)];
+}
+
+/**
  * Generates the core HTML body for the newsletter content.
- * Used for both email and web UI display.
  */
 export function getNewsletterBodyHtml(subscriber, dateStr, contentHtml) {
+  const rank = subscriber?.created_at ? getPersonnelRank(subscriber.created_at) : 'Active Node';
+  const name = subscriber?.name || 'Commander';
+  
   return `
     <div style="padding: 40px; color: #94a3b8; line-height: 1.75;">
       <p style="font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: #10b981; text-transform: uppercase; margin-bottom: 20px;">
-        // WEEKLY_INTELLIGENCE_REPORT :: ${dateStr}
+        // WEEKLY_INTELLIGENCE_REPORT :: ${dateStr} :: PERSONNEL_ID: ${name.toUpperCase().substring(0, 3)}-${(subscriber?.id || '000').toString().padStart(3, '0')}
       </p>
+
+      <div style="margin-bottom: 30px; border-left: 2px solid #10b981; padding-left: 20px;">
+        <h2 style="color: #fff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.5px;">Greetings, ${rank} ${name}.</h2>
+        <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">Your personal intelligence briefing is authenticated. Read carefully.</p>
+      </div>
       
       <div class="newsletter-content-body">
         ${contentHtml}
@@ -15,7 +40,7 @@ export function getNewsletterBodyHtml(subscriber, dateStr, contentHtml) {
 
       <div style="margin-top: 50px; padding: 30px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; text-align: center;">
         <h3 style="color: #fff; margin-top: 0;">Transmission Complete</h3>
-        <p style="font-size: 14px; margin-bottom: 0;">You are receiving this because your neural node is authorized for Alpha-level signal reception.</p>
+        <p style="font-size: 14px; margin-bottom: 0;"><strong>${name}</strong>, you are receiving this because your neural node (${rank}) is authorized for signal reception. Stay alert.</p>
       </div>
     </div>
   `;
@@ -266,17 +291,11 @@ export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
 
 
     <!-- ═══════════════════════════════
-         GREETING
+         BRIEFING CONTENT
     ════════════════════════════════ -->
     <tr>
-      <td class="pad-t">
-        <p class="mono section-label">// TRANSMISSION_BEGINS</p>
-        <h2 style="margin:0 0 14px 0;font-size:24px;font-weight:700;color:#f1f5f9;line-height:1.2;">
-          Greetings, ${subscriber.name}.
-        </h2>
-        <p style="margin:0;font-size:16px;line-height:1.75;color:#94a3b8;">
-          Your weekly intelligence harvest is ready. Every item below was hand-picked from the noise — read deliberately, act precisely.
-        </p>
+      <td style="background-color: #020617;">
+        ${bodyContent}
       </td>
     </tr>
 
