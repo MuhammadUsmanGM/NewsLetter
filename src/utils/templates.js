@@ -381,48 +381,37 @@ export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
 
 
     <!-- ═══════════════════════════════
-         FEEDBACK CARD
+         DIRECT FEEDBACK POLL (1-CLICK)
     ════════════════════════════════ -->
     <tr>
       <td class="pad-t">
         <table role="presentation" class="feedback-card" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
-            <td class="feedback-pad" style="padding:32px 30px;">
-
-              <!-- top row: label + link -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td style="vertical-align:middle;">
-                    <p class="mono" style="margin:0 0 6px 0;font-size:10px;color:#10b981;letter-spacing:3px;">
-                      // PROTOCOL_OPTIMIZATION
-                    </p>
-                    <p style="margin:0;font-size:16px;font-weight:700;color:#f1f5f9;line-height:1.3;">
-                      Was this brief worth your time?
-                    </p>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="margin:12px 0 24px 0;font-size:14px;line-height:1.7;color:#64748b;">
-                Every reply, every rating shapes the next issue. I read all of it — I'm always listening.
+            <td class="feedback-pad" style="padding:32px 30px; text-align: center;">
+              
+              <p class="mono" style="margin:0 0 10px 0;font-size:10px;color:#10b981;letter-spacing:4px;">
+                // PROTOCOL_OPTIMIZATION_SURVEY
+              </p>
+              <p style="margin:0 0 12px 0;font-size:18px;font-weight:700;color:#f1f5f9;line-height:1.2;">
+                Was this signal worth your cycle?
+              </p>
+              <p style="margin:0 0 24px 0;font-size:13px;color:#64748b;line-height:1.5;">
+                Select a binary feedback signal to help optimize future transmissions.
               </p>
 
-              <!-- inner divider -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:22px;">
-                <tr><td style="border-top:1px solid rgba(16,185,129,0.15);font-size:0;line-height:0;">&nbsp;</td></tr>
-              </table>
-
-              <!-- bottom row: label + btn -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                 <tr>
-                  <td class="stack-column-center" style="vertical-align:middle;">
-                    <p class="mono" style="margin:0;font-size:10px;color:#475569;letter-spacing:2px;">AND I MEAN IT.</p>
+                  <td width="48%">
+                    <a href="${appUrl}/api/track/feedback?token=${subscriber.v_token || ''}&useful=true" 
+                       style="display:block; padding:12px; background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:8px; color:#10b981; text-align:center; font-weight:700; font-size:12px; text-decoration:none; text-transform:uppercase; letter-spacing:1px;">
+                      [ YES ]  POSITIVE_SIGNAL
+                    </a>
                   </td>
-                  <td class="stack-column" style="vertical-align:middle;text-align:right;">
-                    <a href="${appUrl}/?view=feedback&email=${encodeURIComponent(subscriber.email)}&name=${encodeURIComponent(subscriber.name)}"
-                       class="feedback-btn"
-                       style="display:inline-block;background:transparent;color:#10b981 !important;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:10px 20px;border-radius:6px;border:1px solid #10b981;text-decoration:none;">
-                      Tell Me Something →
+                  <td width="4%">&nbsp;</td>
+                  <td width="48%">
+                    <a href="${appUrl}/api/track/feedback?token=${subscriber.v_token || ''}&useful=false" 
+                       style="display:block; padding:12px; background:rgba(239,68,68,0.05); border:1px solid #ef4444; border-radius:8px; color:#ef4444; text-align:center; font-weight:700; font-size:12px; text-decoration:none; text-transform:uppercase; letter-spacing:1px;">
+                      [ NO ]  NEGATIVE_SIGNAL
                     </a>
                   </td>
                 </tr>
