@@ -1,166 +1,133 @@
 import React, { useState } from 'react';
+import { ShieldAlert, CheckCircle2, XCircle, ArrowLeft, Send } from 'lucide-react';
 
 const Unsubscribe = ({ email, token, setView, onUnsubscribe }) => {
-  const [reasons, setReasons] = useState({
-    tooMany: false,
-    notRelevant: false,
-    noLongerWant: false,
-    other: false,
-  });
-  const [otherReasonText, setOtherReasonText] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState('confirm'); // 'confirm', 'processing', 'success'
   const [error, setError] = useState('');
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setReasons((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
-  };
+  const reasons = [
+    { label: "Too much noise", value: "too_much_noise" },
+    { label: "Irrelevant signal", value: "irrelevant_signal" },
+    { label: "Moving to a different node", value: "different_node" },
+    { label: "Protocol mission complete", value: "mission_complete" }
+  ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const handleUnsubscribe = async () => {
+    setStep('processing');
     setError('');
-
-    // Prepare reasons data
-    const selectedReasons = [];
-    if (reasons.tooMany) selectedReasons.push('Too many emails');
-    if (reasons.notRelevant) selectedReasons.push('Not relevant to me anymore');
-    if (reasons.noLongerWant) selectedReasons.push('I no longer want to receive these emails');
-    if (reasons.other && otherReasonText.trim()) {
-      selectedReasons.push(`Other: ${otherReasonText}`);
-    } else if (reasons.other) {
-      selectedReasons.push('Other: No specifics provided');
-    }
 
     try {
       const response = await fetch('/api/unsubscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email,
-          token,
-          reasons: selectedReasons
-        })
+        body: JSON.stringify({ email, token })
       });
 
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.error || 'Failed to unsubscribe');
-      }
-
-      onUnsubscribe();
+      if (!response.ok) throw new Error('Unsubscribe failed');
+      
+      setStep('success');
+      if (onUnsubscribe) onUnsubscribe();
     } catch (err) {
-      console.error('Error unsubscribing:', err);
-      setError('Failed to process unsubscribe request. Please try again.');
-      setIsSubmitting(false);
+      setError('Protocol deactivation failed. Please try again.');
+      setStep('confirm');
     }
   };
 
+  const sendFeedback = async (reason) => {
+    if (feedbackSent) return;
+    try {
+      await fetch('/api/unsubscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, token, reasons: [reason], isFeedbackOnly: true })
+      });
+      setFeedbackSent(true);
+    } catch (err) {
+      setFeedbackSent(true); // Don't block UI on error
+    }
+  };
+
+  if (step === 'success') {
+    return (
+      <div className="newsletter-container fade-in">
+        <div className="newsletter-card" style={{ maxWidth: '500px', margin: '40px auto', textAlign: 'center', minHeight: 'auto' }}>
+          <div style={{ padding: '40px' }}>
+            <div style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto' }}>
+              <CheckCircle2 size={32} />
+            </div>
+            <h2 style={{ color: '#fff', fontSize: '1.8rem', marginBottom: '10px' }}>Node Disconnected</h2>
+            <p style={{ color: '#94a3b8', fontSize: '1rem', marginBottom: '30px' }}>Your neural link has been severed. You will no longer receive transmissions.</p>
+            
+            {!feedbackSent ? (
+              <div className="fade-in">
+                <p style={{ color: '#fff', fontWeight: '800', fontSize: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', opacity: 0.6 }}>// HELP_US_OPTIMIZE_THE_SIGNAL</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
+                  {reasons.map((r) => (
+                    <button
+                      key={r.value}
+                      onClick={() => sendFeedback(r.label)}
+                      className="secondary-btn"
+                      style={{ padding: '12px 16px', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem', borderRadius: '8px' }}
+                    >
+                      {r.label} <Send size={14} style={{ opacity: 0.4 }} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="fade-in" style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <p style={{ color: '#10b981', fontWeight: '800', fontSize: '0.9rem', margin: 0 }}>Intelligence Logged. Safe travels, Operative.</p>
+              </div>
+            )}
+            
+            <button 
+              onClick={() => setView('home')} 
+              style={{ marginTop: '30px', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '0.85rem', textDecoration: 'underline' }}
+            >
+              Return to Site
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="newsletter-container fade-in">
-      <div className="newsletter-card fade-in" style={{ maxWidth: '600px', margin: '0 auto', display: 'block', minHeight: 'auto' }}>
-        <div style={{ padding: '40px', textAlign: 'left' }}>
-          <div style={{ paddingBottom: '20px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', marginBottom: '30px' }}>
-            <h2 style={{ color: '#ef4444', fontSize: '1.8rem', marginBottom: '10px' }}>Unsubscribe Confirmation</h2>
-            <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>
-              We're sorry to see you go. To complete the process, please tell us why you are leaving the intelligence protocol.
-            </p>
+      <div className="newsletter-card" style={{ maxWidth: '500px', margin: '40px auto', textAlign: 'center', minHeight: 'auto' }}>
+        <div style={{ padding: '40px' }}>
+          <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px auto' }}>
+            <ShieldAlert size={32} />
           </div>
-          
-          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', padding: '15px 20px', borderRadius: '8px', marginBottom: '30px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-            <span style={{ color: '#94a3b8', fontSize: '0.9rem', display: 'block', marginBottom: '5px' }}>Target Identification</span>
-            <strong style={{ color: '#fff', fontSize: '1.2rem', wordBreak: 'break-all' }}>
-              {email || (token ? 'Secured Token Node' : 'Unknown Node')}
-            </strong>
+          <h2 style={{ color: '#fff', fontSize: '1.8rem', marginBottom: '10px' }}>Terminate Protocol?</h2>
+          <p style={{ color: '#94a3b8', fontSize: '1rem', marginBottom: '10px' }}>
+            You are about to disconnect from <strong>THE SIGNAL</strong>.
+          </p>
+          <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '30px', fontFamily: 'monospace', letterSpacing: '0.5px' }}>
+            TARGET_NODE: {email || 'SECURED_TOKEN_LINK'}
           </div>
-          
-          <form onSubmit={handleSubmit}>
-            <p style={{ color: '#f1f5f9', fontWeight: 'bold', marginBottom: '15px' }}>Why do you want to unsubscribe?</p>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '30px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: '#cbd5e1' }}>
-                <input 
-                  type="checkbox" 
-                  name="tooMany" 
-                  checked={reasons.tooMany} 
-                  onChange={handleCheckboxChange}
-                  style={{ width: '18px', height: '18px', accentColor: '#10b981', cursor: 'pointer' }}
-                />
-                Emails are too frequent
-              </label>
-              
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: '#cbd5e1' }}>
-                <input 
-                  type="checkbox" 
-                  name="notRelevant" 
-                  checked={reasons.notRelevant} 
-                  onChange={handleCheckboxChange}
-                  style={{ width: '18px', height: '18px', accentColor: '#10b981', cursor: 'pointer' }}
-                />
-                Content is not relevant to me anymore
-              </label>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: '#cbd5e1' }}>
-                <input 
-                  type="checkbox" 
-                  name="noLongerWant" 
-                  checked={reasons.noLongerWant} 
-                  onChange={handleCheckboxChange}
-                  style={{ width: '18px', height: '18px', accentColor: '#10b981', cursor: 'pointer' }}
-                />
-                I no longer want to receive these emails
-              </label>
+          {error && <p style={{ color: '#ef4444', marginBottom: '20px', fontSize: '0.9rem' }}>{error}</p>}
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: '#cbd5e1' }}>
-                <input 
-                  type="checkbox" 
-                  name="other" 
-                  checked={reasons.other} 
-                  onChange={handleCheckboxChange}
-                  style={{ width: '18px', height: '18px', accentColor: '#10b981', cursor: 'pointer' }}
-                />
-                Other
-              </label>
-              
-              {reasons.other && (
-                <div style={{ marginLeft: '28px', marginTop: '5px' }}>
-                  <input
-                    type="text"
-                    value={otherReasonText}
-                    onChange={(e) => setOtherReasonText(e.target.value)}
-                    placeholder="Please specify..."
-                    className="stunning-input"
-                    style={{ padding: '10px 15px', fontSize: '0.95rem' }}
-                  />
-                </div>
-              )}
-            </div>
-
-            {error && <div className="api-error-message fade-in" style={{ marginBottom: '20px' }}>{error}</div>}
-
-            <div className="action-buttons-container">
-              <button 
-                type="button" 
-                onClick={() => setView('home')} 
-                className="secondary-btn"
-                style={{ padding: '14px', borderRadius: '12px' }}
-                disabled={isSubmitting}
-              >
-                Go Back
-              </button>
-              <button 
-                type="submit" 
-                className="submit-btn" 
-                style={{ padding: '14px', borderRadius: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)' }}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Processing...' : 'Unsubscribe'}
-              </button>
-            </div>
-          </form>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <button 
+              onClick={handleUnsubscribe} 
+              className="submit-btn" 
+              style={{ padding: '16px', borderRadius: '12px', background: '#ef4444', border: 'none', color: '#fff', fontSize: '1rem', fontWeight: '700' }}
+              disabled={step === 'processing'}
+            >
+              {step === 'processing' ? 'PROCESSING...' : 'DISCONNECT NODE'}
+            </button>
+            <button 
+              onClick={() => setView('home')} 
+              className="secondary-btn"
+              style={{ padding: '16px', borderRadius: '12px' }}
+              disabled={step === 'processing'}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>

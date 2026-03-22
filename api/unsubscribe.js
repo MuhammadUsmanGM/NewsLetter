@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, token, reasons } = req.body;
+  const { email, token, reasons, isFeedbackOnly } = req.body;
 
   if (!email && !token) {
     return res.status(400).json({ error: 'Identification required' });
@@ -21,28 +21,31 @@ export default async function handler(req, res) {
     // 1. Identify the user
     let userToDelete = null;
     if (token) {
+      // Look up via token even if we are only providing feedback (to identify WHO did it)
       const { data } = await supabase.from('newsletter_subscribers').select('email').eq('v_token', token).maybeSingle();
-      userToDelete = data?.email;
+      userToDelete = data?.email || 'Anonymous (Token Session)'; 
     } else {
-      userToDelete = email; // Fallback
+      userToDelete = email;
     }
 
-    if (!userToDelete) {
-        return res.status(200).json({ success: true, message: 'Node already disconnected.' });
+    if (!isFeedbackOnly && userToDelete !== 'Anonymous (Token Session)') {
+        // 2. Delete from newsletter_subscribers
+        const { error } = await supabase
+          .from('newsletter_subscribers')
+          .delete()
+          .eq('email', userToDelete);
+
+        if (error) throw error;
     }
 
-    // 2. Delete from newsletter_subscribers
-    const { error } = await supabase
-      .from('newsletter_subscribers')
-      .delete()
-      .eq('email', userToDelete);
-
-    if (error) throw error;
-
-    // 3. Send Notification Email to Admin about the Unsubscribe
+    // 3. Send Notification Email to Admin about the Unsubscribe or Feedback
     const reasonsList = reasons && reasons.length > 0 
       ? reasons.map(r => `<li>${r}</li>`).join('') 
       : '<li>No reason provided</li>';
+
+    const subject = isFeedbackOnly 
+        ? `[FEEDBACK] User Insights: ${userToDelete}` 
+        : `[UNSUBSCRIBE] User left: ${userToDelete}`;
 
     const unsubscribeHtml = `
       <!DOCTYPE html>
