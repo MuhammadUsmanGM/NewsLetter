@@ -32,7 +32,7 @@ async function fetchTrendingRepos() {
     
     const resp = await axios.get('https://api.github.com/search/repositories', {
       params: {
-        q: `AI OR LLM OR "Machine Learning" OR "Generative AI" OR "Artificial Intelligence" created:>${dateQuery} stars:>10`,
+        q: `AI OR LLM OR "Machine Learning" OR "Generative AI" OR "Artificial Intelligence" pushed:>${dateQuery} stars:>50`,
         sort: 'stars',
         order: 'desc',
         per_page: 8
@@ -203,12 +203,28 @@ async function generateWeeklyIntelligence(intelligenceData) {
 async function sendNewsletter() {
   console.log('--- STARTING 3-2-1 WEEKLY INTELLIGENCE PROTOCOL ---');
 
-  const intelligenceData = await fetchAIIntelligence();
-  if (intelligenceData.articles.length === 0) {
-    console.log('Insufficient signal found. Aborting protocol.');
-    return;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const forceSend = process.argv && Array.isArray(process.argv) ? process.argv.includes('--force') : false;
+
+  // 1. Check if we already have a generated briefing for this week in the vault
+  let sharedEmailBody = null;
+  try {
+    const { data: cachedArchive, error: checkError } = await supabase
+      .from('newsletter_archive')
+      .select('content_html')
+      .eq('week_date', dateStr)
+      .maybeSingle();
+
+    if (cachedArchive) {
+      console.log('--- CACHE HIT: REUSING ARCHIVED NEURAL BRIEFING ---');
+      sharedEmailBody = cachedArchive.content_html;
+    }
+  } catch (err) {
+    console.warn('Cache check failed, will proceed with generation if needed:', err.message);
   }
 
+  // 2. Fetch all subscribers
   const { data: subscribers, error } = await supabase
     .from('newsletter_subscribers')
     .select('*');
@@ -218,46 +234,54 @@ async function sendNewsletter() {
     return;
   }
 
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  const forceSend = process.argv && Array.isArray(process.argv) ? process.argv.includes('--force') : false;
-
-  // Determine if ANY subscriber qualifies before generating content,
-  // so we only generate & archive the issue once per send cycle.
+  // 3. Identify who needs the transmission in their specific window (Monday 9AM+)
   const qualifyingSubscribers = subscribers.filter(subscriber => {
     const localeOptions = { timeZone: subscriber.timezone, hour12: false };
     const userFullDate = new Intl.DateTimeFormat('en-CA', { ...localeOptions, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
     const userDay = new Intl.DateTimeFormat('en-US', { ...localeOptions, weekday: 'long' }).format(now);
     const userHour = parseInt(new Intl.DateTimeFormat('en-US', { ...localeOptions, hour: 'numeric' }).format(now));
+    
     const isMonday = userDay === 'Monday';
     const is9AMOrLater = userHour >= 9;
     const alreadySent = subscriber.last_sent_date === userFullDate;
-    console.log(`[TARGET] ${subscriber.email} | Day: ${userDay} | Hour: ${userHour} | Sent: ${alreadySent}`);
+
+    console.log(`[TARGET] ${subscriber.email} | Target: ${userDay} 09:00 | Current: ${userHour}:00 | Sent: ${alreadySent}`);
     return (isMonday && is9AMOrLater && !alreadySent) || forceSend;
   });
 
   if (qualifyingSubscribers.length === 0) {
-    console.log('No qualifying subscribers at this time. Skipping send.');
+    console.log('No qualifying subscribers at this time. Skipping send cycle.');
     return;
   }
 
-  // Generate content ONCE and archive it ONCE before the send loop
-  console.log('--- GENERATING NEURAL BRIEFING (3-2-1 STRUCTURE) ---');
-  const sharedEmailBody = await generateWeeklyIntelligence(intelligenceData);
-
-  try {
-    console.log('--- ARCHIVING SIGNAL FOR WEB VIEW ---');
-    const { error: archiveError } = await supabase
-      .from('newsletter_archive')
-      .insert([{ week_date: dateStr, content_html: sharedEmailBody }]);
-
-    if (archiveError) {
-      console.error('Failed to archive newsletter:', archiveError);
-    } else {
-      console.log('Signal archived successfully for web view.');
+  // 4. Generate content ONLY if it doesn't already exist for this week
+  if (!sharedEmailBody) {
+    console.log('--- CACHE MISS: GENERATING NEW NEURAL BRIEFING (singleton) ---');
+    const intelligenceData = await fetchAIIntelligence();
+    
+    if (intelligenceData.articles.length === 0) {
+      console.log('Insufficient signal found. Aborting protocol to prevent low-quality briefing.');
+      return;
     }
-  } catch (archiveErr) {
-    console.error('Archive error:', archiveErr);
+
+    sharedEmailBody = await generateWeeklyIntelligence(intelligenceData);
+
+    try {
+      console.log('--- ARCHIVING SIGNAL FOR WEB VIEW & FUTURE TIMEZONES ---');
+      const { error: archiveError } = await supabase
+        .from('newsletter_archive')
+        .insert([{ week_date: dateStr, content_html: sharedEmailBody }]);
+
+      if (archiveError) {
+        console.error('Failed to archive freshly generated newsletter:', archiveError);
+      } else {
+        console.log('Signal archived successfully.');
+      }
+    } catch (archiveErr) {
+      console.error('Archive storage exception:', archiveErr);
+    }
+  } else {
+    console.log('--- UTILIZING SINGLETON BRIEFING FOR CURRENT BATCH ---');
   }
 
   for (const subscriber of qualifyingSubscribers) {
