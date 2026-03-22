@@ -9,6 +9,7 @@ import LiveTicker from './components/LiveTicker'
 import CopyPage from './components/CopyPage'
 import Unsubscribe from './components/Unsubscribe'
 import Commander from './components/Commander'
+import OmegaWall from './components/OmegaWall'
 import { Turnstile } from '@marsidev/react-turnstile'
 import logo from './assets/Favicon.png'
 import { useNeuralTheme } from './context/ThemeContext'
@@ -311,6 +312,7 @@ function App() {
       />
     );
     if (currentView === 'commander') return <Commander setView={setCurrentView} />;
+    if (currentView === 'omegawall') return <OmegaWall setView={setCurrentView} />;
     
     return (
       <div className="newsletter-container">

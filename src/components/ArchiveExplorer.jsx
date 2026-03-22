@@ -1,6 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { Lock, ShieldAlert, Zap, ArrowRight, ShieldCheck } from 'lucide-react';
 import logo from '../assets/Favicon.png';
 import './Feedback.css';
 import './Welcome.css';
@@ -23,7 +23,7 @@ const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
       const minLoadTime = new Promise(resolve => setTimeout(resolve, 1500));
       const fetchPromise = supabase
         .from('newsletter_archive')
-        .select('id, week_date, created_at')
+        .select('id, week_date, created_at, is_pro')
         .order('id', { ascending: false });
 
       const [_, { data, error }] = await Promise.all([minLoadTime, fetchPromise]);
@@ -55,11 +55,11 @@ const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
   }
 
   return (
-    <div className="feedback-container">
-      <div className="feedback-card" style={{ maxWidth: '900px', width: '100%' }}>
+    <div className="feedback-container fade-in">
+      <div className="feedback-card" style={{ maxWidth: '900px', width: '100%', borderTop: '4px solid #10b981' }}>
         <div className="feedback-header">
-          <div className="feedback-badge">Intelligence Archive</div>
-          <h1 className="feedback-title">PROTOCOL VAULT.</h1>
+          <div className="feedback-badge" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>Intelligence Archive</div>
+          <h1 className="feedback-title" style={{ letterSpacing: '-2px' }}>DATA_VAULT_v3.0.</h1>
           <p className="feedback-subtitle">Access all historical signals extracted by the neural network.</p>
         </div>
 
@@ -74,7 +74,10 @@ const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
                 <div 
                   key={item.id} 
                   onClick={() => {
-                    // Update URL without reload for potential bookmarking
+                    if (item.is_pro) {
+                        setView('omegawall');
+                        return;
+                    }
                     window.history.pushState({}, '', `/?view=issue&id=${item.id}`);
                     if (setSelectedIssueId) setSelectedIssueId(item.id);
                     setView('issue');
@@ -85,44 +88,51 @@ const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '24px',
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.05)',
+                    background: item.is_pro ? 'rgba(239, 68, 68, 0.02)' : 'rgba(255,255,255,0.03)',
+                    border: `1px solid ${item.is_pro ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)'}`,
                     borderRadius: '20px',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer'
                   }}
                   onMouseOver={(e) => {
-                    e.currentTarget.style.background = 'rgba(16, 185, 129, 0.05)';
-                    e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                    e.currentTarget.style.background = item.is_pro ? 'rgba(239, 68, 68, 0.05)' : 'rgba(16, 185, 129, 0.05)';
+                    e.currentTarget.style.borderColor = item.is_pro ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
                   }}
                   onMouseOut={(e) => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                    e.currentTarget.style.background = item.is_pro ? 'rgba(239, 68, 68, 0.02)' : 'rgba(255,255,255,0.03)';
+                    e.currentTarget.style.borderColor = item.is_pro ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <div style={{ 
-                      width: '50px', 
-                      height: '50px', 
-                      background: 'rgba(16, 185, 129, 0.1)', 
-                      borderRadius: '12px', 
+                      width: '60px', 
+                      height: '60px', 
+                      background: item.is_pro ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)', 
+                      borderRadius: '16px', 
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center',
-                      color: '#10b981',
+                      color: item.is_pro ? '#ef4444' : '#10b981',
+                      border: `1px solid ${item.is_pro ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'}`,
                       fontWeight: '800'
                     }}>
-                      #{item.id}
+                      {item.is_pro ? <Lock size={20} /> : `#${item.id}`}
                     </div>
                     <div>
-                      <h3 style={{ color: '#ffffff', margin: 0, fontSize: '1.2rem' }}>{item.week_date}</h3>
-                      <p style={{ color: '#64748b', margin: '4px 0 0 0', fontSize: '0.9rem' }}>Signal archived on {new Date(item.created_at).toLocaleDateString()}</p>
+                      {item.is_pro && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', fontSize: '10px', fontWeight: '800', padding: '2px 8px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '2px' }}>RESTRICTED</div>
+                            <span style={{ fontSize: '10px', color: '#64748b', fontWeight: '800' }}>OMEGA_CLEARANCE_REQUIRED</span>
+                        </div>
+                      )}
+                      <h3 style={{ color: '#ffffff', margin: 0, fontSize: '1.25rem', fontWeight: '700' }}>{item.week_date}</h3>
+                      <p style={{ color: '#64748b', margin: '4px 0 0 0', fontSize: '0.85rem' }}>Decrypted on: {new Date(item.created_at).toLocaleDateString()}</p>
                     </div>
                   </div>
-                  <div style={{ color: '#10b981', fontWeight: '700', fontSize: '0.9rem' }}>
-                    Access Deep-Dive →
+                  <div style={{ color: item.is_pro ? '#ef4444' : '#10b981', fontWeight: '800', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {item.is_pro ? 'Upgrade Access' : 'Access Deep-Dive'} <ArrowRight size={16} />
                   </div>
                 </div>
               ))
@@ -130,7 +140,7 @@ const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
           </div>
 
           <div style={{ marginTop: '40px', textAlign: 'center' }}>
-            <button onClick={() => setView('home')} className="back-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>Return to Base</button>
+            <button onClick={() => setView('home')} className="back-link" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#475569', fontSize: '0.9rem', textDecoration: 'underline' }}>Return to Home Protocol</button>
           </div>
         </div>
       </div>
