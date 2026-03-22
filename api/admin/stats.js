@@ -19,13 +19,15 @@ export default async function handler(req, res) {
     // Total & Verification Statuses
     const { data: subscribers, error: subError } = await supabase
       .from('newsletter_subscribers')
-      .select('email, is_verified, created_at, timezone');
+      .select('email, is_verified, created_at, timezone, opens_count');
 
     if (subError) throw subError;
 
     const total = subscribers.length;
     const verified = subscribers.filter(s => s.is_verified).length;
     const unverified = total - verified;
+    const totalOpens = subscribers.reduce((acc, s) => acc + (s.opens_count || 0), 0);
+    const activeNodes = subscribers.filter(s => (s.opens_count || 0) > 0).length;
 
     // Growth Metrics (Last 7 days)
     const sevenDaysAgo = new Date();
@@ -45,7 +47,7 @@ export default async function handler(req, res) {
       .order('id', { ascending: false })
       .limit(1)
       .single();
-
+    
     // 3. Construct the Payload
     return res.status(200).json({
       success: true,
@@ -54,13 +56,17 @@ export default async function handler(req, res) {
         verifiedNodes: verified,
         pendingNodes: unverified,
         growthLast7Days: newGrowth,
+        totalOpens: totalOpens,
+        activeNodes: activeNodes,
         latestIssue: latestArchive?.week_date || 'N/A',
         timezoneDistribution: Object.entries(timezones)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 5)
             .map(([tz, count]) => ({ tz, count }))
       },
-      rawNodes: subscribers.slice(0, 50) // Return first 50 for the list view
+      rawNodes: subscribers
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 50) 
     });
 
   } catch (error) {

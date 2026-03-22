@@ -124,7 +124,8 @@ const Commander = ({ setView }) => {
     );
   }
 
-  const { totalSubscribers, verifiedNodes, pendingNodes, growthLast7Days, latestIssue, timezoneDistribution } = stats.stats;
+  const { totalSubscribers, verifiedNodes, pendingNodes, growthLast7Days, latestIssue, timezoneDistribution, totalOpens, activeNodes } = stats.stats;
+  const engagementRate = totalSubscribers > 0 ? Math.round((activeNodes / totalSubscribers) * 100) : 0;
 
   return (
     <div style={{ minHeight: '100vh', background: '#020617', color: '#f8fafc', padding: '40px 20px', fontFamily: 'Outfit, sans-serif' }}>
@@ -145,9 +146,9 @@ const Commander = ({ setView }) => {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '40px' }}>
           <StatCard title="Total Growth" value={totalSubscribers} icon={<Users size={20} />} trend={`+${growthLast7Days} New Nodes`} />
-          <StatCard title="Verified Nodes" value={verifiedNodes} icon={<UserCheck size={20} />} color="#10b981" />
-          <StatCard title="Pending Sync" value={pendingNodes} icon={<Activity size={20} />} color="#f59e0b" />
-          <StatCard title="Latest Release" value={latestIssue} icon={<Zap size={20} />} color="#ef4444" />
+          <StatCard title="Active Nodes" value={activeNodes} icon={<Activity size={20} />} trend={`${engagementRate}% Engagement`} />
+          <StatCard title="Signals Read" value={totalOpens} icon={<Zap size={20} />} color="#10b981" />
+          <StatCard title="Latest Issue" value={latestIssue} icon={<Shield size={20} />} color="#ef4444" />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>

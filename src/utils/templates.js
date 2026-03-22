@@ -459,6 +459,11 @@ export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
     </tr>
 
 
+    <!-- ═══════════════════════════════
+         TELEMETRY PIXEL
+    ════════════════════════════════ -->
+    <img src="${appUrl}/api/track/open?token=${subscriber.v_token || ''}" width="1" height="1" border="0" style="display:none !important; visibility:hidden; opacity:0;" />
+    
   </table><!-- /email-body -->
 </td>
 </tr>
