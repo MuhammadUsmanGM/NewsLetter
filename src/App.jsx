@@ -38,6 +38,7 @@ function App() {
   const [selectedIssueId, setSelectedIssueId] = useState(null);
   const [turnstileToken, setTurnstileToken] = useState('');
   const [isAlreadySubscribed, setIsAlreadySubscribed] = useState(false);
+  const [referrerToken, setReferrerToken] = useState(null);
 
   const { calculateTheme } = useNeuralTheme();
 
@@ -71,6 +72,11 @@ function App() {
     const viewParam = params.get('view');
     const verifiedStatus = params.get('verified');
     const verifyError = params.get('error');
+    const refParam = params.get('ref');
+
+    if (refParam) {
+        setReferrerToken(refParam);
+    }
 
     if (verifiedStatus === 'true') {
       setApiError('Neural link activated successfully. Welcome to the inner circle.');
@@ -194,7 +200,8 @@ function App() {
             name: formData.name,
             email: formData.email,
             timezone: formData.timezone,
-            turnstileToken: turnstileToken
+            turnstileToken: turnstileToken,
+            referrerToken: referrerToken
           }),
         });
 

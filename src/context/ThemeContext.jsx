@@ -20,7 +20,7 @@ export const ThemeProvider = ({ children }) => {
   const [isPrismUnlocked, setIsPrismUnlocked] = useState(false);
   const [userJoinDate, setUserJoinDate] = useState(null);
 
-  const calculateTheme = (joinDateStr, preferredThemeIndex = null) => {
+  const calculateTheme = (joinDateStr, preferredThemeIndex = null, referralCount = 0) => {
     if (!joinDateStr) return;
     setUserJoinDate(joinDateStr);
     
@@ -29,18 +29,23 @@ export const ThemeProvider = ({ children }) => {
     const diffDays = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
     const weekIndex = Math.floor(diffDays / 7);
     
-    // Check for Prism Unlock (Week 11+)
-    if (weekIndex >= 10) {
+    // Check for Prism Unlock (Week 11+ OR 3+ Referrals)
+    const isTimeUnlocked = weekIndex >= 10;
+    const isReferralUnlocked = referralCount >= 3;
+
+    if (isTimeUnlocked || isReferralUnlocked) {
       setIsPrismUnlocked(true);
-      // If user has a saved preference, use it. Otherwise, default to Red.
+      // If user has a saved preference, use it. Otherwise, default to the rank based on time OR red if maxed.
       if (preferredThemeIndex !== null && SPECTRUM[preferredThemeIndex]) {
         applyTheme(SPECTRUM[preferredThemeIndex]);
       } else {
-        applyTheme(SPECTRUM[9]);
+        const themeIdx = Math.min(weekIndex, 9);
+        applyTheme(SPECTRUM[themeIdx]);
       }
     } else {
       setIsPrismUnlocked(false);
-      applyTheme(SPECTRUM[weekIndex]);
+      const themeIdx = Math.min(weekIndex, 9);
+      applyTheme(SPECTRUM[themeIdx]);
     }
   };
 

@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, timezone, turnstileToken } = req.body;
+  const { name, email, timezone, turnstileToken, referrerToken } = req.body;
 
   if (!name || !email) {
     return res.status(400).json({ error: 'Name and email are required' });
@@ -80,7 +80,9 @@ export default async function handler(req, res) {
         email, 
         timezone, 
         is_verified: false, 
-        v_token: verificationToken 
+        v_token: verificationToken,
+        referred_by: referrerToken || null,
+        referral_count: 0
       }]);
 
     if (insertError) throw insertError;

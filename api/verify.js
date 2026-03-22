@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     // 1. Find user with this token
     const { data: user, error: fetchError } = await supabase
       .from('newsletter_subscribers')
-      .select('email, name, is_verified')
+      .select('email, name, is_verified, referred_by')
       .eq('v_token', token)
       .maybeSingle();
 
@@ -37,6 +37,22 @@ export default async function handler(req, res) {
       .eq('v_token', token);
 
     if (updateError) throw updateError;
+
+    // 2.5. Credit the Referrer (if applicable)
+    if (user.referred_by) {
+      try {
+        await supabase.rpc('increment_referral_count', { referrer_token: user.referred_by });
+        // Alternative if RPC not available:
+        // await supabase.from('newsletter_subscribers').update({ referral_count: supabase.sql`referral_count + 1` }).eq('v_token', user.referred_by);
+        // But for simplicity in JS/Supa:
+        const { data: refUser } = await supabase.from('newsletter_subscribers').select('referral_count').eq('v_token', user.referred_by).single();
+        if (refUser) {
+            await supabase.from('newsletter_subscribers').update({ referral_count: (refUser.referral_count || 0) + 1 }).eq('v_token', user.referred_by);
+        }
+      } catch (refErr) {
+        console.warn('Failed to credit referrer:', refErr);
+      }
+    }
 
     // 3. Trigger Premium Welcome Email (Double Opt-in Complete)
     try {
