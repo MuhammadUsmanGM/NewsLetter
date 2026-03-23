@@ -51,10 +51,22 @@ export default async function handler(req, res) {
     if (existingUser) {
       // Scenario A: User is already verified
       if (existingUser.is_verified) {
+        let finalToken = existingUser.v_token;
+
+        // PATCH: If user is verified but has no v_token (legacy nodes)
+        if (!finalToken) {
+          finalToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+          await supabase
+            .from('newsletter_subscribers')
+            .update({ v_token: finalToken })
+            .eq('email', email);
+        }
+
         return res.status(200).json({ 
           success: true, 
           alreadySubscribed: true, 
           name: existingUser.name,
+          v_token: finalToken,
           message: 'Your neural link is already active. Access granted.' 
         });
       }

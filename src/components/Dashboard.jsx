@@ -243,41 +243,46 @@ const Dashboard = ({ name, email, setView }) => {
             background: isPrismUnlocked ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(0, 0, 0, 0.4))' : 'rgba(255, 255, 255, 0.02)',
             border: isPrismUnlocked ? `1px solid ${currentTheme.color}` : `1px dashed ${currentTheme.color}33`
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                <div>
-                    <h3 style={{ color: '#fff', fontSize: '1.25rem', marginBottom: '4px' }}>Neural Invite Protocol</h3>
-                    <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
-                        {isPrismUnlocked ? 'Protocol Master detected. Your Prism link is active.' : 'Invite 3 verified nodes to unlock the Prism Protocol (Custom Themes).'}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '20px' }}>
+                <h3 style={{ color: '#fff', fontSize: '1.25rem', margin: 0 }}>Neural Invite Protocol</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
+                        {isPrismUnlocked ? 'Protocol Master detected. Your Prism link is active.' : 'Invite 3 verified nodes to unlock the Prism Protocol.'}
                     </p>
+                    {!isPrismUnlocked && (
+                        <div style={{ background: `${currentTheme.color}22`, color: currentTheme.color, padding: '4px 12px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: '800', whiteSpace: 'nowrap', marginLeft: '10px' }}>
+                            {userData?.referral_count || 0} / 3 VERIFIED
+                        </div>
+                    )}
                 </div>
-                {!isPrismUnlocked && (
-                    <div style={{ background: `${currentTheme.color}22`, color: currentTheme.color, padding: '4px 12px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: '800' }}>
-                        {userData?.referral_count || 0} / 3 VERIFIED
-                    </div>
-                )}
             </div>
 
-            <div style={{ 
-                background: 'rgba(0,0,0,0.3)', 
-                padding: '12px 20px', 
-                borderRadius: '12px', 
-                border: '1px solid rgba(255,255,255,0.05)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '15px'
-            }}>
-                <code style={{ fontSize: '0.85rem', color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {`${window.location.origin}/?ref=${userData?.v_token || ''}`}
+            <div className="referral-link-container">
+                <code style={{ fontSize: '0.85rem', color: userData?.v_token ? '#cbd5e1' : '#64748b', fontStyle: userData?.v_token ? 'normal' : 'italic' }}>
+                    {userData?.v_token 
+                        ? `${window.location.origin}/?ref=${userData.v_token}` 
+                        : 'Finalizing neural node... (Re-login to activate link)'}
                 </code>
                 <button 
+                  disabled={!userData?.v_token}
                   onClick={() => {
-                    const link = `${window.location.origin}/?ref=${userData?.v_token || ''}`;
+                    if (!userData?.v_token) return;
+                    const link = `${window.location.origin}/?ref=${userData.v_token}`;
                     navigator.clipboard.writeText(link);
                     setCopyReferralStatus(true);
                     setTimeout(() => setCopyReferralStatus(false), 2000);
                   }}
-                  style={{ background: currentTheme.color, color: '#000', border: 'none', padding: '8px 16px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: '800', cursor: 'pointer', flexShrink: 0 }}
+                  style={{ 
+                    background: userData?.v_token ? currentTheme.color : '#334155', 
+                    color: userData?.v_token ? '#000' : '#94a3b8', 
+                    border: 'none', 
+                    padding: '8px 16px', 
+                    borderRadius: '8px', 
+                    fontSize: '0.75rem', 
+                    fontWeight: '800', 
+                    cursor: userData?.v_token ? 'pointer' : 'not-allowed', 
+                    flexShrink: 0 
+                  }}
                 >
                     {copyReferralStatus ? 'LINK COPIED' : 'COPY INVITE'}
                 </button>

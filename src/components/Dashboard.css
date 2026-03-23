@@ -1,22 +1,4 @@
-:root {
-  --dashboard-bg: #020617;
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --primary-glow: rgba(16, 185, 129, 0.15);
-}
-
-.dashboard-wrapper {
-  min-height: 100vh;
-  background-color: var(--dashboard-bg);
-  background-image: 
-    radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 1rem;
-  font-family: 'Outfit', sans-serif;
-}
+/* ... existing styles ... */
 
 .dashboard-container {
   width: 100%;
@@ -27,31 +9,97 @@
   align-items: start;
 }
 
-@media (max-width: 1100px) {
+/* Mobile & Tablet Optimizations */
+@media (max-width: 1150px) {
   .dashboard-container {
     grid-template-columns: 1fr;
-    max-width: 800px;
+    max-width: 850px;
+    margin: 0 auto;
   }
 }
 
 @media (max-width: 768px) {
   .dashboard-wrapper {
-    padding: 1rem;
+    padding: 1rem 0.5rem;
   }
   
   .glass-card {
     padding: 1.5rem;
     border-radius: 1.5rem;
   }
+
+  .dashboard-header-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
 }
 
+@media (max-width: 550px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timer-grid {
+    gap: 0.75rem;
+  }
+
+  .timer-num {
+    font-size: 2rem;
+  }
+
+  .timer-box {
+    min-width: 60px;
+  }
+
+  .referral-link-container {
+      flex-direction: column;
+      gap: 10px;
+      padding: 15px !important;
+  }
+
+  .referral-link-container code {
+      width: 100%;
+      text-align: center;
+      font-size: 0.75rem !important;
+  }
+
+  .referral-link-container button {
+      width: 100%;
+  }
+}
+
+/* Ensure the referral code container is flexible */
+.referral-link-container {
+    background: rgba(0,0,0,0.3); 
+    padding: 12px 20px; 
+    borderRadius: 12px; 
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    word-break: break-all;
+    overflow: hidden;
+}
+
+/* Rest of the file content... */
 .main-column {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* Glass Card Base */
 .glass-card {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
@@ -60,9 +108,9 @@
   border-radius: 2rem;
   padding: 2.5rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
 }
 
-/* Header Section */
 .dashboard-header-card {
   position: relative;
   overflow: hidden;
@@ -74,8 +122,8 @@
   backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: 2rem;
-  margin-bottom: 2rem;
 }
+/* ... rest of the styles ... */
 
 .brand-badge {
   width: 80px;
