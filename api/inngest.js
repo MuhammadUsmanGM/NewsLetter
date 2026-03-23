@@ -41,10 +41,22 @@ const newsletterDispatcher = inngest.createFunction(
   { id: "newsletter-dispatcher" },
   { event: "signal/newsletter.dispatch" },
   async ({ event, step }) => {
-    const { subscribers, content, dateStr } = event.data;
+    const { subscribers, content, dateStr, isPro = false } = event.data;
     
-    // We fan out the sends as separate events.
-    // This allows Inngest to manage 1,000+ separate retry queues instantly.
+    // 1. Archive the Protocol (Persistence)
+    // This allows the "Vault" and "Latest Issue" views on your site to update instantly
+    await step.run("archive-pulse", async () => {
+        const { error } = await supabase
+            .from('newsletter_archive')
+            .insert([{ 
+                week_date: dateStr, 
+                content_html: content, // Stored as raw HTML for direct rendering in the UI
+                is_pro: isPro
+            }]);
+        if (error) throw error;
+    });
+
+    // 2. We fan out the sends as separate events.
     const events = subscribers.map(sub => ({
       name: "signal/newsletter.send_single",
       data: { 
