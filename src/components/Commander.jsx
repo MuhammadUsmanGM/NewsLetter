@@ -45,7 +45,7 @@ const Commander = ({ setView }) => {
   const fetchCommanderIntelligence = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/admin/stats', {
+      const response = await fetch('/api/admin?channel=stats', {
         headers: {
             'Authorization': `Bearer ${password}`
         }

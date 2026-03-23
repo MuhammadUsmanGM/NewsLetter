@@ -402,11 +402,6 @@ export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                 <tr>
                   <td width="48%">
-                    <a href="${appUrl}/api/track/feedback?token=${subscriber.v_token || ''}&useful=true" 
-                       style="display:block; padding:12px; background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:8px; color:#10b981; text-align:center; font-weight:700; font-size:12px; text-decoration:none; text-transform:uppercase; letter-spacing:1px;">
-                      [ YES ]  POSITIVE_SIGNAL
-                    </a>
-                  </td>
                   <td width="4%">&nbsp;</td>
                   <td width="48%">
                     <a href="${appUrl}/api/track/feedback?token=${subscriber.v_token || ''}&useful=false" 

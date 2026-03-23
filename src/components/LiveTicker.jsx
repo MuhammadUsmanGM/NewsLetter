@@ -13,7 +13,7 @@ const LiveTicker = () => {
 
   const fetchTickerData = async () => {
     try {
-      const response = await fetch('/api/ticker');
+      const response = await fetch('/api/public?channel=ticker');
       const data = await response.json();
       if (data.titles) {
         setTitles(data.titles);
