@@ -72,13 +72,23 @@ export default async function handler(req, res) {
       }
 
       // Scenario B: User exists but is NOT verified (Resend verification)
-      const resendHtml = getVerificationEmailHtml(existingUser.name, existingUser.v_token, process.env.APP_URL);
+      const tokenToUse = existingUser.v_token || Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      
+      // Update DB if token is missing
+      if (!existingUser.v_token) {
+        await supabase
+          .from('newsletter_subscribers')
+          .update({ v_token: tokenToUse })
+          .eq('email', email);
+      }
+
+      const resendHtml = getVerificationEmailHtml(existingUser.name, tokenToUse, process.env.APP_URL);
       await sendMail(email, 'THE SIGNAL: Action Required - Verify Transmission 📡', resendHtml);
       
       return res.status(200).json({
         success: true,
         pendingVerification: true,
-        message: 'A verification link was previously sent. We have dispatched a fresh one to your inbox.'
+        message: 'A verification link has been dispatched to your inbox. Activate it to finalize the link.'
       });
     }
 

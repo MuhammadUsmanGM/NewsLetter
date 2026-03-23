@@ -10,18 +10,28 @@ export default async function handler(req, res) {
   // 1. LIVE SIGNAL FEED (News Ticker)
   if (channel === 'ticker') {
     const NEWS_API_KEY = process.env.NEWS_API_KEY;
+    const fallbackTitles = ["SYNCHRONIZING GLOBAL NEWS FEEDS...", "ESTABLISHING NEURAL LINK...", "FETCHING REAL-TIME AI BREAKTHROUGHS...", "PROTOCOL ACTIVE"];
+    
+    if (!NEWS_API_KEY) {
+        return res.status(200).json({ titles: ["// [ALERT] SECURITY CLEARANCE REQUIRED for External News Feed", ...fallbackTitles] });
+    }
+
     try {
       const response = await fetch(
         `https://newsapi.org/v2/top-headlines?category=technology&language=en&pageSize=15&apiKey=${NEWS_API_KEY}`
       );
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to fetch news');
+      
+      if (!response.ok || !data.articles) {
+          throw new Error(data.message || 'Failed to fetch news');
+      }
+      
       const titles = data.articles.map(article => article.title);
       res.setHeader('Cache-Control', 's-maxage=300');
       return res.status(200).json({ titles });
     } catch (err) {
-      console.error('Ticker Signal Error:', err);
-      return res.status(200).json({ titles: ["ESTABLISHING NEURAL LINK...", "FETCHING REAL-TIME AI BREAKTHROUGHS...", "PROTOCOL ACTIVE"] });
+      console.warn('Ticker Warning:', err.message);
+      return res.status(200).json({ titles: ["// [REDUX] OFFLINE NEWS MODE ACTIVATED", ...fallbackTitles] });
     }
   }
 
