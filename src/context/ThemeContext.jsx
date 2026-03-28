@@ -61,6 +61,7 @@ export const ThemeProvider = ({ children }) => {
     root.style.setProperty('--primary-dark', `${theme.color}CC`); // 80% opacity
     root.style.setProperty('--primary-light', `${theme.color}FF`);
     root.style.setProperty('--accent', theme.color);
+    root.style.setProperty('--selection-bg', `${theme.color}44`); // 25% opacity for text selection
   };
 
   const activatePrism = (index) => {

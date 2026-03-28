@@ -92,3 +92,12 @@ button {
   background: #334155;
 }
 
+::selection {
+  background-color: var(--selection-bg, rgba(16, 185, 129, 0.3));
+  color: #fff;
+}
+
+::-moz-selection {
+  background-color: var(--selection-bg, rgba(16, 185, 129, 0.3));
+  color: #fff;
+}
