@@ -44,47 +44,62 @@
 
 ```mermaid
 graph TD
+    %% User & Security Layers
     A[User Terminal] -->|Interaction| B(React Landing Page)
-    B -->|Silent Challenge| C{Cloudflare Turnstile}
+    B -->|Shield Check| C{Cloudflare Turnstile}
     C -->|Valid Token| D[api/subscribe.js]
-    D -->|Generate v_token| E[(Supabase DB)]
-    D -->|Send Verification| K[SMTP Delivery]
+    D -->|Persist Profile| E[(Supabase DB)]
+    D -->|Dispatch Link| K[SMTP Delivery]
+    
+    %% Verification & Onboarding
     K -->|Verification Link| L[User Inbox]
-    L -->|Click Link| V[api/verify.js]
+    L -->|Handshake| V[api/verify.js]
     V -->|Activate Node| E
-    V -->|Redirect Success/Fail| VU[Verification UI]
+    V -->|Send Welcome| K
+    V -->|Redirect Success| VU[Verification UI]
     VU -->|Navigate| DA[User Dashboard]
-    
-    F[GitHub Actions cron] -->|Trigger| G{api/cron.js}
-    G -->|Fetch News| H[NewsAPI]
-    G -->|Scrape Stars| I[GitHub API]
-    G -->|Neural Synthesis| J[Google Gemini AI]
-    G -->|Check Timezones| E
-    G -->|Send Signal| K
-    G -->|Archive Record| E 
-    K -->|3-3-2-2-1 Briefing| L
-    
-    T[api/track.js] -->|Update Metrics| E
-    L -->|Pixel/Poll| T
 
-    M[Web Archive Interface] -->|Tier Sync| P[Neural Theme Engine]
+    %% Intelligence Engine (The Pipeline)
+    F[GitHub Actions cron] -->|Trigger| G{api/cron.js}
+    G -->|Invoke Pipeline| NS[newsletter.mjs]
+    NS -->|Fetch News| H[NewsAPI]
+    NS -->|Scrape Stars| I[GitHub API]
+    NS -->|Neural Synthesis| J[Google Gemini AI]
+    NS -->|Archive Signal| E
+    NS -->|Dispatch Batch| ING{Inngest Queue}
+    
+    %% Async Delivery Layer
+    ING -->|Fan Out| INH[api/inngest.js]
+    INH -->|Personalized Send| K
+    K -->|3-3-2-2-1 Briefing| L
+
+    %% Maintenance & Analytics
+    T[api/track.js] -->|Update Metrics| E
+    L -->|Beacon Pulse| T
+    SU[Resurrection Watcher] -->|Weekly Check| E
+    SU -->|Re-engage| K
+
+    %% UI Intelligence
+    M[Web Archive Interface] -->|Identity Sync| P[Neural Theme Engine]
     P -->|CSS Variables| M
     N[Feedback Terminal] -->|Signal| O{api/feedback.js}
-    O -->|Relay| K
+    O -->|Forward| K
     O -->|Store| E
 
-    %% Color Palette Definitions
+    %% Styling Definitions
     classDef frontend fill:#2563eb,stroke:#1e3a8a,color:#fff,stroke-width:2px
-    classDef logic fill:#7c3aed,stroke:#4c1d95,color:#fff,stroke-width:2px
+    classDef logic fill:#7c3aed,stroke:#000000,color:#fff,stroke-width:2px
     classDef database fill:#059669,stroke:#064e3b,color:#fff,stroke-width:2px
     classDef trigger fill:#d97706,stroke:#78350f,color:#fff,stroke-width:2px
+    classDef queue fill:#db2777,stroke:#831843,color:#fff,stroke-width:2px
     classDef external fill:#4b5563,stroke:#1f2937,color:#fff,stroke-width:1px,stroke-dasharray: 5 5
 
     %% Applying Classes
-    class B,VU,DA,M,N frontend
-    class D,V,G,T,O,P logic
+    class B,VU,DA,M,N,A,L frontend
+    class D,V,G,T,O,P,NS,INH,SU logic
     class E database
     class C,F trigger
+    class ING queue
     class H,I,J,K external
 ```
 
