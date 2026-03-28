@@ -131,41 +131,42 @@ async function generateWeeklyIntelligence(intelligenceData) {
     GADGETS: ${gadgetsContext}
     REPOS: ${reposContext}
     
-    Create a premium weekly briefing following the **3-3-2-2-1 Structure**.
+    Create a premium weekly briefing following the **3-2-2-2-1-1 UPGRADED NEURAL STRUCTURE**.
     
-    STRICT SOURCE MAPPING RULES:
-    - Section 1 (STORIES) MUST only use items from the STORIES list.
-    - Section 2 (GADGETS) MUST only use items from the GADGETS list.
-    - Section 3 (TOOLS) can use items from STORIES or GADGETS that represent software/frameworks.
-    - Section 4 (REPOS) MUST EXCLUSIVELY use items from the REPOS list. 
-    - CRITICAL: Every URL in the REPOS section MUST start with 'https://github.com/'. DO NOT use news article links (gizmodo, npr, etc.) in the REPOS section.
-
+    STRUCTURE:
+    - 3 TOP STORIES: The absolute peak breakthroughs of the week.
+    - 2 ELITE TOOLS: Critical software/frameworks to optimize AI workflows.
+    - 2 AI GADGETS: Hardware nodes with AI-native architecture.
+    - 2 TRENDING REPOS: High-signal repositories for technical depth.
+    - 1 CONTRARIAN INSIGHT (Big Picture): A bold, non-obvious observation on where AI is headed.
+    - 1 ONE TO WATCH (Early Warning Signal): Find a person, small startup, research paper, or low-star repo (found in SOURCES) that is flying under the radar but has massive future implications. Explain WHY it is a signal.
+    
     INSTRUCTIONS:
     1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs from STORIES.
        - Use this HTML:
          <div style="margin-bottom: 40px;">
            <img src="[ImageURL]" style="width: 100%; height: auto; border-radius: 16px; margin-bottom: 20px;">
-           <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 12px;">[Headline]</h2>
+           <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 12px; letter-spacing: -0.5px;">[Headline]</h2>
            <p style="color: #94a3b8; font-size: 16px; line-height: 1.6;">[Analysis]</p>
            <a href="[URL]" style="color: #10b981; font-weight: 700; text-decoration: none;">Read Technical Analysis →</a>
          </div>
 
-    2. **3 TOP AI GADGETS**: Pick the 3 most innovative hardware releases or updates from GADGETS.
-       - Use this HTML:
-         <div style="background: linear-gradient(to right, #0d2a1f, #0a1628); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 22px; margin-bottom: 16px;">
-           <div style="color: #10b981; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">GADGET PROTOCOL</div>
-           <strong style="color: #ffffff; font-size: 18px; display: block; margin-bottom: 6px;">[Gadget Name]</strong>
-           <p style="color: #94a3b8; margin: 0; font-size: 14px; line-height: 1.5;">[Why it matters / Hardware specs]</p>
-           <a href="[URL]" style="display: inline-block; margin-top: 12px; color: #10b981; font-size: 12px; font-weight: 700; text-decoration: none; text-transform: uppercase;">View Hardware →</a>
-         </div>
-
-    3. **2 ELITE TOOLS**: Pick 2 emerging software AI tools.
+    2. **2 ELITE TOOLS**: Pick 2 emerging software AI tools.
        - Use this HTML:
          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
            <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">TOOL NODE</div>
            <strong style="color: #ffffff; font-size: 18px;">[Tool Name]</strong>
            <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Value Prop]</p>
            <a href="[URL]" style="color: #10b981; font-size: 13px; text-decoration: none; font-weight: 600;">Access Node →</a>
+         </div>
+
+    3. **2 AI GADGETS**: Hardware nodes or updates.
+       - Use this HTML:
+         <div style="background: linear-gradient(to right, #0d2a1f, #0a1628); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 22px; margin-bottom: 16px;">
+           <div style="color: #10b981; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">GADGET PROTOCOL</div>
+           <strong style="color: #ffffff; font-size: 18px; display: block; margin-bottom: 6px;">[Gadget Name]</strong>
+           <p style="color: #94a3b8; margin: 0; font-size: 14px; line-height: 1.5;">[Hardware specs/use-case]</p>
+           <a href="[URL]" style="display: inline-block; margin-top: 12px; color: #10b981; font-size: 12px; font-weight: 700; text-decoration: none; text-transform: uppercase;">View Hardware →</a>
          </div>
 
     4. **2 TRENDING REPOS**: 
@@ -180,8 +181,20 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">View Repository →</a>
          </div>
 
-    5. **1 ACTIONABLE AI INSIGHT**: Provide one high-level insight based on this week's AI research and deployment trends. Focus on what technical founders should implement or monitor.
+    5. **1 CONTRARIAN AI INSIGHT**: Provide one bold, big-picture insight. Avoid generic fluff.
        - Use a quote-style block with #10b981 left border.
+
+    6. **1 ONE TO WATCH (EARLY WARNING SIGNAL)**: 
+       - This is the most critical section. Identify a person, startup, repo, or paper from the SOURCES that is quietly groundbreaking.
+       - Tell the reader WHY they need to watch this now before it hits the mainstream. 
+       - Use this HTML:
+         <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 30px; margin-top: 40px;">
+           <div style="background: #8b5cf6; color: #000; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 100px; display: inline-block; margin-bottom: 15px; letter-spacing: 2px;">ONE TO WATCH</div>
+           <h3 style="color: #ffffff; font-size: 22px; margin-bottom: 10px;">[Signal Title]</h3>
+           <p style="color: #cbd5e1; font-size: 15px; line-height: 1.6; margin-bottom: 15px;">[Early signal analysis - Why it matters before the hype]</p>
+           <p style="color: #8b5cf6; font-size: 13px; font-weight: 700;">// STATUS: UNDER THE RADAR</p>
+         </div>
+
     
     Technical: Return ONLY the HTML content. No markdown. Inline styles only.
   `;
