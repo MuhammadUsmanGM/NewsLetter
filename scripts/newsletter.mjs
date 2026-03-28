@@ -131,15 +131,7 @@ async function generateWeeklyIntelligence(intelligenceData) {
     GADGETS: ${gadgetsContext}
     REPOS: ${reposContext}
     
-    Create a premium weekly briefing following the **3-2-2-2-1-1 UPGRADED NEURAL STRUCTURE**.
-    
-    STRUCTURE:
-    - 3 TOP STORIES: The absolute peak breakthroughs of the week.
-    - 2 ELITE TOOLS: Critical software/frameworks to optimize AI workflows.
-    - 2 AI GADGETS: Hardware nodes with AI-native architecture.
-    - 2 TRENDING REPOS: High-signal repositories for technical depth.
-    - 1 CONTRARIAN INSIGHT (Big Picture): A bold, non-obvious observation on where AI is headed.
-    - 1 ONE TO WATCH (Early Warning Signal): Find a person, small startup, research paper, or low-star repo (found in SOURCES) that is flying under the radar but has massive future implications. Explain WHY it is a signal.
+    - 1 CONTRARIAN INSIGHT (Big Picture): This is the heart of THE SIGNAL. Do NOT sound like an AI assistant. I want a human, slightly cynical, and highly opinionated take on the week's trends. Think "grumpy senior engineer who has seen 1000 hype cycles." Be bold. Be contrarian. If the consensus says X, tell me why we should look at Y. Use short, punchy sentences. No corporate-speak. No fluff. 
     
     INSTRUCTIONS:
     1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs from STORIES.
@@ -181,7 +173,7 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">View Repository →</a>
          </div>
 
-    5. **1 CONTRARIAN AI INSIGHT**: Provide one bold, big-picture insight. Avoid generic fluff.
+    5. **1 CONTRARIAN AI INSIGHT**: Write this with the "opinionated founder" voice. Start with something sharp like "Everyone is obsessed with X, but here's why that's a dead end." or "The real move this week isn't Y, it's Z." No generic positive summaries.
        - Use a quote-style block with #10b981 left border.
 
     6. **1 ONE TO WATCH (EARLY WARNING SIGNAL)**: 
