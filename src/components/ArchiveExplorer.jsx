@@ -10,17 +10,37 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
+const ArchiveExplorer = ({ setView, setSelectedIssueId, email }) => {
   const [archives, setArchives] = useState([]);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchArchives();
-  }, []);
+    const initializeVault = async () => {
+      await fetchUserData();
+      await fetchArchives();
+    };
+    initializeVault();
+  }, [email]);
+
+  const fetchUserData = async () => {
+    if (!email) return;
+    try {
+      const { data, error } = await supabase
+        .from('newsletter_subscribers')
+        .select('created_at, referral_count')
+        .eq('email', email)
+        .single();
+      
+      if (data) setUserData(data);
+    } catch (err) {
+      console.error('Error fetching subscriber for archive:', err);
+    }
+  };
 
   const fetchArchives = async () => {
     try {
-      const minLoadTime = new Promise(resolve => setTimeout(resolve, 1500));
+      const minLoadTime = new Promise(resolve => setTimeout(resolve, 1000));
       const fetchPromise = supabase
         .from('newsletter_archive')
         .select('id, week_date, created_at, is_pro')
@@ -35,6 +55,33 @@ const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Hybrid Calculation Logic
+  const canAccess = (item, index) => {
+    // 0. Public items are always accessible
+    if (!item.is_pro) return true;
+    
+    // 1. Referral Master Logic: (3+ Referrals unlocks entire archive)
+    const isReferralMaster = userData?.referral_count >= 3;
+    if (isReferralMaster) return true;
+
+    // 2. Loyalty (Drip) Logic: (1 Week = 1 Archive Issue Unlocked starting from bottom or specific count)
+    // We treat 'index' carefully here from the fetched list (most recent first)
+    // For a simpler loyalty rule: Unlock 1 Pro issue per week of subscription age.
+    const joinDate = userData ? new Date(userData.created_at) : new Date();
+    const subbedWeeks = Math.floor((new Date() - joinDate) / (1000 * 60 * 60 * 24 * 7));
+    
+    // Reverse rank issues: The older the issue, the easier to unlock?
+    // Let's just say subbedWeeks = total number of Pro issues unlocked for them.
+    const proIssues = archives.filter(a => a.is_pro);
+    const issueProIndex = proIssues.findIndex(a => a.id === item.id);
+    
+    // If they have been subbed for 4 weeks, they can read 4 'Pro' issues.
+    // We check from the most recent downwards for loyalty.
+    if (subbedWeeks > issueProIndex) return true;
+
+    return false;
   };
 
   if (loading) {
@@ -70,72 +117,86 @@ const ArchiveExplorer = ({ setView, setSelectedIssueId }) => {
                 <p style={{ color: '#94a3b8' }}>Archive is currently empty. Initializing first signal capture sequence.</p>
               </div>
             ) : (
-              archives.map((item) => (
-                <div 
-                  key={item.id} 
-                  onClick={() => {
-                    if (item.is_pro) {
-                        setView('omegawall');
-                        return;
-                    }
-                    window.history.pushState({}, '', `/?view=issue&id=${item.id}`);
-                    if (setSelectedIssueId) setSelectedIssueId(item.id);
-                    setView('issue');
-                  }}
-                  style={{ 
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '24px',
-                    background: item.is_pro ? 'rgba(239, 68, 68, 0.02)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${item.is_pro ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)'}`,
-                    borderRadius: '20px',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = item.is_pro ? 'rgba(239, 68, 68, 0.05)' : 'rgba(16, 185, 129, 0.05)';
-                    e.currentTarget.style.borderColor = item.is_pro ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = item.is_pro ? 'rgba(239, 68, 68, 0.02)' : 'rgba(255,255,255,0.03)';
-                    e.currentTarget.style.borderColor = item.is_pro ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.05)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <div style={{ 
-                      width: '60px', 
-                      height: '60px', 
-                      background: item.is_pro ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)', 
-                      borderRadius: '16px', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      color: item.is_pro ? '#ef4444' : '#10b981',
-                      border: `1px solid ${item.is_pro ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'}`,
-                      fontWeight: '800'
-                    }}>
-                      {item.is_pro ? <Lock size={20} /> : `#${item.id}`}
-                    </div>
-                    <div>
-                      {item.is_pro && (
+              archives.map((item, index) => {
+                const unlocked = canAccess(item, index);
+                const isPro = item.is_pro;
+
+                return (
+                  <div 
+                    key={item.id} 
+                    onClick={() => {
+                      if (!unlocked) {
+                          setView('omegawall');
+                          return;
+                      }
+                      window.history.pushState({}, '', `/?view=issue&id=${item.id}`);
+                      if (setSelectedIssueId) setSelectedIssueId(item.id);
+                      setView('issue');
+                    }}
+                    style={{ 
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '24px',
+                      background: !unlocked ? 'rgba(239, 68, 68, 0.02)' : (isPro ? 'rgba(139, 92, 246, 0.03)' : 'rgba(16, 185, 129, 0.03)'),
+                      border: `1px solid ${!unlocked ? 'rgba(239, 68, 68, 0.1)' : (isPro ? 'rgba(139, 92, 246, 0.1)' : 'rgba(16, 185, 129, 0.1)')}`,
+                      borderRadius: '20px',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.background = !unlocked ? 'rgba(239, 68, 68, 0.05)' : (isPro ? 'rgba(139, 92, 246, 0.08)' : 'rgba(16, 185, 129, 0.05)');
+                      e.currentTarget.style.borderColor = !unlocked ? 'rgba(239, 68, 68, 0.2)' : (isPro ? 'rgba(139, 92, 246, 0.2)' : 'rgba(16, 185, 129, 0.2)');
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = !unlocked ? 'rgba(239, 68, 68, 0.02)' : (isPro ? 'rgba(139, 92, 246, 0.03)' : 'rgba(16, 185, 129, 0.03)');
+                      e.currentTarget.style.borderColor = !unlocked ? 'rgba(239, 68, 68, 0.1)' : (isPro ? 'rgba(139, 92, 246, 0.1)' : 'rgba(16, 185, 129, 0.1)');
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                      <div style={{ 
+                        width: '60px', 
+                        height: '60px', 
+                        background: !unlocked ? 'rgba(239, 68, 68, 0.1)' : (isPro ? 'rgba(139, 92, 246, 0.1)' : 'rgba(16, 185, 129, 0.1)'), 
+                        borderRadius: '16px', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        color: !unlocked ? '#ef4444' : (isPro ? '#8b5cf6' : '#10b981'),
+                        border: `1px solid ${!unlocked ? 'rgba(239, 68, 68, 0.2)' : (isPro ? 'rgba(139, 92, 246, 0.2)' : 'rgba(16, 185, 129, 0.2)')}`,
+                        fontWeight: '800'
+                      }}>
+                        {!unlocked ? <Lock size={20} /> : (isPro ? <Zap size={20} /> : <ShieldCheck size={20} />)}
+                      </div>
+                      <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                            <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', fontSize: '10px', fontWeight: '800', padding: '2px 8px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '2px' }}>RESTRICTED</div>
-                            <span style={{ fontSize: '10px', color: '#64748b', fontWeight: '800' }}>OMEGA_CLEARANCE_REQUIRED</span>
+                          {!unlocked ? (
+                            <>
+                              <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', fontSize: '10px', fontWeight: '800', padding: '2px 8px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '2px' }}>RESTRICTED</div>
+                              <span style={{ fontSize: '10px', color: '#64748b', fontWeight: '800' }}>INVITE 3 NODES OR WAIT {index + 1} WEEKS</span>
+                            </>
+                          ) : (
+                            <>
+                              <div style={{ background: isPro ? 'rgba(139, 92, 246, 0.1)' : 'rgba(16, 185, 129, 0.1)', color: isPro ? '#8b5cf6' : '#10b981', fontSize: '10px', fontWeight: '800', padding: '2px 8px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '2px' }}>
+                                {isPro ? 'PREMIUM SIGNAL' : 'PUBLIC ACCESS'}
+                              </div>
+                              <span style={{ fontSize: '10px', color: '#64748b', fontWeight: '800' }}>DECRYPTION_SUCCESSFUL</span>
+                            </>
+                          )}
                         </div>
-                      )}
-                      <h3 style={{ color: '#ffffff', margin: 0, fontSize: '1.25rem', fontWeight: '700' }}>{item.week_date}</h3>
-                      <p style={{ color: '#64748b', margin: '4px 0 0 0', fontSize: '0.85rem' }}>Decrypted on: {new Date(item.created_at).toLocaleDateString()}</p>
+                        <h3 style={{ color: '#ffffff', margin: 0, fontSize: '1.25rem', fontWeight: '700' }}>{item.week_date}</h3>
+                        <p style={{ color: '#64748b', margin: '4px 0 0 0', fontSize: '0.85rem' }}>Decrypted on: {new Date(item.created_at).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <div style={{ color: !unlocked ? '#ef4444' : (isPro ? '#8b5cf6' : '#10b981'), fontWeight: '800', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {!unlocked ? 'Protocol Locked' : 'Access Signal'} <ArrowRight size={16} />
                     </div>
                   </div>
-                  <div style={{ color: item.is_pro ? '#ef4444' : '#10b981', fontWeight: '800', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {item.is_pro ? 'Upgrade Access' : 'Access Deep-Dive'} <ArrowRight size={16} />
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 

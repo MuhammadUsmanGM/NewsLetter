@@ -291,7 +291,7 @@ function App() {
     if (currentView === 'dashboard') return <Dashboard name={userName} email={formData.email} setView={setCurrentView} />;
     if (currentView === 'feedback') return <Feedback setView={setCurrentView} />;
     if (currentView === 'latest') return <LatestIssue setView={setCurrentView} />;
-    if (currentView === 'archive') return <ArchiveExplorer setView={setCurrentView} setSelectedIssueId={setSelectedIssueId} />;
+    if (currentView === 'archive') return <ArchiveExplorer setView={setCurrentView} setSelectedIssueId={setSelectedIssueId} email={formData.email} />;
     if (currentView === 'issue') return <LatestIssue issueId={selectedIssueId} setView={setCurrentView} />;
     if (currentView === 'getcopy') return <CopyPage setView={setCurrentView} />;
     if (currentView === 'unsubscribe') return (
@@ -307,7 +307,7 @@ function App() {
       />
     );
     if (currentView === 'commander') return <Commander setView={setCurrentView} />;
-    if (currentView === 'omegawall') return <OmegaWall setView={setCurrentView} />;
+    if (currentView === 'omegawall') return <OmegaWall setView={setCurrentView} email={formData.email} />;
     if (currentView === 'verification') return <VerificationStatus setView={setCurrentView} setUserName={setUserName} setFormData={setFormData} />;
     
     return (
