@@ -354,7 +354,7 @@ function App() {
                 <div className="success-content">
                   <div className="success-badge" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }}>Mission Suspended</div>
                   <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Protocol Deactivated</h2>
-                  <p style={{ marginBottom: '2rem', opacity: 0.8 }}>You've been successfully removed from the 3-2-2-2-1-1 Intelligence Protocol. We'll miss your presence in the inner circle.</p>
+                  <p style={{ marginBottom: '2rem', opacity: 0.8 }}>You've been successfully removed from the 3-3-2-2-1-1 Intelligence Protocol. We'll miss your presence in the inner circle.</p>
                   
                   <button 
                     onClick={handleJoinAgain}
@@ -417,7 +417,7 @@ function App() {
               <form onSubmit={handleSubmit} className="newsletter-form" noValidate>
                 <div className="form-header">
                   <h2>Join our list</h2>
-                  <p>Start your weekly 3-2-2-2-1-1 intelligence protocol.</p>
+                  <p>Start your weekly 3-3-2-2-1-1 intelligence protocol.</p>
                 </div>
                 {apiError && (
                   <div 
