@@ -17,20 +17,30 @@ export default async function handler(req, res) {
     }
 
     try {
+      console.log('Ticker Activation: Fetching AI signals...');
+      // Using 'everything' instead of 'top-headlines' to get specifically AI news
+      const query = 'artificial intelligence OR LLM OR "machine learning" OR "generative AI"';
       const response = await fetch(
-        `https://newsapi.org/v2/top-headlines?category=technology&language=en&pageSize=15&apiKey=${NEWS_API_KEY}`
+        `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=20&apiKey=${NEWS_API_KEY}`
       );
+      
       const data = await response.json();
       
       if (!response.ok || !data.articles) {
+          console.error('Ticker Signal Error:', data.message || 'Unknown API failure');
           throw new Error(data.message || 'Failed to fetch news');
       }
       
-      const titles = data.articles.map(article => article.title);
-      res.setHeader('Cache-Control', 's-maxage=300');
-      return res.status(200).json({ titles });
+      const titles = data.articles
+        .filter(a => a.title && !a.title.includes('[Removed]'))
+        .map(article => article.title);
+        
+      console.log(`Ticker Synced: ${titles.length} news items received.`);
+      
+      res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=300');
+      return res.status(200).json({ titles: titles.length > 0 ? titles : fallbackTitles });
     } catch (err) {
-      console.warn('Ticker Warning:', err.message);
+      console.warn('Ticker Warning (Redundancy Active):', err.message);
       return res.status(200).json({ titles: ["// [REDUX] OFFLINE NEWS MODE ACTIVATED", ...fallbackTitles] });
     }
   }
