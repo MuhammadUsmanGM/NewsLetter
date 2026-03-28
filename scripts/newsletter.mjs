@@ -70,16 +70,16 @@ async function fetchAIIntelligence() {
     }
   };
 
-  // 1. Broad search for high-quality AI breakthroughs
+  // 1. Broad search for high-quality AI breakthroughs (Strictly AI/ML)
   let articles = await fetchWithParams({
-    q: 'artificial intelligence OR "machine learning" OR "generative AI" OR "AI agents" OR "LLM breakthroughs"',
+    q: '(artificial intelligence OR "machine learning" OR "generative AI" OR "AI agents" OR "LLM") -crypto -stock -politics -price -market',
     from: fromDate,
     sortBy: 'popularity'
   });
 
   // 2. Focused search for AI Gadgets/Hardware
   let gadgets = await fetchWithParams({
-    q: '"AI hardware" OR "AI gadget" OR "AI wearable" OR "AI glasses" OR "AI pin" OR "smart glasses"',
+    q: '("AI hardware" OR "AI gadget" OR "AI wearable" OR "AI glasses" OR "AI pin" OR "Rabbit R1" OR "Humane Pin") -crypto -trading -metaverse',
     from: fromDate,
     sortBy: 'relevancy'
   });
@@ -121,6 +121,10 @@ async function generateWeeklyIntelligence(intelligenceData) {
 
   const prompt = `
     You are the Lead Editor of "THE SIGNAL", a high-end intelligence protocol for technical founders and AI engineers.
+    
+    STRICT CONTENT POLICY: 
+    - Every single item MUST be related to Artificial Intelligence, Machine Learning, or LLMs. 
+    - NO generic tech news, NO crypto, NO social media gossip, NO general gadgetry unless it is AI-native hardware.
     
     SOURCES:
     STORIES: ${articlesContext}
@@ -176,7 +180,7 @@ async function generateWeeklyIntelligence(intelligenceData) {
            <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">View Repository →</a>
          </div>
 
-    5. **1 ACTIONABLE INSIGHT**: Provide one high-level insight based on the week's trends.
+    5. **1 ACTIONABLE AI INSIGHT**: Provide one high-level insight based on this week's AI research and deployment trends. Focus on what technical founders should implement or monitor.
        - Use a quote-style block with #10b981 left border.
     
     Technical: Return ONLY the HTML content. No markdown. Inline styles only.
