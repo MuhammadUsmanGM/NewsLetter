@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     }
 
     if (user.is_verified) {
-      return res.redirect(`${process.env.APP_URL}/?verified=true&reauth=true`);
+      return res.redirect(`${process.env.APP_URL}/?verified=true&reauth=true&email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name)}`);
     }
 
     // 2. Activate the neural link
@@ -65,7 +65,7 @@ export default async function handler(req, res) {
     }
 
     // 4. Success: Redirect back to the UI
-    return res.redirect(`${process.env.APP_URL}/?verified=true`);
+    return res.redirect(`${process.env.APP_URL}/?verified=true&email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.name)}`);
 
   } catch (error) {
     console.error('Internal verification error:', error);

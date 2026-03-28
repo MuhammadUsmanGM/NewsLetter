@@ -10,6 +10,7 @@ import CopyPage from './components/CopyPage'
 import Unsubscribe from './components/Unsubscribe'
 import Commander from './components/Commander'
 import OmegaWall from './components/OmegaWall'
+import VerificationStatus from './components/VerificationStatus'
 import { Turnstile } from '@marsidev/react-turnstile'
 import logo from './assets/Favicon.png'
 import { useNeuralTheme } from './context/ThemeContext'
@@ -79,15 +80,9 @@ function App() {
         setReferrerToken(refParam);
     }
 
-    if (verifiedStatus === 'true') {
-      setApiError('Neural link activated successfully. Welcome to the inner circle.');
-      // Optionally redirect to dashboard if name/email are known, 
-      // but for now, just show a success message on home
-    } else if (verifiedStatus === 'failed') {
-      const errorMsg = verifyError === 'invalid_token' 
-        ? 'Verification token expired or invalid. Please request a new link.'
-        : 'Protocol activation failed. Please contact the operator.';
-      setApiError(errorMsg);
+    if (verifiedStatus) {
+      setCurrentView('verification');
+      setShowWelcome(false);
     }
 
     if (viewParam === 'dashboard') {
@@ -313,6 +308,7 @@ function App() {
     );
     if (currentView === 'commander') return <Commander setView={setCurrentView} />;
     if (currentView === 'omegawall') return <OmegaWall setView={setCurrentView} />;
+    if (currentView === 'verification') return <VerificationStatus setView={setCurrentView} setUserName={setUserName} setFormData={setFormData} />;
     
     return (
       <div className="newsletter-container">
