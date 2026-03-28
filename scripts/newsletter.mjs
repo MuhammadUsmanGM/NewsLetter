@@ -135,40 +135,42 @@ async function generateWeeklyIntelligence(intelligenceData) {
     
     INSTRUCTIONS:
     1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs from STORIES.
+       - INSTRUCTION: Do NOT summarize the news. Tell the reader the BRUTAL TRUTH of why this matters for their roadmap or competitive advantage. Use a 'Breakthrough + Impact' logic.
        - Use this HTML:
          <div style="margin-bottom: 40px;">
            <img src="[ImageURL]" style="width: 100%; height: auto; border-radius: 16px; margin-bottom: 20px;">
            <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 12px; letter-spacing: -0.5px;">[Headline]</h2>
-           <p style="color: #94a3b8; font-size: 16px; line-height: 1.6;">[Analysis]</p>
+           <p style="color: #94a3b8; font-size: 16px; line-height: 1.6;">[Analysis: Max 2-3 punchy sentences on the strategic impact. Avoid "X released Y" - instead use "X's release of Y means you can now Z"]</p>
            <a href="[URL]" style="color: #10b981; font-weight: 700; text-decoration: none;">Read Technical Analysis →</a>
          </div>
 
-    2. **2 ELITE TOOLS**: Pick 2 emerging software AI tools.
+    2. **3 ELITE TOOLS**: Pick 3 emerging software AI tools.
+       - INSTRUCTION: Focus on 'Workflow Optimization'. Why does a founder need this in their stack TODAY?
        - Use this HTML:
          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
            <div style="color: #10b981; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">TOOL NODE</div>
            <strong style="color: #ffffff; font-size: 18px;">[Tool Name]</strong>
-           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Value Prop]</p>
+           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Value Prop: 1-2 punchy sentences on how it cuts dev time or cost.]</p>
            <a href="[URL]" style="color: #10b981; font-size: 13px; text-decoration: none; font-weight: 600;">Access Node →</a>
          </div>
 
     3. **2 AI GADGETS**: Hardware nodes or updates.
+       - INSTRUCTION: Focus on 'Hardware Capability'. How does this change the bridge between the physical and digital world?
        - Use this HTML:
          <div style="background: linear-gradient(to right, #0d2a1f, #0a1628); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 22px; margin-bottom: 16px;">
            <div style="color: #10b981; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">GADGET PROTOCOL</div>
            <strong style="color: #ffffff; font-size: 18px; display: block; margin-bottom: 6px;">[Gadget Name]</strong>
-           <p style="color: #94a3b8; margin: 0; font-size: 14px; line-height: 1.5;">[Hardware specs/use-case]</p>
+           <p style="color: #94a3b8; margin: 0; font-size: 14px; line-height: 1.5;">[Hardware Edge: Explain the AI-native capability clearly.]</p>
            <a href="[URL]" style="display: inline-block; margin-top: 12px; color: #10b981; font-size: 12px; font-weight: 700; text-decoration: none; text-transform: uppercase;">View Hardware →</a>
          </div>
 
     4. **2 TRENDING REPOS**: 
-       - IF "NO GITHUB REPOSITORIES FOUND" is provided in the REPOS source, output: <div style="color: #94a3b8; padding: 20px; text-align: center; border: 1px dashed #1e293b; border-radius: 12px;">GitHub Node scanning for signals... Check back next week.</div>
-       - OTHERWISE, pick exactly 2 GitHub repos from the REPOS list.
+       - INSTRUCTION: Focus on 'Technical Implementation'. What is the specific engineering advantage of this codebase?
        - Use this HTML:
          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
            <div style="color: #8b5cf6; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">GITHUB NODE</div>
            <strong style="color: #ffffff; font-size: 18px;">[Repo Name]</strong>
-           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Description]</p>
+           <p style="color: #cbd5e1; margin: 8px 0; font-size: 14px;">[Engineering Edge: 2 punchy sentences on why a dev should fork this now.]</p>
            <div style="color: #8b5cf6; font-size: 13px; font-weight: 700; margin-bottom: 12px;">★ [Stars] Stars • [Language]</div>
            <a href="[URL]" style="color: #8b5cf6; font-size: 13px; text-decoration: none; font-weight: 600;">View Repository →</a>
          </div>
