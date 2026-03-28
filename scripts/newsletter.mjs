@@ -176,12 +176,12 @@ async function generateWeeklyIntelligence(intelligenceData) {
     5. **1 CONTRARIAN AI INSIGHT**: Write this with the "opinionated founder" voice. Start with something sharp like "Everyone is obsessed with X, but here's why that's a dead end." or "The real move this week isn't Y, it's Z." No generic positive summaries.
        - Use a quote-style block with #10b981 left border.
 
-    6. **1 ONE TO WATCH (EARLY WARNING SIGNAL)**: 
+    6. **1 THE RADAR (EARLY WARNING SIGNAL)**: 
        - This is the most critical section. Identify a person, startup, repo, or paper from the SOURCES that is quietly groundbreaking.
        - Tell the reader WHY they need to watch this now before it hits the mainstream. 
        - Use this HTML:
          <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 30px; margin-top: 40px;">
-           <div style="background: #8b5cf6; color: #000; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 100px; display: inline-block; margin-bottom: 15px; letter-spacing: 2px;">ONE TO WATCH</div>
+           <div style="background: #8b5cf6; color: #000; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 100px; display: inline-block; margin-bottom: 15px; letter-spacing: 2px;">THE RADAR</div>
            <h3 style="color: #ffffff; font-size: 22px; margin-bottom: 10px;">[Signal Title]</h3>
            <p style="color: #cbd5e1; font-size: 15px; line-height: 1.6; margin-bottom: 15px;">[Early signal analysis - Why it matters before the hype]</p>
            <p style="color: #8b5cf6; font-size: 13px; font-weight: 700;">// STATUS: UNDER THE RADAR</p>
