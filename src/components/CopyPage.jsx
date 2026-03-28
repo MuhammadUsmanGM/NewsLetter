@@ -329,11 +329,25 @@ const CopyPage = ({ setView }) => {
       introText = getText(introSection);
     }
 
+    // Extraction: SUBJECT LINE
+    let subjectLine = "";
+    const firstParagraph = doc.body.querySelector('p');
+    if (firstParagraph && firstParagraph.textContent.length < 150 && firstParagraph.textContent.includes(".")) {
+        // AI usually puts subject line as first text it generates if not wrapped in specific div
+        // But our script might wrap it or it might just be the first thing in the string
+        // Let's check for the emoji-started line
+        const subjectMatch = html.match(/^(?:[\u2700-\u27bf]|[\ud83c\udde6-\ud83c\uddfa]|[\ud83d\udc00-\ud83d\ude4f]|[\ud83d\ude80-\ud83d\udeff]|[\ud83e\udd00-\ud83e\uddff]|[\u2600-\u26ff]|[\u2300-\u23ff]).+?(?=\n|<div|<p)/i);
+        if (subjectMatch) subjectLine = subjectMatch[0].trim();
+    }
+
     let out = "";
     const issueNum = issue && issue.id ? String(issue.id).padStart(2, "0") : "??";
     
     // Header
     out += `◈ THE SIGNAL #${issueNum} | INTELLIGENCE PROTOCOL ◈\n`;
+    if (subjectLine) {
+      out += `Subject: ${subjectLine}\n`;
+    }
     out += `Precision intelligence for the AI elite.\n\n`;
     
     if (introText) {

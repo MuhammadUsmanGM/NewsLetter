@@ -134,7 +134,11 @@ async function generateWeeklyIntelligence(intelligenceData) {
     Create a premium weekly briefing following the **3-3-2-2-1-1 UPGRADED NEURAL STRUCTURE**.
     
     STRUCTURE:
-    - 0 LEAD EDITOR INTRO: Start with a 3-line human-sounding brief (Max 3 lines). 
+    - 0 SUBJECT LINE: Before anything else, write a one-line, high-impact email subject line.
+      Format: [EMOJI] [Breakthrough Fact]. [Inevitable Reality]. [Actionable Hook].
+      Example: "⚡ Oracle is cutting teams. AI is unpopular. And something big is coming."
+      Goal: Maximize open rate. No generic "Issue #X".
+    - 0.5 LEAD EDITOR INTRO: Start with a 3-line human-sounding brief (Max 3 lines). 
       Format:
       1. The Week's Mood/Theme: One line capturing the vibe of AI this week (e.g., "This week AI got humbled").
       2. Personal Hot Take: One line of YOUR raw opinion (e.g., "Honestly? I think the backlash is healthy - it means people are paying attention").
