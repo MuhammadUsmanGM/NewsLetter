@@ -177,6 +177,22 @@ const Dashboard = ({ name, email, setView }) => {
             </button>
           </motion.div>
 
+          {/* Access Full Archive */}
+          <motion.div className="glass-card latest-briefing-card" variants={itemVariants} style={{ marginBottom: '24px', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid rgba(255, 255, 255, 0.05)` }}>
+            <div>
+              <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '4px' }}>The Protocol Vault</h3>
+              <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Explore the full historical database of all past intelligence signals.</p>
+            </div>
+            <button 
+              onClick={() => setView('archive')} 
+              className="sync-btn" 
+              style={{ width: 'auto', background: 'rgba(255, 255, 255, 0.03)', color: '#94a3b8', border: '1px solid rgba(255, 255, 255, 0.1)', cursor: 'pointer', padding: '10px 20px', borderRadius: '10px' }}
+            >
+              <Globe size={16} style={{ marginRight: '8px' }} />
+              Open Archive
+            </button>
+          </motion.div>
+
           {/* Optimized 3-2-2-1 Countdown */}
           <motion.div className="glass-card countdown-section" variants={itemVariants}>
             <div className="countdown-title">Next 3-3-2-2-1 Intelligence Release</div>
