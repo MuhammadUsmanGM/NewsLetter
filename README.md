@@ -44,10 +44,10 @@
 
 ```mermaid
 graph TD
-    A[User Terminal] -->|Interaction| B[React Landing Page]
+    A[User Terminal] -->|Interaction| B(React Landing Page)
     B -->|Silent Challenge| C{Cloudflare Turnstile}
     C -->|Valid Token| D[api/subscribe.js]
-    D -->|Generate v_token| E(Supabase DB)
+    D -->|Generate v_token| E[(Supabase DB)]
     D -->|Send Verification| K[SMTP Delivery]
     K -->|Verification Link| L[User Inbox]
     L -->|Click Link| V[api/verify.js]
@@ -72,6 +72,20 @@ graph TD
     N[Feedback Terminal] -->|Signal| O{api/feedback.js}
     O -->|Relay| K
     O -->|Store| E
+
+    %% Color Palette Definitions
+    classDef frontend fill:#2563eb,stroke:#1e3a8a,color:#fff,stroke-width:2px
+    classDef logic fill:#7c3aed,stroke:#4c1d95,color:#fff,stroke-width:2px
+    classDef database fill:#059669,stroke:#064e3b,color:#fff,stroke-width:2px
+    classDef trigger fill:#d97706,stroke:#78350f,color:#fff,stroke-width:2px
+    classDef external fill:#4b5563,stroke:#1f2937,color:#fff,stroke-width:1px,stroke-dasharray: 5 5
+
+    %% Applying Classes
+    class B,VU,DA,M,N frontend
+    class D,V,G,T,O,P logic
+    class E database
+    class C,F trigger
+    class H,I,J,K external
 ```
 
 ---
