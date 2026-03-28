@@ -1,5 +1,12 @@
-import React from 'react';
-import { Lock, Zap, ShieldCheck, ArrowRight, CreditCard, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Lock, Zap, ShieldCheck, ArrowRight, ExternalLink } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
+import { useNeuralTheme } from '../context/ThemeContext';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const OmegaWall = ({ setView, email }) => {
   const { currentTheme } = useNeuralTheme();
