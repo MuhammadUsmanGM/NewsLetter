@@ -47,16 +47,26 @@ graph TD
     A[User Terminal] -->|Interaction| B[React Landing Page]
     B -->|Silent Challenge| C{Cloudflare Turnstile}
     C -->|Valid Token| D[api/subscribe.js]
-    D -->|Secure Storage| E(Supabase DB)
+    D -->|Generate v_token| E(Supabase DB)
+    D -->|Send Verification| K[SMTP Delivery]
+    K -->|Verification Link| L[User Inbox]
+    L -->|Click Link| V[api/verify.js]
+    V -->|Activate Node| E
+    V -->|Redirect Success/Fail| VU[Verification UI]
+    VU -->|Navigate| DA[User Dashboard]
     
     F[GitHub Actions cron] -->|Trigger| G{api/cron.js}
     G -->|Fetch News| H[NewsAPI]
     G -->|Scrape Stars| I[GitHub API]
     G -->|Neural Synthesis| J[Google Gemini AI]
     G -->|Check Timezones| E
-    G -->|Send Signal| K[SMTP Delivery]
+    G -->|Send Signal| K
     G -->|Archive Record| E 
-    K -->|3-3-2-2-1 Briefing| L[User Inbox]  
+    K -->|3-3-2-2-1 Briefing| L
+    
+    T[api/track.js] -->|Update Metrics| E
+    L -->|Pixel/Poll| T
+
     M[Web Archive Interface] -->|Tier Sync| P[Neural Theme Engine]
     P -->|CSS Variables| M
     N[Feedback Terminal] -->|Signal| O{api/feedback.js}
