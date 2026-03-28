@@ -44,59 +44,82 @@
 
 ```mermaid
 graph TD
-    %% User & Security Layers
-    A[User Terminal] -->|Interaction| B(React Landing Page)
-    B -->|Shield Check| C{Cloudflare Turnstile}
-    C -->|Valid Token| D[api/subscribe.js]
-    D -->|Persist Profile| E[(Supabase DB)]
-    D -->|Dispatch Link| K[SMTP Delivery]
+    subgraph Frontend [Portal]
+        A[User Terminal] -->|Access| B(React Web App)
+        B -->|Shield| C{Turnstile}
+        VU[Verification UI]
+        DA[User Dashboard]
+        M[Web Archive]
+    end
+
+    subgraph Logic [Neural Core]
+        D[api/subscribe.js]
+        V[api/verify.js]
+        G{api/cron.js}
+        NS[newsletter.mjs]
+        INH[api/inngest.js]
+        T[api/track.js]
+        SU[Weekly Watcher]
+    end
+
+    subgraph Storage [Vault]
+        E[(Supabase DB)]
+    end
+
+    subgraph External [Ecosystem]
+        H[NewsAPI]
+        I[GitHub API]
+        J[Google Gemini AI]
+        K[SMTP Gateway]
+    end
+
+    %% Auth Flow
+    B -->|Challenge| C
+    C -->|Valid| D
+    D -->|Register| E
+    D -->|Mail Link| K
     
-    %% Verification & Onboarding
+    %% Verification
     K -->|Verification Link| L[User Inbox]
-    L -->|Handshake| V[api/verify.js]
+    L -->|Handshake| V
     V -->|Activate Node| E
-    V -->|Send Welcome| K
-    V -->|Redirect Success| VU[Verification UI]
-    VU -->|Navigate| DA[User Dashboard]
+    V -->|Handshake Email| K
+    V -->|Redirect| VU
+    VU -->|Access| DA
 
-    %% Intelligence Engine (The Pipeline)
-    F[GitHub Actions cron] -->|Trigger| G{api/cron.js}
-    G -->|Invoke Pipeline| NS[newsletter.mjs]
-    NS -->|Fetch News| H[NewsAPI]
-    NS -->|Scrape Stars| I[GitHub API]
-    NS -->|Neural Synthesis| J[Google Gemini AI]
-    NS -->|Archive Signal| E
-    NS -->|Dispatch Batch| ING{Inngest Queue}
+    %% Newsletter Engine
+    F[GitHub Actions] -->|Trigger| G
+    G -->|Invoke| NS
+    NS -->|Fetch| H
+    NS -->|Scrape| I
+    NS -->|Synthesize| J
+    NS -->|Archive| E
+    NS -->|Dispatch| ING{Inngest Queue}
     
-    %% Async Delivery Layer
-    ING -->|Fan Out| INH[api/inngest.js]
-    INH -->|Personalized Send| K
-    K -->|3-3-2-2-1 Briefing| L
+    ING -->|Worker| INH
+    INH -->|Deliver| K
+    K -->|Briefing| L
 
-    %% Maintenance & Analytics
-    T[api/track.js] -->|Update Metrics| E
-    L -->|Beacon Pulse| T
-    SU[Resurrection Watcher] -->|Weekly Check| E
+    %% Maintenance
+    T -->|Log Metrics| E
+    L -->|Beacon| T
     SU -->|Re-engage| K
+    SU -->|Status Check| E
 
-    %% UI Intelligence
-    M[Web Archive Interface] -->|Identity Sync| P[Neural Theme Engine]
-    P -->|CSS Variables| M
-    N[Feedback Terminal] -->|Signal| O{api/feedback.js}
-    O -->|Forward| K
-    O -->|Store| E
+    %% Personalization
+    M -.->|Tier Sync| E
+    P[Theme Engine] -.->|Styles| M
 
-    %% Styling Definitions
-    classDef frontend fill:#2563eb,stroke:#1e3a8a,color:#fff,stroke-width:2px
-    classDef logic fill:#7c3aed,stroke:#000000,color:#fff,stroke-width:2px
-    classDef database fill:#059669,stroke:#064e3b,color:#fff,stroke-width:2px
-    classDef trigger fill:#d97706,stroke:#78350f,color:#fff,stroke-width:2px
-    classDef queue fill:#db2777,stroke:#831843,color:#fff,stroke-width:2px
-    classDef external fill:#4b5563,stroke:#1f2937,color:#fff,stroke-width:1px,stroke-dasharray: 5 5
+    %% Styling
+    classDef frontend fill:#2563eb,stroke:#1e3a8a,color:#fff
+    classDef logic fill:#7c3aed,stroke:#4c1d95,color:#fff
+    classDef database fill:#059669,stroke:#064e3b,color:#fff
+    classDef trigger fill:#d97706,stroke:#78350f,color:#fff
+    classDef queue fill:#db2777,stroke:#831843,color:#fff
+    classDef external fill:#4b5563,stroke:#1f2937,color:#fff,stroke-dasharray: 5 5
 
-    %% Applying Classes
-    class B,VU,DA,M,N,A,L frontend
-    class D,V,G,T,O,P,NS,INH,SU logic
+    class A,B,VU,DA,M,L frontend
+    class D,V,G,T,P,NS,INH,SU logic
     class E database
     class C,F trigger
     class ING queue
