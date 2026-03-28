@@ -131,9 +131,28 @@ async function generateWeeklyIntelligence(intelligenceData) {
     GADGETS: ${gadgetsContext}
     REPOS: ${reposContext}
     
+    Create a premium weekly briefing following the **3-3-2-2-1-1 UPGRADED NEURAL STRUCTURE**.
+    
+    STRUCTURE:
+    - 0 LEAD EDITOR INTRO: Start with a 3-line human-sounding brief (Max 3 lines). 
+      Format:
+      1. The Week's Mood/Theme: One line capturing the vibe of AI this week (e.g., "This week AI got humbled").
+      2. Personal Hot Take: One line of YOUR raw opinion (e.g., "Honestly? I think the backlash is healthy - it means people are paying attention").
+      3. A Hook into the Issue: One line that makes them want to read further (e.g., "Here's what actually moved the needle 👇").
+      Goal: Sound like a smart friend briefing them, not a bot summarizing headlines.
+    - 3 TOP STORIES: The absolute peak breakthroughs of the week.
+    - 3 ELITE TOOLS: Critical software/frameworks to optimize AI workflows.
+    - 2 AI GADGETS: Hardware nodes with AI-native architecture.
+    - 2 TRENDING REPOS: High-signal repositories for technical depth.
     - 1 CONTRARIAN INSIGHT (Big Picture): This is the heart of THE SIGNAL. Do NOT sound like an AI assistant. I want a human, slightly cynical, and highly opinionated take on the week's trends. Think "grumpy senior engineer who has seen 1000 hype cycles." Be bold. Be contrarian. If the consensus says X, tell me why we should look at Y. Use short, punchy sentences. No corporate-speak. No fluff. 
+    - 1 THE RADAR (Early Warning Signal): Find a person, small startup, research paper, or low-star repo (found in SOURCES) that is quietly groundbreaking. Explain WHY it is a signal.
     
     INSTRUCTIONS:
+    0. **LEAD EDITOR INTRO**:
+       - Use this HTML:
+         <div style="margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+           <p style="color: #94a3b8; font-size: 16px; font-style: italic; line-height: 1.6; margin: 0;">[Intro Text]</p>
+         </div>
     1. **3 MAJOR NEW STORIES**: Select the 3 most impactful breakthroughs from STORIES.
        - INSTRUCTION: Do NOT summarize the news. Tell the reader the BRUTAL TRUTH of why this matters for their roadmap or competitive advantage. Use a 'Breakthrough + Impact' logic.
        - Use this HTML:
