@@ -44,86 +44,66 @@
 
 ```mermaid
 graph TD
-    subgraph Frontend [Portal]
-        A[User Terminal] -->|Access| B(React Web App)
-        B -->|Shield| C{Turnstile}
-        VU[Verification UI]
-        DA[User Dashboard]
-        M[Web Archive]
+    %% ─── Phase I: Subscription ───────────────────────────────────
+    subgraph Onboarding ["Phase I — Neural Handshake · Subscription"]
+        A["User Terminal"]      -->|"Enroll"| B["Landing Page"]
+        B                       -->|"Shield Check"| C{{"Cloudflare Turnstile"}}
+        C                       -->|"Valid Token"| D["api/subscribe.js"]
+        D                       -->|"Create Node"| E[("Supabase DB")]
+        D                       -->|"Dispatch"| K["SMTP Gateway"]
+        K                       -->|"Link Transmission"| L["User Inbox"]
     end
 
-    subgraph Logic [Neural Core]
-        D[api/subscribe.js]
-        V[api/verify.js]
-        G{api/cron.js}
-        NS[newsletter.mjs]
-        INH[api/inngest.js]
-        T[api/track.js]
-        SU[Weekly Watcher]
+    %% ─── Phase II: Verification ──────────────────────────────────
+    subgraph Verification ["Phase II — Activation Handshake · Verification"]
+        L  -->|"Click Link"| V["api/verify.js"]
+        V  -->|"Verify Record"| E
+        V  -->|"Welcome Protocol"| K
+        V  -->|"Redirect"| VU["Verification UI"]
+        VU -->|"Access"| DA["User Dashboard"]
     end
 
-    subgraph Storage [Vault]
-        E[(Supabase DB)]
+    %% ─── Phase III: Weekly Pipeline ──────────────────────────────
+    subgraph Intelligence ["Phase III — Signal Processing · Weekly"]
+        F["GitHub Actions cron"] -->|"Trigger"| G{{"api/cron.js"}}
+        G                        -->|"Invoke Engine"| NS["newsletter.mjs"]
+        NS                       -->|"Fetch News"| H["NewsAPI"]
+        NS                       -->|"Scrape Stars"| I["GitHub API"]
+        NS                       -->|"Neural Synthesis"| J["Gemini AI"]
+        NS                       -->|"Archive"| E
+        NS                       -->|"Background Dispatch"| ING{{"Inngest Queue"}}
+        ING                      -->|"Async Workers"| INH["api/inngest.js"]
+        INH                      -->|"Final Delivery"| K
+        K                        -->|"Weekly Briefing"| L
     end
 
-    subgraph External [Ecosystem]
-        H[NewsAPI]
-        I[GitHub API]
-        J[Google Gemini AI]
-        K[SMTP Gateway]
+    %% ─── Analytics & Lifecycle ───────────────────────────────────
+    subgraph Maintenance ["Analytics and Lifecycle"]
+        T["api/track.js"]    -->|"Update Metrics"| E
+        L                    -->|"Engagement Beacon"| T
+        SU["Weekly Watcher"] -->|"Resurrection Proto"| K
+        M["Web Archive"]    -.->|"Tier Sync"| E
+        P["Theme Engine"]   -.->|"Visual Styles"| M
     end
 
-    %% Auth Flow
-    B -->|Challenge| C
-    C -->|Valid| D
-    D -->|Register| E
-    D -->|Mail Link| K
-    
-    %% Verification
-    K -->|Verification Link| L[User Inbox]
-    L -->|Handshake| V
-    V -->|Activate Node| E
-    V -->|Handshake Email| K
-    V -->|Redirect| VU
-    VU -->|Access| DA
+    %% ─── Styling ─────────────────────────────────────────────────
+    classDef onboarding   fill:#0f2a4a,stroke:#1f6feb,color:#79c0ff,stroke-width:1.5px
+    classDef verification fill:#0d2d1a,stroke:#238636,color:#56d364,stroke-width:1.5px
+    classDef intelligence fill:#1a0f3a,stroke:#6e40c9,color:#bc8cff,stroke-width:1.5px
+    classDef database     fill:#0a2a2a,stroke:#0e7490,color:#22d3ee,stroke-width:1.5px
+    classDef gateway      fill:#1c1a12,stroke:#9e6a03,color:#e3b341,stroke-width:1.5px
+    classDef external     fill:#161b22,stroke:#30363d,color:#8b949e,stroke-width:1px,stroke-dasharray:4 3
+    classDef trigger      fill:#1c1206,stroke:#d97706,color:#fbbf24,stroke-width:1.5px
+    classDef queue        fill:#2d1a1a,stroke:#b91c1c,color:#fca5a5,stroke-width:1.5px
 
-    %% Newsletter Engine
-    F[GitHub Actions] -->|Trigger| G
-    G -->|Invoke| NS
-    NS -->|Fetch| H
-    NS -->|Scrape| I
-    NS -->|Synthesize| J
-    NS -->|Archive| E
-    NS -->|Dispatch| ING{Inngest Queue}
-    
-    ING -->|Worker| INH
-    INH -->|Deliver| K
-    K -->|Briefing| L
-
-    %% Maintenance
-    T -->|Log Metrics| E
-    L -->|Beacon| T
-    SU -->|Re-engage| K
-    SU -->|Status Check| E
-
-    %% Personalization
-    M -.->|Tier Sync| E
-    P[Theme Engine] -.->|Styles| M
-
-    %% Styling
-    classDef frontend fill:#2563eb,stroke:#1e3a8a,color:#fff
-    classDef logic fill:#7c3aed,stroke:#4c1d95,color:#fff
-    classDef database fill:#059669,stroke:#064e3b,color:#fff
-    classDef trigger fill:#d97706,stroke:#78350f,color:#fff
-    classDef queue fill:#db2777,stroke:#831843,color:#fff
-    classDef external fill:#4b5563,stroke:#1f2937,color:#fff,stroke-dasharray: 5 5
-
-    class A,B,VU,DA,M,L frontend
-    class D,V,G,T,P,NS,INH,SU logic
+    class A,B,C,D onboarding
+    class L,V,VU,DA verification
+    class G,NS,ING,INH intelligence
+    class F trigger
     class E database
-    class C,F trigger
-    class ING queue
-    class H,I,J,K external
+    class K gateway
+    class H,I,J external
+    class T,SU,M,P external
 ```
 
 ---
