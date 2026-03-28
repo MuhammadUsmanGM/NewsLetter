@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import logo from '../assets/Favicon.png';
+import logo from '../assets/Favicon.webp';
 import './Feedback.css'; // Reuse premium styles for content
 import './Welcome.css';  // Reuse loading styles
 import { Share2, Zap, ArrowLeft } from 'lucide-react';

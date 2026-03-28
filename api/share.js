@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     const description = headlines.length > 0 ? `Featuring: ${headlines.join(', ')}` : 'Weekly AI Intelligence Protocol';
 
     // Use a static OG image instead of dynamic generation
-    const ogImageUrl = `${process.env.APP_URL}/Favicon.png`;
+    const ogImageUrl = `${process.env.APP_URL}/Favicon.webp`;
     const issueUrl = `${process.env.APP_URL}/?view=issue&id=${id}`;
 
     const html = `

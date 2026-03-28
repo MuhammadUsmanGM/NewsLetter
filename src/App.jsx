@@ -12,7 +12,7 @@ import Commander from './components/Commander'
 import OmegaWall from './components/OmegaWall'
 import VerificationStatus from './components/VerificationStatus'
 import { Turnstile } from '@marsidev/react-turnstile'
-import logo from './assets/Favicon.png'
+import logo from './assets/Favicon.webp'
 import { useNeuralTheme } from './context/ThemeContext'
 import './App.css'
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../assets/Favicon.png';
+import logo from '../assets/Favicon.webp';
 
 export default function VerificationStatus({ setView, setUserName, setFormData }) {
   const [status, setStatus] = useState('loading'); // 'loading', 'success', 'failed'

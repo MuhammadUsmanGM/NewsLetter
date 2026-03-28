@@ -274,7 +274,7 @@ export function getNewsletterHtml(subscriber, dateStr, contentHtml, appUrl) {
     ════════════════════════════════ -->
     <tr>
       <td class="pad" style="background:linear-gradient(160deg,#061a12 0%,#020617 100%);border-bottom:2px solid #10b981;text-align:center;">
-        <img src="${appUrl}/Favicon.png" alt="Signal" width="64" height="64"
+        <img src="${appUrl}/Favicon.webp" alt="Signal" width="64" height="64"
              style="display:block;margin:0 auto 20px auto;border:1px solid #10b981;border-radius:14px;width:64px;height:64px;">
 
         <div class="issue-pill">Weekly Protocol Release</div>
@@ -505,7 +505,7 @@ export function getVerificationEmailHtml(name, token, appUrl) {
 </head>
 <body>
   <div class="card">
-    <img src="${appUrl}/Favicon.png" class="logo" alt="Signal">
+    <img src="${appUrl}/Favicon.webp" class="logo" alt="Signal">
     <div class="mono">// VERIFICATION_REQUIRED</div>
     <h1>Initialize Transmission?</h1>
     <p>Greetings, ${name}. We've detected a request to connect your node to <strong>THE SIGNAL</strong>. Please confirm your identity to activate the neural link.</p>
@@ -549,7 +549,7 @@ export function getWelcomeEmailHtml(name, email, appUrl) {
 <body>
   <div class="wrapper">
     <div class="header">
-      <img src="${appUrl}/Favicon.png" width="60" style="border-radius:12px; border:1px solid #10b981;">
+      <img src="${appUrl}/Favicon.webp" width="60" style="border-radius:12px; border:1px solid #10b981;">
       <div class="mono" style="margin-top:20px;">// SIGNAL_RELAY :: CONNECTION_STABLE</div>
       <h1>THE <span style="color:#10b981;">SIGNAL.</span></h1>
     </div>
@@ -602,7 +602,7 @@ export function getResurrectionEmailHtml(name, appUrl) {
 </head>
 <body>
   <div class="card">
-    <img src="${appUrl}/Favicon.png" class="logo" alt="Signal">
+    <img src="${appUrl}/Favicon.webp" class="logo" alt="Signal">
     <div class="mono">// SIGNAL_LOST :: NODE_INACTIVE</div>
     <h1>Is your node still active?</h1>
     <p>Greetings, ${name}. Our telemetry indicates your neural terminal hasn't synced with <strong>THE SIGNAL</strong> in 21 days. We've temporarily throttled your bandwidth to protect the protocol.</p>

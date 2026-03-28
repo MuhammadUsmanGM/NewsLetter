@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { Lock, ShieldAlert, Zap, ArrowRight, ShieldCheck } from 'lucide-react';
-import logo from '../assets/Favicon.png';
+import logo from '../assets/Favicon.webp';
 import './Feedback.css';
 import './Welcome.css';
 

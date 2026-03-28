@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Lock, Copy, Check, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useNeuralTheme } from "../context/ThemeContext";
-import logo from "../assets/Favicon.png";
+import logo from "../assets/Favicon.webp";
 import "./Welcome.css";
 
 // Initialize Supabase client

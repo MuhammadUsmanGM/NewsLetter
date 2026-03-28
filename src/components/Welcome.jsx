@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import logo from '../assets/Favicon.png';
+import logo from '../assets/Favicon.webp';
 import './Welcome.css';
 
 const Welcome = ({ onWelcomeComplete }) => {

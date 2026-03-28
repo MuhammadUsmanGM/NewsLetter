@@ -14,7 +14,7 @@ import {
   Download
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
-import logo from '../assets/Favicon.png';
+import logo from '../assets/Favicon.webp';
 import { useNeuralTheme } from '../context/ThemeContext';
 import './Dashboard.css';
 

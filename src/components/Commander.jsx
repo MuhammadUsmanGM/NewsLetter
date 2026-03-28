@@ -16,7 +16,7 @@ import {
   UserPlus
 } from 'lucide-react';
 import { useNeuralTheme } from '../context/ThemeContext';
-import logo from '../assets/Favicon.png';
+import logo from '../assets/Favicon.webp';
 import './Welcome.css';
 
 const Commander = ({ setView }) => {

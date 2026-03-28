@@ -2,7 +2,7 @@ const CACHE_NAME = 'the-signal-v2'; // Incremented version to force update
 const ASSETS = [
   '/',
   '/index.html',
-  '/Favicon.png',
+  '/Favicon.webp',
   '/manifest.json'
 ];
 
