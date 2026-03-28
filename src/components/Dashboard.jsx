@@ -162,7 +162,7 @@ const Dashboard = ({ name, email, setView }) => {
           </motion.div>
 
           {/* Access Latest Briefing */}
-          <motion.div className="glass-card" variants={itemVariants} style={{ marginBottom: '24px', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${currentTheme.color}33` }}>
+          <motion.div className="glass-card latest-briefing-card" variants={itemVariants} style={{ marginBottom: '24px', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${currentTheme.color}33` }}>
             <div>
               <h3 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '4px' }}>Latest Signal Archive</h3>
               <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Access this week's 3-3-2-2-1 intelligence briefing immediately.</p>
@@ -214,7 +214,7 @@ const Dashboard = ({ name, email, setView }) => {
             >
               <h3 style={{ color: '#fff', marginBottom: '1rem', fontSize: '1.2rem' }}>Prism Protocol Unlocked</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Master of the Spectrum detected. Choose your active neural theme.</p>
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div className="prism-grid" style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 {SPECTRUM.map((t, idx) => (
                   <button
                     key={t.rank}
@@ -245,12 +245,12 @@ const Dashboard = ({ name, email, setView }) => {
           }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '20px' }}>
                 <h3 style={{ color: '#fff', fontSize: '1.25rem', margin: 0 }}>Neural Invite Protocol</h3>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                     <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
                         {isPrismUnlocked ? 'Protocol Master detected. Your Prism link is active.' : 'Invite 3 verified nodes to unlock the Prism Protocol.'}
                     </p>
                     {!isPrismUnlocked && (
-                        <div style={{ background: `${currentTheme.color}22`, color: currentTheme.color, padding: '4px 12px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: '800', whiteSpace: 'nowrap', marginLeft: '10px' }}>
+                        <div style={{ background: `${currentTheme.color}22`, color: currentTheme.color, padding: '4px 12px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: '800', whiteSpace: 'nowrap' }}>
                             {userData?.referral_count || 0} / 3 VERIFIED
                         </div>
                     )}
@@ -258,7 +258,7 @@ const Dashboard = ({ name, email, setView }) => {
             </div>
 
             <div className="referral-link-container">
-                <code style={{ fontSize: '0.85rem', color: userData?.v_token ? '#cbd5e1' : '#64748b', fontStyle: userData?.v_token ? 'normal' : 'italic' }}>
+                <code style={{ fontSize: '0.85rem', color: userData?.v_token ? '#cbd5e1' : '#64748b', fontStyle: userData?.v_token ? 'normal' : 'italic', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {userData?.v_token 
                         ? `${window.location.origin}/?ref=${userData.v_token}` 
                         : 'Finalizing neural node... (Re-login to activate link)'}
