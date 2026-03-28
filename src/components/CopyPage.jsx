@@ -213,7 +213,7 @@ const CopyPage = ({ setView }) => {
       `Status: [ SECURE_TRANSMISSION ]\n` +
       `──────────────────────────────\n\n` +
       `Precision intelligence for the AI elite. No hype, just the architecture of tomorrow.\n\n` +
-      `Here is your 3-3-2-2-1 protocol for this week:\n`;
+      `Here is your 3-3-2-2-1-1 protocol for this week:\n`;
 
     // World-Class CTA Footer
     const footer =
@@ -311,76 +311,22 @@ const CopyPage = ({ setView }) => {
         }
       });
 
-    let insight = "";
-    const insightSection = Array.from(
-      doc.querySelectorAll("h3, h2, div, strong"),
-    ).find((el) => {
-      const text = el.textContent.toLowerCase();
-      return (
-        text.includes("actionable insight") ||
-        text.includes("master insight") ||
-        text.includes("neural insight") ||
-        text.includes("interactive insight")
-      );
-    });
-    if (insightSection) {
-      // try header text first (e.g. "This Week's Actionable Insight: …")
-      const headerText = insightSection.textContent.replace(/\s+/g, " ").trim();
-      const parts = headerText.split(/[:\-–—]/);
-      if (parts.length > 1) {
-        const candidate = parts.slice(1).join(":").trim();
-        if (candidate.length > 20) {
-          insight = candidate;
-        }
-      }
-
-      // fall back to sibling paragraphs / blockquotes
-      if (!insight) {
-        let elem = insightSection.nextElementSibling;
-        while (elem && elem.textContent.trim().length < 20) {
-          elem = elem.nextElementSibling;
-        }
-        if (elem) insight = getText(elem);
-      }
-
-      // check inside the same container
-      if (!insight) {
-        const parent = insightSection.parentElement;
-        if (parent) {
-          const p = parent.querySelector("p, blockquote");
-          if (p) insight = getText(p);
-        }
-      }
-
-      // last resort: grab first long sentence after the word "insight" in body text
-      if (!insight) {
-        const bodyText = doc.body.textContent || "";
-        const match = bodyText.match(/insight[\s\S]{0,200}/i);
-        if (match) {
-          insight = match[0]
-            .replace(/insight\s*[:\-–—]?/i, "")
-            .trim()
-            .split("\n")[0];
-        }
-      }
-
-      // still empty? use last blockquote as final fallback
-      if (!insight) {
-        const quotes = Array.from(doc.querySelectorAll("blockquote"));
-        if (quotes.length) {
-          insight = getText(quotes[quotes.length - 1]);
-        }
-      }
+    // Extraction: THE RADAR
+    let radarSignal = "";
+    const radarSection = Array.from(doc.querySelectorAll("div")).find(d => 
+      d.textContent.includes("THE RADAR") && d.querySelector("h3")
+    );
+    if (radarSection) {
+      const title = getText(radarSection.querySelector("h3"));
+      const details = getText(radarSection.querySelector("p"));
+      if (title) radarSignal = `⚡︎ ${title}\n${details}`;
     }
 
-    // If there was no header section at all, we still want to capture
-    // any closing blockquote as the insight (common case when the AI just
-    // appends a standalone quote and skips the heading).
-    if (!insight) {
-      const quotes = Array.from(doc.querySelectorAll("blockquote"));
-      if (quotes.length) {
-        insight = getText(quotes[quotes.length - 1]);
-      }
+    // Extraction: LEAD EDITOR INTRO
+    let introText = "";
+    const introSection = doc.querySelector('div[style*="border-bottom"] p');
+    if (introSection) {
+      introText = getText(introSection);
     }
 
     let out = "";
@@ -389,7 +335,12 @@ const CopyPage = ({ setView }) => {
     // Header
     out += `◈ THE SIGNAL #${issueNum} | INTELLIGENCE PROTOCOL ◈\n`;
     out += `Precision intelligence for the AI elite.\n\n`;
-    out += `Here is your 3-3-2-2-1 protocol for this week 👇\n\n`;
+    
+    if (introText) {
+      out += `"${introText}"\n\n`;
+    }
+
+    out += `Here is your 3-3-2-2-1-1 protocol for this week 👇\n\n`;
 
     // 01. Breakthroughs
     out += `◈ 01. THE SIGNALS | MAJOR BREAKTHROUGHS\n`;
@@ -400,7 +351,7 @@ const CopyPage = ({ setView }) => {
     });
 
     // 02. Gadgets
-    out += `◈ 02. HARDWARE | THE GADGET PROTOCOL\n`;
+    out += `◈ 02. HARDWARE | GADGET PROTOCOL\n`;
     gadgets.forEach((g) => {
       out += `⚡︎ ${g.name}\n${g.details}\n`;
       if (g.url) out += `🔗 Technical Specs: ${g.url}\n`;
@@ -425,10 +376,15 @@ const CopyPage = ({ setView }) => {
 
     // 05. Insight
     if (insight) {
-      out += `◈ 05. NEURAL INSIGHT | ACTIONABLE\n`;
+      out += `◈ 05. NEURAL INSIGHT | CONTRARIAN\n`;
       out += `\n"${insight}"\n\n`;
     }
 
+    // 06. The Radar
+    if (radarSignal) {
+      out += `◈ 06. THE RADAR | EARLY WARNING\n`;
+      out += `\n${radarSignal}\n\n`;
+    }
     // World-Class CTA Footer
     out += `📬 START RECEIVING THE SIGNAL\n`;
     out += `Join 1,000+ engineers getting the weekly briefing:\n`;
