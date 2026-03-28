@@ -400,6 +400,7 @@ const CopyPage = ({ setView }) => {
       out += `\n${radarSignal}\n\n`;
     }
     // World-Class CTA Footer
+    out += `\nUntil next week — stay ahead of the signal.\n\n`;
     out += `📬 START RECEIVING THE SIGNAL\n`;
     out += `Join 1,000+ engineers getting the weekly briefing:\n`;
     out += `➔ ${window.location.origin}\n\n`;

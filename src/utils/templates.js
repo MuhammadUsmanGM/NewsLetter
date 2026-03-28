@@ -39,7 +39,7 @@ export function getNewsletterBodyHtml(subscriber, dateStr, contentHtml) {
       </div>
 
       <div style="margin-top: 50px; padding: 30px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; text-align: center;">
-        <h3 style="color: #fff; margin-top: 0;">Transmission Complete</h3>
+        <h3 style="color: #fff; margin-top: 0; margin-bottom: 5px;">Until next week — stay ahead of the signal.</h3>
         <p style="font-size: 14px; margin-bottom: 0;"><strong>${name}</strong>, you are receiving this because your neural node (${rank}) is authorized for signal reception. Stay alert.</p>
       </div>
     </div>
